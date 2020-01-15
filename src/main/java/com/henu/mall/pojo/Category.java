@@ -1,6 +1,7 @@
 package com.henu.mall.pojo;
 
 import java.util.Date;
+
 public class Category {
     private Integer id;
 

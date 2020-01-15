@@ -3,7 +3,6 @@ package com.henu.mall.vo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.henu.mall.enums.ResponseEnum;
 import lombok.Data;
-import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.validation.BindingResult;
 
 import java.util.Objects;
@@ -30,7 +29,7 @@ public class ResponseVo<T> {
     }
 
     public static <T> ResponseVo<T> successByMsg(String msg){
-        return new ResponseVo<>(ResponseEnum.SUCCESS.getCode(),msg);
+        return new ResponseVo<T>(ResponseEnum.SUCCESS.getCode(),msg);
     }
 
     public static <T> ResponseVo<T> success(T data) {
@@ -38,19 +37,19 @@ public class ResponseVo<T> {
     }
 
     public static <T> ResponseVo<T> success() {
-        return new ResponseVo<>(ResponseEnum.SUCCESS.getCode(), ResponseEnum.SUCCESS.getDesc());
+        return new ResponseVo<T>(ResponseEnum.SUCCESS.getCode(), ResponseEnum.SUCCESS.getDesc());
     }
 
     public static <T> ResponseVo<T> error(ResponseEnum responseEnum) {
-        return new ResponseVo<>(responseEnum.getCode(), responseEnum.getDesc());
+        return new ResponseVo<T>(responseEnum.getCode(), responseEnum.getDesc());
     }
 
     public static <T> ResponseVo<T> error(ResponseEnum responseEnum, String msg) {
-        return new ResponseVo<>(responseEnum.getCode(), msg);
+        return new ResponseVo<T>(responseEnum.getCode(), msg);
     }
 
     public static <T> ResponseVo<T> error(ResponseEnum responseEnum, BindingResult bindingResult) {
-        return new ResponseVo<>(responseEnum.getCode(),
+        return new ResponseVo<T>(responseEnum.getCode(),
                 Objects.requireNonNull(bindingResult.getFieldError()).getField() + " " + bindingResult.getFieldError().getDefaultMessage());
     }
 }

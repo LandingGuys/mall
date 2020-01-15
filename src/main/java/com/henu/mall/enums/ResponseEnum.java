@@ -1,5 +1,6 @@
 package com.henu.mall.enums;
 
+
 import lombok.Getter;
 
 /**
@@ -21,6 +22,12 @@ public enum ResponseEnum {
     EMAIL_EXIST(4, "邮箱已存在"),
 
     NEED_LOGIN(10, "用户未登录, 请先登录"),
+
+    THIRD_PARTY_LOGIN_QQ_ERROR(11,"qq授权登录失败"),
+
+    THIRD_PARTY_LOGIN_WEI_XIN_ERROR(11,"微信授权登录失败"),
+
+    THIRD_PARTY_LOGIN_WEI_BO_ERROR(11,"微博授权登录失败"),
 
     USERNAME_OR_PASSWORD_ERROR(11, "用户名或密码错误"),;
 

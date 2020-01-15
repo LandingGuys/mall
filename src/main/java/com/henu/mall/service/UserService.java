@@ -9,11 +9,18 @@ import com.henu.mall.vo.ResponseVo;
  */
 public interface UserService {
     /**
-     * 用户注册
+     * 第三方注册登录
      */
-        ResponseVo<User> register(User user);
+        Boolean crateOrUpdate(User user);
+
     /**
-     * 登录
+     * 邮箱、手机号注册
+     * @param user
+     * @return
+     */
+    ResponseVo<User> register(User user);
+    /**
+     * 邮箱、手机号登录
      */
    ResponseVo<User> login(String string,String password);
 }

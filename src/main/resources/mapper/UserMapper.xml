@@ -3,11 +3,14 @@
 <mapper namespace="com.henu.mall.mapper.UserMapper">
   <resultMap id="BaseResultMap" type="com.henu.mall.pojo.User">
     <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="account_id" jdbcType="VARCHAR" property="accountId" />
     <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="question" jdbcType="VARCHAR" property="question" />
+    <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
     <result column="answer" jdbcType="VARCHAR" property="answer" />
     <result column="role" jdbcType="INTEGER" property="role" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -72,7 +75,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, username, password, email, phone, question, answer, role, create_time, update_time
+    id, account_id, username, token, password, email, phone, question, avatar_url, answer, 
+    role, create_time, update_time
   </sql>
   <select id="selectByExample" parameterType="com.henu.mall.pojo.UserExample" resultMap="BaseResultMap">
     select
@@ -105,12 +109,14 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.henu.mall.pojo.User">
-    insert into mall_user (id, username, password, 
-      email, phone, question, 
+    insert into mall_user (id, account_id, username, 
+      token, password, email, 
+      phone, question, avatar_url, 
       answer, role, create_time, 
       update_time)
-    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{question,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{accountId,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{token,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{question,jdbcType=VARCHAR}, #{avatarUrl,jdbcType=VARCHAR}, 
       #{answer,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
@@ -120,8 +126,14 @@
       <if test="id != null">
         id,
       </if>
+      <if test="accountId != null">
+        account_id,
+      </if>
       <if test="username != null">
         username,
+      </if>
+      <if test="token != null">
+        token,
       </if>
       <if test="password != null">
         password,
@@ -134,6 +146,9 @@
       </if>
       <if test="question != null">
         question,
+      </if>
+      <if test="avatarUrl != null">
+        avatar_url,
       </if>
       <if test="answer != null">
         answer,
@@ -152,8 +167,14 @@
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
+      <if test="accountId != null">
+        #{accountId,jdbcType=VARCHAR},
+      </if>
       <if test="username != null">
         #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        #{token,jdbcType=VARCHAR},
       </if>
       <if test="password != null">
         #{password,jdbcType=VARCHAR},
@@ -166,6 +187,9 @@
       </if>
       <if test="question != null">
         #{question,jdbcType=VARCHAR},
+      </if>
+      <if test="avatarUrl != null">
+        #{avatarUrl,jdbcType=VARCHAR},
       </if>
       <if test="answer != null">
         #{answer,jdbcType=VARCHAR},
@@ -193,8 +217,14 @@
       <if test="record.id != null">
         id = #{record.id,jdbcType=INTEGER},
       </if>
+      <if test="record.accountId != null">
+        account_id = #{record.accountId,jdbcType=VARCHAR},
+      </if>
       <if test="record.username != null">
         username = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.token != null">
+        token = #{record.token,jdbcType=VARCHAR},
       </if>
       <if test="record.password != null">
         password = #{record.password,jdbcType=VARCHAR},
@@ -207,6 +237,9 @@
       </if>
       <if test="record.question != null">
         question = #{record.question,jdbcType=VARCHAR},
+      </if>
+      <if test="record.avatarUrl != null">
+        avatar_url = #{record.avatarUrl,jdbcType=VARCHAR},
       </if>
       <if test="record.answer != null">
         answer = #{record.answer,jdbcType=VARCHAR},
@@ -228,11 +261,14 @@
   <update id="updateByExample" parameterType="map">
     update mall_user
     set id = #{record.id,jdbcType=INTEGER},
+      account_id = #{record.accountId,jdbcType=VARCHAR},
       username = #{record.username,jdbcType=VARCHAR},
+      token = #{record.token,jdbcType=VARCHAR},
       password = #{record.password,jdbcType=VARCHAR},
       email = #{record.email,jdbcType=VARCHAR},
       phone = #{record.phone,jdbcType=VARCHAR},
       question = #{record.question,jdbcType=VARCHAR},
+      avatar_url = #{record.avatarUrl,jdbcType=VARCHAR},
       answer = #{record.answer,jdbcType=VARCHAR},
       role = #{record.role,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -244,8 +280,14 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.henu.mall.pojo.User">
     update mall_user
     <set>
+      <if test="accountId != null">
+        account_id = #{accountId,jdbcType=VARCHAR},
+      </if>
       <if test="username != null">
         username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        token = #{token,jdbcType=VARCHAR},
       </if>
       <if test="password != null">
         password = #{password,jdbcType=VARCHAR},
@@ -258,6 +300,9 @@
       </if>
       <if test="question != null">
         question = #{question,jdbcType=VARCHAR},
+      </if>
+      <if test="avatarUrl != null">
+        avatar_url = #{avatarUrl,jdbcType=VARCHAR},
       </if>
       <if test="answer != null">
         answer = #{answer,jdbcType=VARCHAR},
@@ -276,11 +321,14 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.henu.mall.pojo.User">
     update mall_user
-    set username = #{username,jdbcType=VARCHAR},
+    set account_id = #{accountId,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      token = #{token,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       question = #{question,jdbcType=VARCHAR},
+      avatar_url = #{avatarUrl,jdbcType=VARCHAR},
       answer = #{answer,jdbcType=VARCHAR},
       role = #{role,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},

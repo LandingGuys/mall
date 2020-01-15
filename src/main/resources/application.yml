@@ -1,11 +1,11 @@
 server:
-  port: 8082
+  port: 80
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: root
-    url:  jdbc:mysql://127.0.0.1:3306/mall?characterEncoding=utf-8&useSSL=false
+    password: Lv1003@@
+    url:  jdbc:mysql://106.75.109.78:3306/mall?characterEncoding=utf-8&useSSL=false
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
@@ -13,6 +13,11 @@ mybatis:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   type-aliases-package: com.henu.mall.pojo
   mapper-locations: classpath:mappers/*.xml
+
+#qq
+QQ_client_id: 101802971
+QQ_client_secret: 772adebaf15b637a2d2e6aed6081895f
+QQ_Redirect_uri: http://www.wast.club/qqcallback
 
 
 

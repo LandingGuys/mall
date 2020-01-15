@@ -165,6 +165,76 @@ public class UserExample {
             return (Criteria) this;
         }
 
+        public Criteria andAccountIdIsNull() {
+            addCriterion("account_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountIdIsNotNull() {
+            addCriterion("account_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountIdEqualTo(String value) {
+            addCriterion("account_id =", value, "accountId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountIdNotEqualTo(String value) {
+            addCriterion("account_id <>", value, "accountId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountIdGreaterThan(String value) {
+            addCriterion("account_id >", value, "accountId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountIdGreaterThanOrEqualTo(String value) {
+            addCriterion("account_id >=", value, "accountId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountIdLessThan(String value) {
+            addCriterion("account_id <", value, "accountId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountIdLessThanOrEqualTo(String value) {
+            addCriterion("account_id <=", value, "accountId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountIdLike(String value) {
+            addCriterion("account_id like", value, "accountId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountIdNotLike(String value) {
+            addCriterion("account_id not like", value, "accountId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountIdIn(List<String> values) {
+            addCriterion("account_id in", values, "accountId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountIdNotIn(List<String> values) {
+            addCriterion("account_id not in", values, "accountId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountIdBetween(String value1, String value2) {
+            addCriterion("account_id between", value1, value2, "accountId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountIdNotBetween(String value1, String value2) {
+            addCriterion("account_id not between", value1, value2, "accountId");
+            return (Criteria) this;
+        }
+
         public Criteria andUsernameIsNull() {
             addCriterion("username is null");
             return (Criteria) this;
@@ -232,6 +302,76 @@ public class UserExample {
 
         public Criteria andUsernameNotBetween(String value1, String value2) {
             addCriterion("username not between", value1, value2, "username");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokenIsNull() {
+            addCriterion("token is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokenIsNotNull() {
+            addCriterion("token is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokenEqualTo(String value) {
+            addCriterion("token =", value, "token");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokenNotEqualTo(String value) {
+            addCriterion("token <>", value, "token");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokenGreaterThan(String value) {
+            addCriterion("token >", value, "token");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokenGreaterThanOrEqualTo(String value) {
+            addCriterion("token >=", value, "token");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokenLessThan(String value) {
+            addCriterion("token <", value, "token");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokenLessThanOrEqualTo(String value) {
+            addCriterion("token <=", value, "token");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokenLike(String value) {
+            addCriterion("token like", value, "token");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokenNotLike(String value) {
+            addCriterion("token not like", value, "token");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokenIn(List<String> values) {
+            addCriterion("token in", values, "token");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokenNotIn(List<String> values) {
+            addCriterion("token not in", values, "token");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokenBetween(String value1, String value2) {
+            addCriterion("token between", value1, value2, "token");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokenNotBetween(String value1, String value2) {
+            addCriterion("token not between", value1, value2, "token");
             return (Criteria) this;
         }
 
@@ -512,6 +652,76 @@ public class UserExample {
 
         public Criteria andQuestionNotBetween(String value1, String value2) {
             addCriterion("question not between", value1, value2, "question");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvatarUrlIsNull() {
+            addCriterion("avatar_url is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvatarUrlIsNotNull() {
+            addCriterion("avatar_url is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvatarUrlEqualTo(String value) {
+            addCriterion("avatar_url =", value, "avatarUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvatarUrlNotEqualTo(String value) {
+            addCriterion("avatar_url <>", value, "avatarUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvatarUrlGreaterThan(String value) {
+            addCriterion("avatar_url >", value, "avatarUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvatarUrlGreaterThanOrEqualTo(String value) {
+            addCriterion("avatar_url >=", value, "avatarUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvatarUrlLessThan(String value) {
+            addCriterion("avatar_url <", value, "avatarUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvatarUrlLessThanOrEqualTo(String value) {
+            addCriterion("avatar_url <=", value, "avatarUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvatarUrlLike(String value) {
+            addCriterion("avatar_url like", value, "avatarUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvatarUrlNotLike(String value) {
+            addCriterion("avatar_url not like", value, "avatarUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvatarUrlIn(List<String> values) {
+            addCriterion("avatar_url in", values, "avatarUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvatarUrlNotIn(List<String> values) {
+            addCriterion("avatar_url not in", values, "avatarUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvatarUrlBetween(String value1, String value2) {
+            addCriterion("avatar_url between", value1, value2, "avatarUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAvatarUrlNotBetween(String value1, String value2) {
+            addCriterion("avatar_url not between", value1, value2, "avatarUrl");
             return (Criteria) this;
         }
 
