@@ -43,9 +43,6 @@ public class UserServiceImpl implements UserService {
         User dbUser = dbUsers.get(0);
         User updateUser =new User();
         updateUser.setToken(user.getToken())
-                .setRole(user.getRole())
-                .setUsername(user.getUsername())
-                .setAccountId(user.getAccountId())
                 .setUpdateTime(new Date());
         UserExample example = new UserExample();
         example.createCriteria().andIdEqualTo(dbUser.getId());

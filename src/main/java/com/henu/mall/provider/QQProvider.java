@@ -18,6 +18,12 @@ import java.io.IOException;
  */
 @Component
 public class QQProvider {
+    public static String requestOauthUrl(QQAccessTokenDTO accessTokenDTO){
+        String oauthUrl="https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id="
+                +accessTokenDTO.getClient_id()+"&redirect_uri="
+                +accessTokenDTO.getRedirect_uri()+"&state=1";
+        return oauthUrl;
+    }
     /**
      * 获取accessToken
      * @param accessTokenDTO
@@ -31,7 +37,11 @@ public class QQProvider {
         Request request = new Request.Builder().url(urlString).get().build();
         try (Response response = client.newCall(request).execute()) {
             String string = response.body().string();
-            String accessToken = JSON.parseObject(string).getString("access_token");
+//            Object jsonObject = JSON.parseObject(string);
+            String accessToken = string.split("\\&")[0].split("\\=")[1];
+//            String[] split1 = split[0].split("\\=");
+//            String accessToken=split1[1];
+//            String accessToken = JSON.parseObject(string).getString("access_token");
             return accessToken;
         } catch (IOException e) {
             e.printStackTrace();
@@ -40,7 +50,7 @@ public class QQProvider {
     }
     public static String getOpenId(String accessToken){
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url("https://graph.qq.com/oauth2.0/me?" + accessToken).build();
+        Request request = new Request.Builder().url("https://graph.qq.com/oauth2.0/me?access_token=" + accessToken).build();
         try {
             Response response = client.newCall(request).execute();
             String string = response.body().string();
@@ -60,7 +70,7 @@ public class QQProvider {
      */
     public static QQUser getUserInfo(String openId, String qq_clientId, String accessToken) {
         OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder().url("https://graph.qq.com/user/get_user_info?"+accessToken+"&oauth_consumer_key="+qq_clientId+"&openid="+openId+"").build();
+        Request request = new Request.Builder().url("https://graph.qq.com/user/get_user_info?access_token="+accessToken+"&oauth_consumer_key="+qq_clientId+"&openid="+openId+"").build();
         try {
             Response response = client.newCall(request).execute();
             String string = response.body().string();

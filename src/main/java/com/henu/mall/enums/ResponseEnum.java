@@ -25,7 +25,7 @@ public enum ResponseEnum {
 
     THIRD_PARTY_LOGIN_QQ_ERROR(11,"qq授权登录失败"),
 
-    THIRD_PARTY_LOGIN_WEI_XIN_ERROR(11,"微信授权登录失败"),
+    THIRD_PARTY_LOGIN_BAI_DU_ERROR(11,"百度授权登录失败"),
 
     THIRD_PARTY_LOGIN_WEI_BO_ERROR(11,"微博授权登录失败"),
 
