@@ -12,12 +12,15 @@ mybatis:
     # 控制台日志配置
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   type-aliases-package: com.henu.mall.pojo
-  mapper-locations: classpath:mappers/*.xml
+  mapper-locations: classpath:mapper/*.xml
 
 #qq
 QQ_client_id: 101802971
 QQ_client_secret: 772adebaf15b637a2d2e6aed6081895f
 QQ_Redirect_uri: http://www.wast.club/qqcallback
 
-
+#baidu
+BaiDu_client_id: SBzm4VChESX3VQc7qEgP8DMO
+BaiDu_client_secret: zDtClO4KaarnzBXfeIPn9E98niblkNHu
+BaiDu_Redirect_uri: http://www.wast.club/baiducallback
 
