@@ -55,9 +55,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseVo<User> login(String string, String password) {
-
-        return null;
+    public ResponseVo login(User user) {
+        //判断用户名，密码是否一致
+        UserExample example = new UserExample();
+        example.createCriteria().andUsernameEqualTo(user.getUsername())
+                .andPasswordEqualTo(DigestUtils.md5DigestAsHex(
+                        user.getPassword().getBytes(StandardCharsets.UTF_8)));
+        List<User> users = userMapper.selectByExample(example);
+        if(users.size() != 0){
+            //TODO 加入token
+            return ResponseVo.success();
+        }
+        return ResponseVo.error(ResponseEnum.PASSWORD_ERROR);
     }
 
     /**

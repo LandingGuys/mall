@@ -11,7 +11,7 @@ public interface UserService {
     /**
      * 第三方注册登录
      */
-        Boolean crateOrUpdate(User user);
+    Boolean crateOrUpdate(User user);
 
     /**
      * 邮箱、手机号注册
@@ -22,5 +22,5 @@ public interface UserService {
     /**
      * 邮箱、手机号登录
      */
-   ResponseVo<User> login(String string,String password);
+   ResponseVo<User> login(User user);
 }
