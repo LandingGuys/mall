@@ -33,8 +33,6 @@ public class Oauth2Controller {
     @Value("${QQ_Redirect_uri}")
     private String QQRedirectUri;
 
-    @Resource
-    private QQProvider qqProvider;
 
     @Resource
     private UserService userService;
