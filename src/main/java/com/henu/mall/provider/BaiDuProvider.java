@@ -18,7 +18,7 @@ import java.io.IOException;
 @Component
 public class BaiDuProvider {
     public static String requestOauthUrl(BaiDuAccessTokenDTO accessTokenDTO){
-        String oauthUrl=" https://openapi.baidu.com/oauth/2.0/authorize?response_type=code&client_id="
+        String oauthUrl="https://openapi.baidu.com/oauth/2.0/authorize?response_type=code&client_id="
                 +accessTokenDTO.getClient_id()+"&redirect_uri="
                 +accessTokenDTO.getRedirect_uri()+"&display=popup";
         return oauthUrl;
