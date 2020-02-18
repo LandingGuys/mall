@@ -3,9 +3,6 @@ package com.henu.mall.vo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.henu.mall.enums.ResponseEnum;
 import lombok.Data;
-import org.springframework.validation.BindingResult;
-
-import java.util.Objects;
 
 /**
  * @author lv
@@ -48,8 +45,6 @@ public class ResponseVo<T> {
         return new ResponseVo<T>(responseEnum.getCode(), msg);
     }
 
-    public static <T> ResponseVo<T> error(ResponseEnum responseEnum, BindingResult bindingResult) {
-        return new ResponseVo<T>(responseEnum.getCode(),
-                Objects.requireNonNull(bindingResult.getFieldError()).getField() + " " + bindingResult.getFieldError().getDefaultMessage());
-    }
+
+
 }

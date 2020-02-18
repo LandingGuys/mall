@@ -13,8 +13,6 @@ public class User {
 
     private String username;
 
-    private String token;
-
     private String password;
 
     private String email;
@@ -32,6 +30,8 @@ public class User {
     private Date createTime;
 
     private Date updateTime;
+
+    private String token;
 
 
 }

@@ -8,6 +8,7 @@
     <context id="DB2Tables" targetRuntime="MyBatis3">
         <!--数据库连接的信息，驱动类，连接地址，用户名，密码-->
         <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"></plugin>
+        <!-- 不再追加xml内容-->
         <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"></plugin>
         <commentGenerator>
             <property name="suppressAllComments" value="true"></property>
@@ -45,7 +46,10 @@
         <table tableName="mall_order" domainObjectName="Order" ></table>
         <table tableName="mall_order_item" domainObjectName="OrderItem" ></table>
         <table tableName="mall_pay_info" domainObjectName="PayInfo" ></table>
-        <table tableName="mall_product" domainObjectName="Product" ></table>
+        <table tableName="mall_product" domainObjectName="Product" >
+            <columnOverride column="sub_images" javaType="java.lang.String" jdbcType="VARCHAR" />
+            <columnOverride column="detail" javaType="java.lang.String" jdbcType="VARCHAR" />
+        </table>
         <table tableName="mall_shipping" domainObjectName="Shipping" ></table>
         <table tableName="mall_user" domainObjectName="User" ></table>
 

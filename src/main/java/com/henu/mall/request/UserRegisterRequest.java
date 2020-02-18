@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
  * NotNull 判断是否为NULL
  */
 @Data
-public class AddUser {
+public class UserRegisterRequest {
 
     @NotBlank(message = "用户名不能为空")
     private String username;

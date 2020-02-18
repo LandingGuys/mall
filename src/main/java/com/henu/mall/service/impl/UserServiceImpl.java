@@ -1,11 +1,15 @@
 package com.henu.mall.service.impl;
 
+
 import com.henu.mall.enums.ResponseEnum;
 import com.henu.mall.enums.RoleEnum;
 import com.henu.mall.mapper.UserMapper;
 import com.henu.mall.pojo.User;
 import com.henu.mall.pojo.UserExample;
 import com.henu.mall.service.UserService;
+import com.henu.mall.utils.Md5TokenGenerator;
+import com.henu.mall.utils.RedisUtil;
+import com.henu.mall.utils.TokeUtil;
 import com.henu.mall.vo.ResponseVo;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
@@ -15,6 +19,10 @@ import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+
+import static com.henu.mall.enums.ResponseEnum.GET_USER_INFO_ERROR;
+import static com.henu.mall.enums.ResponseEnum.THIRD_PARTY_LOGIN_ERROR;
 
 /**
  * @author lv
@@ -25,46 +33,56 @@ public class UserServiceImpl implements UserService {
     @Resource
     private UserMapper userMapper;
 
+    @Resource
+    private RedisUtil redisUtil;
+
+    @Resource
+    private Md5TokenGenerator tokenGenerator;
+
     @Override
-    public Boolean crateOrUpdate(User user) {
+    public ResponseVo<User> crateOrUpdate(User user) {
         UserExample userExample = new UserExample();
         userExample.createCriteria().andAccountIdEqualTo(user.getAccountId());
         List<User> dbUsers = userMapper.selectByExample(userExample);
+        //token 存入 redis
+        //token MD5 加盐
+        String token = tokenGenerator.generate(user.getAccountId());
+        user.setToken(token);
+        TokeUtil.setToken(user.getUsername(),redisUtil,token);
+
         if(CollectionUtils.isEmpty(dbUsers)){
             //插入
             int i = userMapper.insertSelective(user);
-            if(i ==1){
-                return true;
-            }else {
-                return false;
+            if(i != 1){
+                return ResponseVo.error(THIRD_PARTY_LOGIN_ERROR);
             }
+            return getUserInfo(user.getAccountId());
         }
         //更新
-        User dbUser = dbUsers.get(0);
-        User updateUser =new User();
-        updateUser.setToken(user.getToken())
-                .setUpdateTime(new Date());
+        user.setUpdateTime(new Date());
         UserExample example = new UserExample();
-        example.createCriteria().andIdEqualTo(dbUser.getId());
-        int i = userMapper.updateByExampleSelective(updateUser, example);
-        if(i == 1 ){
-            return true;
-        }else {
-           return false;
+        example.createCriteria().andAccountIdEqualTo(user.getAccountId());
+        int i = userMapper.updateByExampleSelective(user, example);
+        if(i != 1 ){
+            return ResponseVo.error(THIRD_PARTY_LOGIN_ERROR);
         }
+        return getUserInfo(user.getAccountId());
     }
 
     @Override
     public ResponseVo login(User user) {
-        //判断用户名，密码是否一致
+        //判断邮箱，密码是否一致
         UserExample example = new UserExample();
-        example.createCriteria().andUsernameEqualTo(user.getUsername())
+        example.createCriteria().andEmailEqualTo(user.getEmail())
                 .andPasswordEqualTo(DigestUtils.md5DigestAsHex(
                         user.getPassword().getBytes(StandardCharsets.UTF_8)));
         List<User> users = userMapper.selectByExample(example);
         if(users.size() != 0){
-            //TODO 加入token
-            return ResponseVo.success();
+            //token存入redis
+            String token = tokenGenerator.generate(users.get(0).getAccountId());
+            users.get(0).setToken(token);
+            TokeUtil.setToken(users.get(0).getUsername(),redisUtil,token);
+            return ResponseVo.success(users.get(0));
         }
         return ResponseVo.error(ResponseEnum.PASSWORD_ERROR);
     }
@@ -77,7 +95,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public ResponseVo<User> register(User user) {
-        //username不能重复
+        //username不能重复 手机号不能重复
         UserExample userExampleByUsername = new UserExample();
         userExampleByUsername.createCriteria().andUsernameEqualTo(user.getUsername());
         long countByUsername = userMapper.countByExample(userExampleByUsername);
@@ -93,6 +111,12 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setRole(RoleEnum.CUSTOMER.getCode());
+        user.setAccountId(UUID.randomUUID().toString());
+        //token 存入 redis
+        String token= tokenGenerator.generate(user.getAccountId());
+        user.setToken(token);
+        TokeUtil.setToken(user.getUsername(),redisUtil,token);
+
         user.setPassword(DigestUtils.md5DigestAsHex(
                 user.getPassword().getBytes(StandardCharsets.UTF_8)
         ));
@@ -101,5 +125,17 @@ public class UserServiceImpl implements UserService {
             return ResponseVo.error(ResponseEnum.ERROR);
         }
         return ResponseVo.success();
+    }
+
+    @Override
+    public ResponseVo<User> getUserInfo(String accountId) {
+        UserExample example = new UserExample();
+        example.createCriteria().andAccountIdEqualTo(accountId);
+
+        List<User> users = userMapper.selectByExample(example);
+        if(CollectionUtils.isNotEmpty(users)){
+            return ResponseVo.success(users.get(0));
+        }
+        return ResponseVo.error(GET_USER_INFO_ERROR);
     }
 }

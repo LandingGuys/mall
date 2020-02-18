@@ -17,9 +17,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.UUID;
 
 /**
  * @author lvbenwei11319
@@ -71,14 +71,14 @@ public class Oauth2Controller {
 
     }
     @GetMapping("/qqcallback")
-    public ResponseVo qqCallback(@RequestParam("code") String code){
+    public ResponseVo<User> qqCallback(@RequestParam("code") String code,
+                                 HttpServletResponse response){
         QQAccessTokenDTO qqAccessTokenDTO = new QQAccessTokenDTO("authorization_code", QQClientId, code, QQClientSecret, QQRedirectUri);
         String accessToken= QQProvider.getAccessToken(qqAccessTokenDTO);
         String openId=QQProvider.getOpenId(accessToken);
         QQUser qqUser=QQProvider.getUserInfo(openId,QQClientId,accessToken);
         User user = new User();
         user.setAccountId(openId)
-                .setToken(UUID.randomUUID().toString())
                 .setRole(RoleEnum.CUSTOMER.getCode());
         if(qqUser.getNickname()==null){
             user.setUsername("qq"+openId);
@@ -90,31 +90,30 @@ public class Oauth2Controller {
         }else{
             user.setAvatarUrl("https://shuixin.oss-cn-beijing.aliyuncs.com/tian.png");
         }
-        Boolean crateOrUpdate = userService.crateOrUpdate(user);
-        if(!crateOrUpdate){
+        ResponseVo<User> userResponseVo = userService.crateOrUpdate(user);
+        if(userResponseVo.getStatus().equals(ResponseEnum.THIRD_PARTY_LOGIN_ERROR.getCode())){
             return ResponseVo.error(ResponseEnum.THIRD_PARTY_LOGIN_QQ_ERROR);
         }
-        return ResponseVo.success();
+        response.addCookie(new Cookie("token",userResponseVo.getData().getToken()));
+        return userResponseVo;
     }
     @PostMapping("/weiBoCallBack")
     public ResponseVo weiBoCallback(){
         return null;
     }
     @GetMapping("/baiducallback")
-    public ResponseVo baiDuCallBack(@RequestParam("code") String code){
+    public ResponseVo baiDuCallBack(@RequestParam("code") String code,
+                                    HttpServletResponse response){
         BaiDuAccessTokenDTO baiDuAccessTokenDTO = new BaiDuAccessTokenDTO("authorization_code", BaiDuClientId, code, BaiDuClientSecret, BaiDuRedirectUri);
         String accessToken = BaiDuProvider.getAccessToken(baiDuAccessTokenDTO);
 
         BaiDuUser baiduUser=BaiDuProvider.getUser(accessToken);
         if(baiduUser!=null && baiduUser.getUserid()!=null){
-            //登录成功,写cookie和session/改为redis
-            String token=UUID.randomUUID().toString();
-//            Integer expire=7200;
-//            redisTemplate.opsForValue().set(String.format("token_%s",token),String.valueOf(githubUser.getId()),expire, TimeUnit.SECONDS);
+
             User user=new User();
             user.setAccountId(baiduUser.getUserid())
-                    .setRole(RoleEnum.CUSTOMER.getCode())
-                    .setToken(token);
+                    .setRole(RoleEnum.CUSTOMER.getCode());
+
             if(baiduUser.getUsername()!=null){
                 user.setUsername(baiduUser.getUsername());
             }else{
@@ -126,13 +125,12 @@ public class Oauth2Controller {
                 user.setAvatarUrl("https://shuixin.oss-cn-beijing.aliyuncs.com/tian.png");
             }
 
-            Boolean crateOrUpdate = userService.crateOrUpdate(user);
-            if(crateOrUpdate){
-                return ResponseVo.success();
-            }else{
+            ResponseVo<User> userResponseVo = userService.crateOrUpdate(user);
+            if(userResponseVo.getStatus().equals(ResponseEnum.THIRD_PARTY_LOGIN_ERROR.getCode())){
                 return ResponseVo.error(ResponseEnum.THIRD_PARTY_LOGIN_BAI_DU_ERROR);
             }
-
+            response.addCookie(new Cookie("token",userResponseVo.getData().getToken()));
+            return userResponseVo;
         }else{
             //登录失败，请重新登录
             log.error("callback get github error,{}",baiduUser);

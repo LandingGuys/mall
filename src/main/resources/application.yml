@@ -2,10 +2,31 @@ server:
   port: 80
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: Lv1003@@
     url:  jdbc:mysql://106.75.109.78:3306/mall?characterEncoding=utf-8&useSSL=false
+    tomcat:
+      initial-size: 5
+      min-idle: 5
+      max-active: 100
+      validation-query: SELECT 1
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      max-wait: 60000
+      time-between-eviction-runs-millis: 30000
+  redis:
+    host: 106.75.109.78
+    port: 6379
+    password: 123456
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+    timeout: 5000
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
@@ -23,4 +44,5 @@ QQ_Redirect_uri: http://www.wast.club/qqcallback
 BaiDu_client_id: SBzm4VChESX3VQc7qEgP8DMO
 BaiDu_client_secret: zDtClO4KaarnzBXfeIPn9E98niblkNHu
 BaiDu_Redirect_uri: http://www.wast.club/baiducallback
+
 
