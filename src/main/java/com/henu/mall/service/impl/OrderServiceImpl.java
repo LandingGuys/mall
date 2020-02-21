@@ -49,6 +49,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     private OrderItemExtMapper orderItemExtMapper;
+
+    @Resource
+    private OrderItemMapper orderItemMapper;
     /**
      * 创建订单
      *
@@ -235,7 +238,20 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public ResponseVo<OrderVo> detail(Integer uid, Long orderNo) {
-        return null;
+        OrderExample orderExample = new OrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(orderNo);
+        List<Order> orderList = orderMapper.selectByExample(orderExample);
+        if(CollectionUtils.isEmpty(orderList) || !orderList.get(0).getUserId().equals(uid)){
+            return ResponseVo.error(ResponseEnum.ORDER_NOT_EXIST);
+        }
+        OrderItemExample example = new OrderItemExample();
+        example.createCriteria().andOrderNoEqualTo(orderNo)
+                .andUserIdEqualTo(uid);
+        List<OrderItem> orderItemList = orderItemMapper.selectByExample(example);
+
+        Shipping shipping = shippingMapper.selectByPrimaryKey(orderList.get(0).getShippingId());
+        OrderVo orderVo = buildOrderVo(orderList.get(0), orderItemList, shipping);
+        return ResponseVo.success(orderVo);
     }
 
     /**
@@ -247,6 +263,53 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public ResponseVo cancel(Integer uid, Long orderNo) {
-        return null;
+        OrderExample orderExample = new OrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(orderNo);
+        List<Order> orderList = orderMapper.selectByExample(orderExample);
+        if (CollectionUtils.isEmpty(orderList) || !orderList.get(0).getUserId().equals(uid)) {
+            return ResponseVo.error(ResponseEnum.ORDER_NOT_EXIST);
+        }
+        Order order = orderList.get(0);
+        //只有[未付款]订单可以取消，看自己公司业务
+        if (!order.getStatus().equals(OrderStatusEnum.NO_PAY.getCode())) {
+            return ResponseVo.error(ResponseEnum.ORDER_STATUS_ERROR);
+        }
+
+        order.setStatus(OrderStatusEnum.CANCELED.getCode());
+        order.setCloseTime(new Date());
+        int row = orderMapper.updateByPrimaryKeySelective(order);
+        if (row <= 0) {
+            return ResponseVo.error(ResponseEnum.ERROR);
+        }
+
+        return ResponseVo.success();
+    }
+
+    /**
+     * 支付后修改订单状态
+     *
+     * @param orderNo
+     */
+    @Override
+    public void paid(Long orderNo) {
+        OrderExample orderExample = new OrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(orderNo);
+        List<Order> orderList = orderMapper.selectByExample(orderExample);
+        if (CollectionUtils.isEmpty(orderList)) {
+            throw new RuntimeException(ResponseEnum.ORDER_NOT_EXIST.getDesc() + "订单id:" + orderNo);
+        }
+        Order order = orderList.get(0);
+        //只有[未付款]订单可以变成[已付款]，看自己公司业务
+        if (!order.getStatus().equals(OrderStatusEnum.NO_PAY.getCode())) {
+            throw new RuntimeException(ResponseEnum.ORDER_STATUS_ERROR.getDesc()+"订单id:" + orderNo);
+        }
+
+        order.setStatus(OrderStatusEnum.PAID.getCode());
+        order.setPaymentTime(new Date());
+        int row = orderMapper.updateByPrimaryKeySelective(order);
+        if (row <= 0) {
+            throw new RuntimeException("将订单更新为已支付状态失败，订单id:" + orderNo);
+        }
+
     }
 }

@@ -1,0 +1,53 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: Lv1003@@
+    url:  jdbc:mysql://106.75.109.78:3306/mall?characterEncoding=utf-8&useSSL=false
+    tomcat:
+      initial-size: 5
+      min-idle: 5
+      max-active: 100
+      validation-query: SELECT 1
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      max-wait: 60000
+      time-between-eviction-runs-millis: 30000
+  redis:
+    host: 39.106.112.85
+    port: 6379
+    password: Lv1003@@
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+    timeout: 5000
+  rabbitmq:
+    addresses: 39.106.112.85
+    port: 5672
+    username: admin
+    password: Lv1003@@
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    # 控制台日志配置
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-aliases-package: com.henu.mall.pojo
+  mapper-locations: classpath:mapper/*.xml
+
+#qq
+QQ_client_id: 101802971
+QQ_client_secret: 772adebaf15b637a2d2e6aed6081895f
+QQ_Redirect_uri: http://www.wast.club/qqcallback
+
+#baidu
+BaiDu_client_id: SBzm4VChESX3VQc7qEgP8DMO
+BaiDu_client_secret: zDtClO4KaarnzBXfeIPn9E98niblkNHu
+BaiDu_Redirect_uri: http://www.wast.club/baiducallback
+
+

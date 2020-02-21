@@ -10,6 +10,7 @@ import com.henu.mall.vo.CartVo;
 import com.henu.mall.vo.ResponseVo;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import javax.annotation.Resource;
@@ -24,7 +25,7 @@ public class CartServiceImplTest extends MallApplicationTests {
     private CartService cartService;
     private  Integer uid =1;
     private Integer productId =28;
-    @Test
+    @Before
     public void add() {
         log.info("【新增购物车...】");
         CartAddRequest form = new CartAddRequest();

@@ -43,7 +43,8 @@ public interface OrderService {
     ResponseVo cancel(Integer uid,Long orderNo);
 
     /**
-     * 支付订单
+     * 支付后修改订单状态
      */
+    void paid(Long orderNo);
 
 }

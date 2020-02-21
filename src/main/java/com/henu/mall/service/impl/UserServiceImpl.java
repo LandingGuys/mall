@@ -71,17 +71,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseVo login(User user) {
-        //判断邮箱，密码是否一致
+        //判断用户名，密码是否一致
+        // TODO 改成邮箱 手机号 token redis
         UserExample example = new UserExample();
-        example.createCriteria().andEmailEqualTo(user.getEmail())
+        example.createCriteria().andUsernameEqualTo(user.getUsername())
                 .andPasswordEqualTo(DigestUtils.md5DigestAsHex(
                         user.getPassword().getBytes(StandardCharsets.UTF_8)));
         List<User> users = userMapper.selectByExample(example);
         if(users.size() != 0){
-            //token存入redis
-            String token = tokenGenerator.generate(users.get(0).getAccountId());
-            users.get(0).setToken(token);
-            TokeUtil.setToken(users.get(0).getUsername(),redisUtil,token);
+            // TODO token redis
+//            //token存入redis
+//            String token = tokenGenerator.generate(users.get(0).getAccountId());
+//            users.get(0).setToken(token);
+//            TokeUtil.setToken(users.get(0).getUsername(),redisUtil,token);
             return ResponseVo.success(users.get(0));
         }
         return ResponseVo.error(ResponseEnum.PASSWORD_ERROR);

@@ -27,7 +27,7 @@
     from mall_shipping
     <where>
       <if test="shippingIdSet.size() > 0">
-        and order_no in
+        and id in
         <foreach collection="shippingIdSet" item="item" index="index" open="(" separator="," close=")">
           #{item}
         </foreach>
