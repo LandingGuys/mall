@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henu.mall.mapper.UserExtMapper">
+  <resultMap id="BaseResultMap" type="com.henu.mall.pojo.User">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="account_id" jdbcType="VARCHAR" property="accountId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="question" jdbcType="VARCHAR" property="question" />
+    <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
+    <result column="answer" jdbcType="VARCHAR" property="answer" />
+    <result column="role" jdbcType="INTEGER" property="role" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, account_id, username, password, email, phone, question, avatar_url, answer, role, 
+    create_time, update_time
+  </sql>
+  <select id="selectUserListByCondition" parameterType="com.henu.mall.request.UserSelectCondition" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from mall_user
+    <where>
+        <if test="query !=null and query !=''">
+          and concat(`username`,`email`,`phone`) like concat (concat ('%',#{query},'%'))
+        </if>
+    </where>
+    order by id
+  </select>
+
+
+
+</mapper>

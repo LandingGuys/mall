@@ -5,17 +5,18 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: Lv1003@@
-    url:  jdbc:mysql://106.75.109.78:3306/mall?characterEncoding=utf-8&useSSL=false
-    tomcat:
-      initial-size: 5
-      min-idle: 5
-      max-active: 100
-      validation-query: SELECT 1
-      test-while-idle: true
-      test-on-borrow: false
-      test-on-return: false
-      max-wait: 60000
-      time-between-eviction-runs-millis: 30000
+    url:  jdbc:mysql://39.106.112.85:3306/yymall?characterEncoding=utf-8&useSSL=false
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: DatabookHikariCP
+      max-lifetime: 120000
+      connection-test-query: SELECT 1
+      connection-timeout: 30000
+
   redis:
     host: 39.106.112.85
     port: 6379
@@ -49,5 +50,10 @@ QQ_Redirect_uri: http://www.wast.club/qqcallback
 BaiDu_client_id: SBzm4VChESX3VQc7qEgP8DMO
 BaiDu_client_secret: zDtClO4KaarnzBXfeIPn9E98niblkNHu
 BaiDu_Redirect_uri: http://www.wast.club/baiducallback
+#oss
+endpoint: http://oss-cn-beijing.aliyuncs.com
+accessKeyId: LTAIlAHWpVWuoRQH
+accessKeySecret: Zg6oKK5WFdMiN8IEmKPAUWAvGUxfzG
+bucketName: shuixin
 
 

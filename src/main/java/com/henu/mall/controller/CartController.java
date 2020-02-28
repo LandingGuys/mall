@@ -1,11 +1,13 @@
 package com.henu.mall.controller;
 
-import com.henu.mall.pojo.User;
+import com.henu.mall.annotation.AuthIgnore;
 import com.henu.mall.request.CartAddRequest;
+import com.henu.mall.request.CartSelectAllRequest;
 import com.henu.mall.request.CartUpdateRequest;
 import com.henu.mall.service.CartService;
 import com.henu.mall.vo.CartVo;
 import com.henu.mall.vo.ResponseVo;
+import com.henu.mall.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,47 +21,48 @@ import javax.validation.Valid;
  */
 @Slf4j
 @RestController
+@AuthIgnore
 public class CartController {
     @Resource
     private CartService cartService;
 
     @GetMapping("/carts")
     public ResponseVo<CartVo> list(HttpSession session){
-        User user = (User)session.getAttribute("user");
+        UserVo user =(UserVo) session.getAttribute("user");
         return cartService.list(user.getId());
     }
 
     @PostMapping("/carts")
     public ResponseVo<CartVo> add(@Valid @RequestBody CartAddRequest cartAddRequest,
                                   HttpSession session){
-        User user = (User)session.getAttribute("user");
+        UserVo user =(UserVo) session.getAttribute("user");
         return cartService.add(user.getId(),cartAddRequest);
     }
-    @PutMapping("/carts/{productId}")
-    public ResponseVo<CartVo> update(@PathVariable Integer productId,@RequestBody CartUpdateRequest cartUpdateRequest,
+    @PutMapping("/carts")
+    public ResponseVo<CartVo> update(@RequestBody CartUpdateRequest cartUpdateRequest,
                                      HttpSession session){
-        User user = (User)session.getAttribute("user");
-        return cartService.update(user.getId(),productId,cartUpdateRequest);
+        UserVo user =(UserVo) session.getAttribute("user");
+        return cartService.update(user.getId(),cartUpdateRequest);
     }
     @DeleteMapping("/carts/{productId}")
     public ResponseVo<CartVo> delete(@PathVariable Integer productId,HttpSession session){
-        User user = (User)session.getAttribute("user");
+        UserVo user =(UserVo) session.getAttribute("user");
         return cartService.delete(user.getId(),productId);
     }
 
     @PutMapping("/carts/selectAll")
-    public ResponseVo<CartVo> selectAll(HttpSession session){
-        User user = (User)session.getAttribute("user");
-        return cartService.selectAll(user.getId());
+    public ResponseVo<CartVo> isSelectAll(HttpSession session, @RequestBody CartSelectAllRequest cartSelectAllRequest){
+        UserVo user =(UserVo) session.getAttribute("user");
+        return cartService.isSelectAll(user.getId(),cartSelectAllRequest.getSelectAll());
     }
-    @PutMapping("/carts/unSelectAll")
-    public ResponseVo<CartVo> unSelectAll(HttpSession session){
-        User user = (User)session.getAttribute("user");
-        return cartService.unSelectAll(user.getId());
-    }
+//    @PutMapping("/carts/unSelectAll")
+//    public ResponseVo<CartVo> unSelectAll(HttpSession session){
+//        UserVo user =(UserVo) session.getAttribute("user");
+//        return cartService.unSelectAll(user.getId());
+//    }
     @GetMapping("/carts/products/sum")
     public ResponseVo<Integer> sum(HttpSession session){
-        User user = (User)session.getAttribute("user");
+        UserVo user =(UserVo) session.getAttribute("user");
         return cartService.productSum(user.getId());
     }
 }

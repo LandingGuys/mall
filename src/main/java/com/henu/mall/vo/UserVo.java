@@ -1,29 +1,26 @@
-package com.henu.mall.pojo;
+package com.henu.mall.vo;
 
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 import java.util.Date;
+
+/**
+ * @author lv
+ * @date 2020-02-21 23:24
+ */
 @Data
-@Accessors(chain = true)
-public class User {
+public class UserVo {
     private Integer id;
 
     private String accountId;
 
     private String username;
 
-    private String password;
-
     private String email;
 
     private String phone;
 
-    private String question;
-
     private String avatarUrl;
-
-    private String answer;
 
     private Integer role;
 
@@ -31,5 +28,5 @@ public class User {
 
     private Date updateTime;
 
-
+    private String token;
 }

@@ -21,6 +21,14 @@ public enum ResponseEnum {
 
     EMAIL_EXIST(4, "邮箱已存在"),
 
+    ADD_USER_ERROR(5,"添加用户失败"),
+
+    USER_NOT_EXIST(6,"用户不存在"),
+
+    UPDATE_USER_ERROR(7,"修改用户失败"),
+
+    UPLOAD_USER_ERROR(8,"修改头像失败"),
+
     TOKEN_EXPIRE_ERROR(9,"Token过期，请重新登录"),
 
     NEED_LOGIN(10, "用户未登录, 请先登录"),
@@ -54,6 +62,10 @@ public enum ResponseEnum {
     ORDER_NOT_EXIST(24,"订单不存在"),
 
     ORDER_STATUS_ERROR(25,"订单状态有误"),
+
+    FILE_UPLOAD_ERROR(26,"图片上传失败"),
+
+    USER_DELETE_ERROR(27,"用户删除失败"),
 
     ;
 

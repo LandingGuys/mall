@@ -207,6 +207,7 @@ public class OrderServiceImpl implements OrderService {
     public ResponseVo<PageInfo> list(Integer uid, Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum,pageSize);
         OrderExample example = new OrderExample();
+        example.setOrderByClause("`create_time` DESC");
         example.createCriteria().andUserIdEqualTo(uid);
         List<Order> orderList = orderMapper.selectByExample(example);
         Set<Long> orderNoSet = orderList.stream().map(Order::getOrderNo).collect(Collectors.toSet());

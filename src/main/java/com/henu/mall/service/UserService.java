@@ -1,7 +1,12 @@
 package com.henu.mall.service;
 
+import com.github.pagehelper.PageInfo;
 import com.henu.mall.pojo.User;
+import com.henu.mall.request.UserAddRequest;
+import com.henu.mall.request.UserSelectCondition;
+import com.henu.mall.request.UserUpdateRequest;
 import com.henu.mall.vo.ResponseVo;
+import com.henu.mall.vo.UserVo;
 
 /**
  * @author lv
@@ -11,21 +16,58 @@ public interface UserService {
     /**
      * 第三方注册登录
      */
-    ResponseVo<User> crateOrUpdate(User user);
+    ResponseVo<UserVo> crateOrUpdate(User user);
 
     /**
      * 邮箱、手机号注册
      * @param user
      * @return
      */
-    ResponseVo<User> register(User user);
+    ResponseVo<UserVo> register(User user);
     /**
      * 邮箱、手机号登录
      */
-   ResponseVo<User> login(User user);
+   ResponseVo<UserVo> login(User user);
+
+//    /**
+//     * 获取用户信息
+//     */
+//    ResponseVo<User> getUserInfo(String accountId);
 
     /**
-     * 获取用户信息
+     * 根据查询条件获取用户列表
+     * @param condition
+     * @param
+     * @param
+     * @return
      */
-    ResponseVo<User> getUserInfo(String accountId);
+    ResponseVo<PageInfo> getUserListByCondition(UserSelectCondition condition);
+
+    /**
+     *根据详细信息添加用户
+     * @param request
+     * @return
+     */
+    ResponseVo<UserVo> addUser(UserAddRequest request);
+
+    /**
+     * 根据用户id 修改信息
+     * @param userId
+     * @return
+     */
+    ResponseVo updateUser(Integer userId, UserUpdateRequest request);
+
+    /**
+     * 根据用户id 获取用户信息
+     * @param userId
+     * @return
+     */
+    ResponseVo<UserVo> getUserInfo(Integer userId);
+
+    /**
+     * 根据用户id 删除用户
+     * @param userId
+     * @return
+     */
+    ResponseVo delete(Integer userId);
 }

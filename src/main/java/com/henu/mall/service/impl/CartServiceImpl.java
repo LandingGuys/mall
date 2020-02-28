@@ -135,11 +135,11 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public ResponseVo<CartVo> update(Integer uid, Integer productId, CartUpdateRequest cartUpdateRequest) {
+    public ResponseVo<CartVo> update(Integer uid,CartUpdateRequest cartUpdateRequest) {
         //购物车redisKey
         String cartKey=String.format(MallConsts.CART_REDIS_KEY_TEMPLATE,uid);
         //先判断redis 里面是否有该购物车数据
-        Object value = redisUtil.hGet(cartKey,String.valueOf(productId));
+        Object value = redisUtil.hGet(cartKey,String.valueOf(cartUpdateRequest.getProductId()));
         if(value == null){
             //无，报错购物车中无该商品
             return ResponseVo.error(ResponseEnum.CART_PRODUCT_NOT_EXIST);
@@ -152,7 +152,7 @@ public class CartServiceImpl implements CartService {
         if (cartUpdateRequest.getSelected() != null) {
             cart.setProductSelected(cartUpdateRequest.getSelected());
         }
-        redisUtil.hPut(cartKey,String.valueOf(productId),JSON.toJSONString(cart));
+        redisUtil.hPut(cartKey,String.valueOf(cartUpdateRequest.getProductId()),JSON.toJSONString(cart));
         return list(uid);
     }
 
@@ -172,29 +172,29 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public ResponseVo<CartVo> selectAll(Integer uid) {
+    public ResponseVo<CartVo> isSelectAll(Integer uid,Boolean selectAll) {
         String cartKey=String.format(MallConsts.CART_REDIS_KEY_TEMPLATE,uid);
 
         for (Cart cart : listForCart(uid)) {
-            cart.setProductSelected(true);
+            cart.setProductSelected(selectAll);
             redisUtil.hPut(cartKey,String.valueOf(cart.getProductId()),JSON.toJSONString(cart));
         }
 
         return list(uid);
     }
 
-    @Override
-    public ResponseVo<CartVo> unSelectAll(Integer uid) {
-        String cartKey=String.format(MallConsts.CART_REDIS_KEY_TEMPLATE,uid);
-
-        for (Cart cart : listForCart(uid)) {
-            cart.setProductSelected(false);
-            redisUtil.hPut(cartKey,String.valueOf(cart.getProductId()),JSON.toJSONString(cart));
-        }
-
-        return list(uid);
-
-    }
+//    @Override
+//    public ResponseVo<CartVo> unSelectAll(Integer uid) {
+//        String cartKey=String.format(MallConsts.CART_REDIS_KEY_TEMPLATE,uid);
+//
+//        for (Cart cart : listForCart(uid)) {
+//            cart.setProductSelected(false);
+//            redisUtil.hPut(cartKey,String.valueOf(cart.getProductId()),JSON.toJSONString(cart));
+//        }
+//
+//        return list(uid);
+//
+//    }
 
     @Override
     public ResponseVo<Integer> productSum(Integer uid) {

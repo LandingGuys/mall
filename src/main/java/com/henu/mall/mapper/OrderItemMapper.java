@@ -2,10 +2,12 @@ package com.henu.mall.mapper;
 
 import com.henu.mall.pojo.OrderItem;
 import com.henu.mall.pojo.OrderItemExample;
-import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
+import java.util.List;
+@Mapper
 public interface OrderItemMapper {
     long countByExample(OrderItemExample example);
 

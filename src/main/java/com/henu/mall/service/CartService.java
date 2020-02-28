@@ -18,13 +18,13 @@ public interface CartService {
 
      ResponseVo<CartVo> add(Integer uid, CartAddRequest cartAddRequest);
 
-     ResponseVo<CartVo> update(Integer uid, Integer productId, CartUpdateRequest cartUpdateRequest);
+     ResponseVo<CartVo> update(Integer uid,CartUpdateRequest cartUpdateRequest);
 
      ResponseVo<CartVo> delete(Integer uid,Integer productId);
 
-     ResponseVo<CartVo> selectAll(Integer uid);
+     ResponseVo<CartVo> isSelectAll(Integer uid,Boolean selectAll);
 
-     ResponseVo<CartVo> unSelectAll(Integer uid);
+//     ResponseVo<CartVo> unSelectAll(Integer uid);
 
      ResponseVo<Integer> productSum(Integer uid);
 

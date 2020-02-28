@@ -48,4 +48,10 @@ public class MallExceptionHandler {
         Objects.requireNonNull(bindingResult.getFieldError());
         return ResponseVo.error(ResponseEnum.PARAM_ERROR,bindingResult.getFieldError().getField()+ "" +bindingResult.getFieldError().getDefaultMessage());
     }
+    @ExceptionHandler(FileUploadException.class)
+    @ResponseBody
+    public ResponseVo fileUploadHandle() {
+        return ResponseVo.error(ResponseEnum.FILE_UPLOAD_ERROR);
+    }
+
 }

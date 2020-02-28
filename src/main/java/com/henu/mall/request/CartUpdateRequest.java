@@ -9,6 +9,8 @@ import lombok.Data;
 @Data
 public class CartUpdateRequest {
 
+    private Integer productId;
+
     private Integer quantity;
 
     private Boolean selected;

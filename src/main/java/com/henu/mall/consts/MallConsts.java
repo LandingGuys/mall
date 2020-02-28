@@ -13,6 +13,10 @@ public class MallConsts {
 
     public static final String USER_TOKEN_KEY_TEMPLATE = "token_%s";
 
+    public static final String USER_TOKEN_KEY_RESET_TEMPLATE = "token_rest_%s";
+
+    public static  final String HTTP_HEADER_NAME = "Authorization";
+
     public static final Integer USER_TOKEN_KEY_EXPIRE_TIME = 60 * 10;
 
     public static final Integer USER_TOKEN_KEY_RESET_TIME = 1000 * 100;

@@ -48,7 +48,7 @@ public class CartServiceImplTest extends MallApplicationTests {
         CartUpdateRequest request =new CartUpdateRequest();
         request.setQuantity(2);
         request.setSelected(false);
-        ResponseVo<CartVo> responseVo = cartService.update(uid,productId,request);
+        ResponseVo<CartVo> responseVo = cartService.update(uid,request);
         log.info("list={}",JSON.toJSONString(responseVo));
         Assert.assertEquals(ResponseEnum.SUCCESS.getCode(), responseVo.getStatus());
     }
@@ -63,14 +63,14 @@ public class CartServiceImplTest extends MallApplicationTests {
 
     @Test
     public void selectAll() {
-        ResponseVo<CartVo> responseVo = cartService.selectAll(uid);
+        ResponseVo<CartVo> responseVo = cartService.isSelectAll(uid,true);
         log.info("result={}", JSON.toJSONString(responseVo));
         Assert.assertEquals(ResponseEnum.SUCCESS.getCode(), responseVo.getStatus());
     }
 
     @Test
     public void unSelectAll() {
-        ResponseVo<CartVo> responseVo = cartService.unSelectAll(uid);
+        ResponseVo<CartVo> responseVo = cartService.isSelectAll(uid,false);
         log.info("result={}", JSON.toJSONString(responseVo));
         Assert.assertEquals(ResponseEnum.SUCCESS.getCode(), responseVo.getStatus());
     }

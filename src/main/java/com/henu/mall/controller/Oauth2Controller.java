@@ -6,18 +6,19 @@ import com.henu.mall.dto.QQAccessTokenDTO;
 import com.henu.mall.dto.QQUser;
 import com.henu.mall.enums.ResponseEnum;
 import com.henu.mall.enums.RoleEnum;
+import com.henu.mall.manager.AuthManager;
 import com.henu.mall.pojo.User;
 import com.henu.mall.provider.BaiDuProvider;
 import com.henu.mall.provider.QQProvider;
 import com.henu.mall.service.UserService;
 import com.henu.mall.vo.ResponseVo;
+import com.henu.mall.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -47,6 +48,9 @@ public class Oauth2Controller {
 
     @Resource
     private UserService userService;
+    @Resource
+    private AuthManager authManager;
+
     @GetMapping("/oauth/{req}")
     public void oauth(@PathVariable("req") String req, HttpServletResponse response) throws IOException{
         if("qq".equals(req)){
@@ -71,7 +75,7 @@ public class Oauth2Controller {
 
     }
     @GetMapping("/qqcallback")
-    public ResponseVo<User> qqCallback(@RequestParam("code") String code,
+    public ResponseVo<UserVo> qqCallback(@RequestParam("code") String code,
                                  HttpServletResponse response){
         QQAccessTokenDTO qqAccessTokenDTO = new QQAccessTokenDTO("authorization_code", QQClientId, code, QQClientSecret, QQRedirectUri);
         String accessToken= QQProvider.getAccessToken(qqAccessTokenDTO);
@@ -88,13 +92,14 @@ public class Oauth2Controller {
         if(StringUtils.isNoneBlank(qqUser.getFigureurl_qq_1())){
             user.setAvatarUrl(qqUser.getFigureurl_qq_1());
         }else{
-            user.setAvatarUrl("https://shuixin.oss-cn-beijing.aliyuncs.com/tian.png");
+            user.setAvatarUrl("http://shuixin.oss-cn-beijing.aliyuncs.com/moren.jpg");
         }
-        ResponseVo<User> userResponseVo = userService.crateOrUpdate(user);
+        ResponseVo<UserVo> userResponseVo = userService.crateOrUpdate(user);
         if(userResponseVo.getStatus().equals(ResponseEnum.THIRD_PARTY_LOGIN_ERROR.getCode())){
             return ResponseVo.error(ResponseEnum.THIRD_PARTY_LOGIN_QQ_ERROR);
         }
-        response.addCookie(new Cookie("token",userResponseVo.getData().getToken()));
+        authManager.login(userResponseVo.getData());
+        //response.addCookie(new Cookie("token",userResponseVo.getData().getToken()));
         return userResponseVo;
     }
     @PostMapping("/weiBoCallBack")
@@ -102,7 +107,7 @@ public class Oauth2Controller {
         return null;
     }
     @GetMapping("/baiducallback")
-    public ResponseVo baiDuCallBack(@RequestParam("code") String code,
+    public ResponseVo<UserVo> baiDuCallBack(@RequestParam("code") String code,
                                     HttpServletResponse response){
         BaiDuAccessTokenDTO baiDuAccessTokenDTO = new BaiDuAccessTokenDTO("authorization_code", BaiDuClientId, code, BaiDuClientSecret, BaiDuRedirectUri);
         String accessToken = BaiDuProvider.getAccessToken(baiDuAccessTokenDTO);
@@ -122,14 +127,14 @@ public class Oauth2Controller {
             if(baiduUser.getPortrait()!=null){
                 user.setAvatarUrl("http://tb.himg.baidu.com/sys/portrait/item/"+baiduUser.getPortrait());
             }else{
-                user.setAvatarUrl("https://shuixin.oss-cn-beijing.aliyuncs.com/tian.png");
+                user.setAvatarUrl("http://shuixin.oss-cn-beijing.aliyuncs.com/moren.jpg");
             }
 
-            ResponseVo<User> userResponseVo = userService.crateOrUpdate(user);
+            ResponseVo<UserVo> userResponseVo = userService.crateOrUpdate(user);
             if(userResponseVo.getStatus().equals(ResponseEnum.THIRD_PARTY_LOGIN_ERROR.getCode())){
                 return ResponseVo.error(ResponseEnum.THIRD_PARTY_LOGIN_BAI_DU_ERROR);
             }
-            response.addCookie(new Cookie("token",userResponseVo.getData().getToken()));
+            authManager.login(userResponseVo.getData());
             return userResponseVo;
         }else{
             //登录失败，请重新登录

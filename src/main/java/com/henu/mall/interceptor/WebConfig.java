@@ -14,11 +14,9 @@ import javax.annotation.Resource;
 public class WebConfig implements WebMvcConfigurer {
 
     @Resource
-    private SessionInterceptor sessionInterceptor;
+    private AuthorizationInterceptor authorizationInterceptor;
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(sessionInterceptor).addPathPatterns("/**")
-            .excludePathPatterns("/user/register","/user/login","/oauth/*","/error"
-            ,"/products/*","/products");
+        registry.addInterceptor(authorizationInterceptor).addPathPatterns("/**");
     }
 }
