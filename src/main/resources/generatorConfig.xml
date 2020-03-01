@@ -14,7 +14,7 @@
             <property name="suppressAllComments" value="true"></property>
         </commentGenerator>
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://106.75.109.78:3306/mall"
+                        connectionURL="jdbc:mysql://39.106.112.85:3306/yymall"
                         userId="root"
                         password="Lv1003@@">
         </jdbcConnection>

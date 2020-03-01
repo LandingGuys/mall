@@ -2,13 +2,10 @@ package com.henu.mall.mapper;
 
 import com.henu.mall.pojo.Product;
 import com.henu.mall.pojo.ProductExample;
-import org.apache.ibatis.annotations.Mapper;
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
-import java.util.List;
-
-@Mapper
 public interface ProductMapper {
     long countByExample(ProductExample example);
 

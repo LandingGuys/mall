@@ -44,11 +44,7 @@ public class ShippingServiceImpl implements ShippingService {
         }
         Map<String,Integer> map =new HashMap<>();
         map.put("shippingId",shipping.getId());
-
-        ResponseVo.success(map);
-
-
-        return null;
+        return ResponseVo.success(map);
     }
 
     /**

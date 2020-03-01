@@ -2,13 +2,10 @@ package com.henu.mall.mapper;
 
 import com.henu.mall.pojo.PayInfo;
 import com.henu.mall.pojo.PayInfoExample;
-import org.apache.ibatis.annotations.Mapper;
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
-import java.util.List;
-
-@Mapper
 public interface PayInfoMapper {
     long countByExample(PayInfoExample example);
 

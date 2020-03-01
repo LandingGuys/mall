@@ -2,7 +2,7 @@ package com.henu.mall.request;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 /**
  * @author lv
@@ -10,6 +10,13 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 public class OrderCreateRequest {
-    @NotNull
-    private Integer shippingId;
+    @NotBlank(message ="收货人不能为空")
+    private String receiverName;
+
+    @NotBlank(message ="收货人联系方式不能为空")
+    private String receiverPhone;
+
+    @NotBlank(message ="收货人地址不能为空")
+    private String receiverAddress;
+
 }

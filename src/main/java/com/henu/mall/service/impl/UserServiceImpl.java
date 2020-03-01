@@ -215,6 +215,7 @@ public class UserServiceImpl implements UserService {
             return ResponseVo.error(ResponseEnum.USER_NOT_EXIST);
         }
         User user =new User();
+//        BeanUtils.copyProperties(userSelect,user);
         BeanUtils.copyProperties(request,user);
         // 修改用户前username,email的验证 （验证除自己username,email 之外是否还有 已存在的）
         if(!user.getUsername().equals(userSelect.getUsername()) ){
@@ -235,6 +236,25 @@ public class UserServiceImpl implements UserService {
             return ResponseVo.error(ResponseEnum.UPDATE_USER_ERROR);
         }
         return ResponseVo.success();
+    }
+
+    @Override
+    public ResponseVo<UserVo> updateUserImage(Integer userId, UserUpdateRequest request) {
+        User userSelect = userMapper.selectByPrimaryKey(userId);
+        if(userSelect == null){
+            return ResponseVo.error(ResponseEnum.USER_NOT_EXIST);
+        }
+        User user = new User();
+        user.setAvatarUrl(request.getAvatarUrl());
+        user.setId(userId);
+        int row = userMapper.updateByPrimaryKeySelective(user);
+        if(row <= 0){
+           return ResponseVo.error(ResponseEnum.UPLOAD_USER_ERROR);
+        }
+        User userDb = userMapper.selectByPrimaryKey(userId);
+        UserVo userVo =new UserVo();
+        BeanUtils.copyProperties(userDb,userVo);
+        return ResponseVo.success(userVo);
     }
 
     @Override

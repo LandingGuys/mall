@@ -60,6 +60,14 @@ public class UserController {
         }
         return ResponseVo.success(user);
     }
+    @PutMapping("/user")
+    @AuthIgnore
+    public ResponseVo<UserVo> updateUser(@RequestBody UserUpdateRequest request,HttpSession session){
+        UserVo user =(UserVo) session.getAttribute("user");
+        ResponseVo responseVo = userService.updateUserImage(user.getId(), request);
+        session.setAttribute("user", responseVo.getData());
+        return responseVo;
+    }
     @PostMapping("/user/logout")
     public ResponseVo logout(HttpSession session){
         session.removeAttribute("user");

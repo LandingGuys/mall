@@ -51,11 +51,19 @@ public interface UserService {
     ResponseVo<UserVo> addUser(UserAddRequest request);
 
     /**
-     * 根据用户id 修改信息
+     * 根据用户id 修改信息 username email 必传
      * @param userId
      * @return
      */
     ResponseVo updateUser(Integer userId, UserUpdateRequest request);
+
+    /**
+     * 根据用户id 修改头像
+     * @param userId
+     * @param request
+     * @return
+     */
+    ResponseVo updateUserImage(Integer userId,UserUpdateRequest request);
 
     /**
      * 根据用户id 获取用户信息

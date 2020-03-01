@@ -1,6 +1,5 @@
 package com.henu.mall.vo;
 
-import com.henu.mall.pojo.Shipping;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -34,9 +33,11 @@ public class OrderVo {
 
     private Date createTime;
 
+    private String receiverName;
+
+    private String receiverPhone;
+
+    private String receiverAddress;
+
     private List<OrderItemVo> orderItemVoList;
-
-    private Integer shippingId;
-
-    private Shipping shippingVo;
 }

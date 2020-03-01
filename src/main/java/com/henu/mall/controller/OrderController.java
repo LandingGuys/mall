@@ -27,7 +27,7 @@ public class OrderController {
     public ResponseVo<OrderVo> create(@Valid @RequestBody OrderCreateRequest request,
                                       HttpSession session){
         UserVo user =(UserVo) session.getAttribute("user");
-        return orderService.create(user.getId(),request.getShippingId());
+        return orderService.create(user.getId(),request);
     }
     @GetMapping("/user/orders")
     public ResponseVo<PageInfo> list( @RequestParam(required = false,defaultValue = "1") Integer pageNum,

@@ -2,13 +2,17 @@ package com.henu.mall.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.henu.mall.consts.MQConstant;
+import com.henu.mall.consts.MallConsts;
 import com.henu.mall.enums.OrderStatusEnum;
 import com.henu.mall.enums.PaymentTypeEnum;
 import com.henu.mall.enums.ResponseEnum;
 import com.henu.mall.enums.SaleEnum;
 import com.henu.mall.mapper.*;
 import com.henu.mall.pojo.*;
+import com.henu.mall.request.OrderCreateRequest;
 import com.henu.mall.service.CartService;
+import com.henu.mall.service.MessageService;
 import com.henu.mall.service.OrderService;
 import com.henu.mall.vo.OrderItemVo;
 import com.henu.mall.vo.OrderVo;
@@ -29,11 +33,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class OrderServiceImpl implements OrderService {
-    @Resource
-    private ShippingMapper shippingMapper;
-
-    @Resource
-    private ShippingExtMapper shippingExtMapper;
 
     @Resource
     private CartService cartService;
@@ -52,26 +51,30 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     private OrderItemMapper orderItemMapper;
+
+    @Resource
+    private MessageService messageService;
     /**
      * 创建订单
      *
      * @param uid
-     * @param shippingId
+     * @param request
      * @return
      */
     @Override
     @Transactional
-    public ResponseVo<OrderVo> create(Integer uid, Integer shippingId) {
-        //1.收货地质校验（后面也会需要收货地址）
-        ShippingExample example = new ShippingExample();
-        example.createCriteria().andUserIdEqualTo(uid)
-                .andIdEqualTo(shippingId);
+    public ResponseVo<OrderVo> create(Integer uid, OrderCreateRequest request) {
+//        //1.收货地质校验（后面也会需要收货地址）
+//        ShippingExample example = new ShippingExample();
+//        example.createCriteria().andUserIdEqualTo(uid)
+//                .andIdEqualTo(shippingId);
+//
+//        List<Shipping> shippings = shippingMapper.selectByExample(example);
+//        if(CollectionUtils.isEmpty(shippings)){
+//            return ResponseVo.error(ResponseEnum.SHIPPING_NOT_EXIST);
+//        }
 
-        List<Shipping> shippings = shippingMapper.selectByExample(example);
-        if(CollectionUtils.isEmpty(shippings)){
-            return ResponseVo.error(ResponseEnum.SHIPPING_NOT_EXIST);
-        }
-        //2.获取购物车，校验（是否有商品、库存）
+        //1.获取购物车，校验（是否有商品、库存）
         List<Cart> cartList = cartService.listForCart(uid).stream().filter(
                 Cart::getProductSelected
         ).collect(Collectors.toList());
@@ -114,7 +117,7 @@ public class OrderServiceImpl implements OrderService {
         }
         //计算总价 只计算被选中的
         //生成订单，入库 Order ,事务
-        Order order = buildOrder(uid, orderNo, shippingId, orderItemList);
+        Order order = buildOrder(uid, orderNo, request, orderItemList);
         int rowForOrder = orderMapper.insertSelective(order);
         if(rowForOrder <= 0){
             return ResponseVo.error(ResponseEnum.ERROR);
@@ -129,11 +132,13 @@ public class OrderServiceImpl implements OrderService {
             cartService.delete(uid, cart.getProductId());
         }
         //构造orderVo
-        OrderVo orderVo = buildOrderVo(order, orderItemList, shippings.get(0));
+        OrderVo orderVo = buildOrderVo(order, orderItemList);
+        // 设置订单超时时间 发消息到 mq (orderId) 设置过期时间 未在规定时间内完成支付，将自动取消订单
+        messageService.send(MQConstant.ORDER_QUEUE_NAME,orderVo.getOrderNo().toString(), MallConsts.ORDER_TIME_OUT_TIME);
         return ResponseVo.success(orderVo);
     }
 
-    private OrderVo buildOrderVo(Order order, List<OrderItem> orderItemList, Shipping shipping) {
+    private OrderVo buildOrderVo(Order order, List<OrderItem> orderItemList) {
         OrderVo orderVo = new OrderVo();
         BeanUtils.copyProperties(order, orderVo);
 
@@ -143,16 +148,10 @@ public class OrderServiceImpl implements OrderService {
             return orderItemVo;
         }).collect(Collectors.toList());
         orderVo.setOrderItemVoList(OrderItemVoList);
-
-        if (shipping != null) {
-            orderVo.setShippingId(shipping.getId());
-            orderVo.setShippingVo(shipping);
-        }
-
         return orderVo;
     }
 
-    private Order buildOrder(Integer uid, Long orderNo, Integer shippingId, List<OrderItem> orderItemList) {
+    private Order buildOrder(Integer uid, Long orderNo, OrderCreateRequest request, List<OrderItem> orderItemList) {
         BigDecimal payment = orderItemList.stream()
                 .map(OrderItem::getTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -160,7 +159,9 @@ public class OrderServiceImpl implements OrderService {
         Order order = new Order();
         order.setOrderNo(orderNo);
         order.setUserId(uid);
-        order.setShippingId(shippingId);
+        order.setReceiverName(request.getReceiverName());
+        order.setReceiverPhone(request.getReceiverPhone());
+        order.setReceiverAddress(request.getReceiverAddress());
         order.setPayment(payment);
         order.setPaymentType(PaymentTypeEnum.PAY_ONLINE.getCode());
         order.setPostage(0);
@@ -215,13 +216,13 @@ public class OrderServiceImpl implements OrderService {
         List<OrderItem> orderItemList = orderItemExtMapper.selectByOrderNoSet(orderNoSet);
         Map<Long, List<OrderItem>> orderItemMap = orderItemList.stream().collect(Collectors.groupingBy(OrderItem::getOrderNo));
 
-        Set<Integer> shippingIdSet = orderList.stream().map(Order::getShippingId).collect(Collectors.toSet());
-        List<Shipping> shippingList = shippingExtMapper.selectByIdSet(shippingIdSet);
-        Map<Integer, Shipping> shippingMap = shippingList.stream().collect(Collectors.toMap(Shipping::getId, shipping -> shipping));
+//        Set<Integer> shippingIdSet = orderList.stream().map(Order::getShippingId).collect(Collectors.toSet());
+//        List<Shipping> shippingList = shippingExtMapper.selectByIdSet(shippingIdSet);
+//        Map<Integer, Shipping> shippingMap = shippingList.stream().collect(Collectors.toMap(Shipping::getId, shipping -> shipping));
         List<OrderVo> orderVoList =new ArrayList<>();
 
         for (Order order : orderList) {
-            OrderVo orderVo = buildOrderVo(order, orderItemMap.get(order.getOrderNo()), shippingMap.get(order.getShippingId()));
+            OrderVo orderVo = buildOrderVo(order, orderItemMap.get(order.getOrderNo()));
             orderVoList.add(orderVo);
         }
 
@@ -250,8 +251,8 @@ public class OrderServiceImpl implements OrderService {
                 .andUserIdEqualTo(uid);
         List<OrderItem> orderItemList = orderItemMapper.selectByExample(example);
 
-        Shipping shipping = shippingMapper.selectByPrimaryKey(orderList.get(0).getShippingId());
-        OrderVo orderVo = buildOrderVo(orderList.get(0), orderItemList, shipping);
+//        Shipping shipping = shippingMapper.selectByPrimaryKey(orderList.get(0).getShippingId());
+        OrderVo orderVo = buildOrderVo(orderList.get(0), orderItemList);
         return ResponseVo.success(orderVo);
     }
 
@@ -304,7 +305,6 @@ public class OrderServiceImpl implements OrderService {
         if (!order.getStatus().equals(OrderStatusEnum.NO_PAY.getCode())) {
             throw new RuntimeException(ResponseEnum.ORDER_STATUS_ERROR.getDesc()+"订单id:" + orderNo);
         }
-
         order.setStatus(OrderStatusEnum.PAID.getCode());
         order.setPaymentTime(new Date());
         int row = orderMapper.updateByPrimaryKeySelective(order);
@@ -312,5 +312,30 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("将订单更新为已支付状态失败，订单id:" + orderNo);
         }
 
+    }
+
+    /**
+     * 超时自动取消订单
+     * @param orderNo
+     */
+    @Override
+    public void cancel(Long orderNo) {
+        //1.判断订单是否存在
+        OrderExample example = new OrderExample();
+        example.createCriteria().andOrderNoEqualTo(orderNo);
+        List<Order> orderList = orderMapper.selectByExample(example);
+        if(CollectionUtils.isEmpty(orderList)){
+            throw new RuntimeException(ResponseEnum.ORDER_NOT_EXIST.getDesc() + "订单id:" + orderNo);
+        }
+        //2.判断订单是否未支付并且订单未取消
+        Order order = orderList.get(0);
+        if(order.getStatus().equals(OrderStatusEnum.NO_PAY.getCode()) && !order.getStatus().equals(OrderStatusEnum.CANCELED)){
+            //3.将未支付并且未取消的订单取消
+            order.setStatus(OrderStatusEnum.CANCELED.getCode());
+            int row = orderMapper.updateByPrimaryKeySelective(order);
+            if(row <= 0){
+                throw new RuntimeException("将超时未支付订单自动取消失败，订单id:" + orderNo);
+            }
+        }
     }
 }

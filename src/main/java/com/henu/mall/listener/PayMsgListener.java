@@ -1,6 +1,7 @@
 package com.henu.mall.listener;
 
 import com.alibaba.fastjson.JSON;
+import com.henu.mall.consts.MQConstant;
 import com.henu.mall.pojo.PayInfo;
 import com.henu.mall.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,7 @@ import javax.annotation.Resource;
  * @date 2020-02-20 12:20
  */
 @Component
-@RabbitListener(queues = "payNotify")
+@RabbitListener(queues = MQConstant.PAY_QUEUE_NAME)
 @Slf4j
 public class PayMsgListener {
     @Resource
@@ -33,6 +34,5 @@ public class PayMsgListener {
         } catch (RuntimeException e){
             throw new RuntimeException("异步消息体错误");
         }
-
     }
 }

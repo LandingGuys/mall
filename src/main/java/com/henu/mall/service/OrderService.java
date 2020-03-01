@@ -1,6 +1,7 @@
 package com.henu.mall.service;
 
 import com.github.pagehelper.PageInfo;
+import com.henu.mall.request.OrderCreateRequest;
 import com.henu.mall.vo.OrderVo;
 import com.henu.mall.vo.ResponseVo;
 
@@ -12,10 +13,10 @@ public interface OrderService {
     /**
      * 创建订单
      * @param uid
-     * @param shippingId
+     * @param request
      * @return
      */
-    ResponseVo<OrderVo> create(Integer uid,Integer shippingId);
+    ResponseVo<OrderVo> create(Integer uid, OrderCreateRequest request);
 
     /**
      * 订单列表
@@ -46,5 +47,12 @@ public interface OrderService {
      * 支付后修改订单状态
      */
     void paid(Long orderNo);
+
+    /**
+     * 超时自动取消订单
+     * @param orderNo
+     * @return
+     */
+    void cancel(Long orderNo);
 
 }

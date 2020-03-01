@@ -5,7 +5,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: Lv1003@@
-    url:  jdbc:mysql://39.106.112.85:3306/mall?characterEncoding=utf-8&useSSL=false
+    url:  jdbc:mysql://39.106.112.85:3306/yymall?characterEncoding=utf-8&useSSL=false
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       minimum-idle: 5
@@ -36,7 +36,7 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
     # 控制台日志配置
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   type-aliases-package: com.henu.mall.pojo
   mapper-locations: classpath:mapper/*.xml
 
