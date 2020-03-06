@@ -46,9 +46,9 @@ QQ_client_secret: 772adebaf15b637a2d2e6aed6081895f
 QQ_Redirect_uri: http://www.wast.club/qqcallback
 
 #baidu
-BaiDu_client_id: SBzm4VChESX3VQc7qEgP8DMO
-BaiDu_client_secret: zDtClO4KaarnzBXfeIPn9E98niblkNHu
-BaiDu_Redirect_uri: http://www.wast.club/baiducallback
+BaiDu_client_id: Q7E0zSzseyw0n6x8FhDWwc1f
+BaiDu_client_secret: DqHG6U9DxHkeP63uCdEUUy42AXmWbsB6
+BaiDu_Redirect_uri: http://www.main.wast.club/baiducallback
 
 
 #oss

@@ -11,6 +11,7 @@ import com.henu.mall.pojo.User;
 import com.henu.mall.provider.BaiDuProvider;
 import com.henu.mall.provider.QQProvider;
 import com.henu.mall.service.UserService;
+import com.henu.mall.vo.OauthVo;
 import com.henu.mall.vo.ResponseVo;
 import com.henu.mall.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
@@ -51,28 +52,34 @@ public class Oauth2Controller {
     @Resource
     private AuthManager authManager;
 
-    @GetMapping("/oauth/{req}")
-    public void oauth(@PathVariable("req") String req, HttpServletResponse response) throws IOException{
+    @PostMapping("/oauth/{req}")
+    public ResponseVo<OauthVo> oauth(@PathVariable("req") String req, HttpServletResponse response) throws IOException{
+        OauthVo oauthVo =new OauthVo();
         if("qq".equals(req)){
             QQAccessTokenDTO qqAccessTokenDTO = new QQAccessTokenDTO();
             qqAccessTokenDTO.setClient_id(QQClientId)
                     .setRedirect_uri(QQRedirectUri);
             String requestQqOauthUrl = QQProvider.requestOauthUrl(qqAccessTokenDTO);
             //重定向
-            response.sendRedirect(requestQqOauthUrl);
+            //response.sendRedirect(requestQqOauthUrl);
+            oauthVo.setUrl(requestQqOauthUrl);
+            return ResponseVo.success(oauthVo);
+
         }else if ("baidu".equals(req)){
             BaiDuAccessTokenDTO baiDuAccessTokenDTO = new BaiDuAccessTokenDTO();
             baiDuAccessTokenDTO.setClient_id(BaiDuClientId)
                     .setRedirect_uri(BaiDuRedirectUri);
             String requestBaiDuOauthUrl = BaiDuProvider.requestOauthUrl(baiDuAccessTokenDTO);
             //重定向
-            response.sendRedirect(requestBaiDuOauthUrl);
+            //response.sendRedirect(requestBaiDuOauthUrl);
+            oauthVo.setUrl(requestBaiDuOauthUrl);
+            return ResponseVo.success(oauthVo);
         }else if("weixin".equals(req)){
 
         }else{
 
         }
-
+       return null;
     }
     @GetMapping("/qqcallback")
     public ResponseVo<UserVo> qqCallback(@RequestParam("code") String code,
