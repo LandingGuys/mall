@@ -4,10 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.henu.mall.consts.MQConstant;
 import com.henu.mall.consts.MallConsts;
-import com.henu.mall.enums.OrderStatusEnum;
-import com.henu.mall.enums.PaymentTypeEnum;
-import com.henu.mall.enums.ResponseEnum;
-import com.henu.mall.enums.SaleEnum;
+import com.henu.mall.enums.*;
 import com.henu.mall.mapper.*;
 import com.henu.mall.pojo.*;
 import com.henu.mall.request.OrderCreateRequest;
@@ -54,6 +51,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     private MessageService messageService;
+
+    @Resource
+    private UserMapper userMapper;
     /**
      * 创建订单
      *
@@ -206,10 +206,18 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public ResponseVo<PageInfo> list(Integer uid, Integer pageNum, Integer pageSize) {
+        User user = userMapper.selectByPrimaryKey(uid);
         PageHelper.startPage(pageNum,pageSize);
         OrderExample example = new OrderExample();
-        example.setOrderByClause("`create_time` DESC");
-        example.createCriteria().andUserIdEqualTo(uid);
+
+        //example.createCriteria().andUserIdEqualTo(uid);
+
+        if(!user.getRole().equals(RoleEnum.ADMIN.getCode())){
+            example.setOrderByClause("`create_time` DESC");
+            example.createCriteria().andUserIdEqualTo(uid);
+        }else{
+            example.setOrderByClause("`create_time` DESC");
+        }
         List<Order> orderList = orderMapper.selectByExample(example);
         Set<Long> orderNoSet = orderList.stream().map(Order::getOrderNo).collect(Collectors.toSet());
 
@@ -243,15 +251,24 @@ public class OrderServiceImpl implements OrderService {
         OrderExample orderExample = new OrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(orderNo);
         List<Order> orderList = orderMapper.selectByExample(orderExample);
-        if(CollectionUtils.isEmpty(orderList) || !orderList.get(0).getUserId().equals(uid)){
-            return ResponseVo.error(ResponseEnum.ORDER_NOT_EXIST);
+        User user = userMapper.selectByPrimaryKey(uid);
+        if(user.getRole().equals(RoleEnum.ADMIN.getCode())){
+            if(CollectionUtils.isEmpty(orderList)){
+                return ResponseVo.error(ResponseEnum.ORDER_NOT_EXIST);
+            }
+        }else{
+            if(CollectionUtils.isEmpty(orderList) || !orderList.get(0).getUserId().equals(uid)){
+                return ResponseVo.error(ResponseEnum.ORDER_NOT_EXIST);
+            }
         }
         OrderItemExample example = new OrderItemExample();
-        example.createCriteria().andOrderNoEqualTo(orderNo)
-                .andUserIdEqualTo(uid);
+        if(user.getRole().equals(RoleEnum.ADMIN.getCode())){
+            example.createCriteria().andOrderNoEqualTo(orderNo);
+        }else{
+            example.createCriteria().andOrderNoEqualTo(orderNo)
+                    .andUserIdEqualTo(uid);
+        }
         List<OrderItem> orderItemList = orderItemMapper.selectByExample(example);
-
-//        Shipping shipping = shippingMapper.selectByPrimaryKey(orderList.get(0).getShippingId());
         OrderVo orderVo = buildOrderVo(orderList.get(0), orderItemList);
         return ResponseVo.success(orderVo);
     }
@@ -268,8 +285,15 @@ public class OrderServiceImpl implements OrderService {
         OrderExample orderExample = new OrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(orderNo);
         List<Order> orderList = orderMapper.selectByExample(orderExample);
-        if (CollectionUtils.isEmpty(orderList) || !orderList.get(0).getUserId().equals(uid)) {
-            return ResponseVo.error(ResponseEnum.ORDER_NOT_EXIST);
+        User user = userMapper.selectByPrimaryKey(uid);
+        if(user.getRole().equals(RoleEnum.ADMIN.getCode())){
+            if(CollectionUtils.isEmpty(orderList)){
+                return ResponseVo.error(ResponseEnum.ORDER_NOT_EXIST);
+            }
+        }else{
+            if (CollectionUtils.isEmpty(orderList) || !orderList.get(0).getUserId().equals(uid)) {
+                return ResponseVo.error(ResponseEnum.ORDER_NOT_EXIST);
+            }
         }
         Order order = orderList.get(0);
         //只有[未付款]订单可以取消，看自己公司业务

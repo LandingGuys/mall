@@ -1,0 +1,9 @@
+@startuml
+
+:用户: as user
+user --> (注册)
+user -> (登录)
+user -> (修改个人信息)
+user -> (浏览商品)
+
+@enduml

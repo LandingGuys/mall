@@ -18,4 +18,14 @@ public interface CategoryService {
     ResponseVo<List<CategoryVO>> searchAll();
 
     void findSubCategoryId(Integer id, Set<Integer> resultSet);
+
+    /**
+     * 新增类目
+     */
+    ResponseVo add();
+
+    /**
+     * 删除类目
+     */
+    ResponseVo delete();
 }

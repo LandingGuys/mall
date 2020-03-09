@@ -67,6 +67,12 @@ public enum ResponseEnum {
 
     USER_DELETE_ERROR(27,"用户删除失败"),
 
+    PRODUCT_ADD_ERROR(28,"添加商品失败"),
+
+    PRODUCT_UPDATE_ERROR(29,"更新商品信息失败"),
+
+    PRODUCT_DELETE_ERROR(30,"删除商品失败"),
+
     ;
 
     private Integer code;

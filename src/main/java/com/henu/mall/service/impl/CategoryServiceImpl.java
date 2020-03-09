@@ -105,4 +105,20 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
+
+    /**
+     * 新增类目
+     */
+    @Override
+    public ResponseVo add() {
+        return null;
+    }
+
+    /**
+     * 删除类目
+     */
+    @Override
+    public ResponseVo delete() {
+        return null;
+    }
 }

@@ -2,9 +2,13 @@ package com.henu.mall.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.henu.mall.enums.ResponseEnum;
+import com.henu.mall.enums.SaleEnum;
 import com.henu.mall.mapper.ProductExtMapper;
 import com.henu.mall.mapper.ProductMapper;
 import com.henu.mall.pojo.Product;
+import com.henu.mall.request.ProductAddRequest;
+import com.henu.mall.request.ProductUpdateRequest;
 import com.henu.mall.service.CategoryService;
 import com.henu.mall.service.ProductService;
 import com.henu.mall.vo.ProductDetailVo;
@@ -75,5 +79,78 @@ public class ProductServiceImpl implements ProductService {
         productDetailVo.setStock(product.getStock()>100 ? 100 : product.getStock());
 
         return ResponseVo.success(productDetailVo);
+    }
+
+
+    /**
+     * 新增商品
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public ResponseVo add(ProductAddRequest request) {
+        Product product = new Product();
+        BeanUtils.copyProperties(request,product);
+        int row = productMapper.insertSelective(product);
+        if(row <= 0){
+            return ResponseVo.error(ResponseEnum.PRODUCT_ADD_ERROR);
+        }
+        return ResponseVo.success();
+    }
+
+    /**
+     * 更新商品
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public ResponseVo<ProductDetailVo> update(ProductUpdateRequest request) {
+        Product product = new Product();
+        BeanUtils.copyProperties(request,product);
+        Product selectByPrimaryKey = productMapper.selectByPrimaryKey(product.getId());
+        if(selectByPrimaryKey == null){
+            ResponseVo.error(ResponseEnum.PRODUCT_NOT_EXIST);
+        }
+        int row = productMapper.updateByPrimaryKeySelective(product);
+        if(row <= 0){
+            return ResponseVo.error(ResponseEnum.PRODUCT_UPDATE_ERROR);
+        }
+        return ResponseVo.success();
+    }
+
+//    /**
+//     * 商品上下架
+//     *
+//     * @param request
+//     * @return
+//     */
+//    @Override
+//    public ResponseVo<ProductDetailVo> UpOrOff(ProductUpdateRequest request) {
+//
+//        return null;
+//    }
+
+    /**
+     * 删除商品
+     *
+     * @param productId
+     * @return
+     */
+    @Override
+    public ResponseVo delete(Integer productId) {
+        Product product = productMapper.selectByPrimaryKey(productId);
+        if(product == null){
+            return ResponseVo.error(ResponseEnum.PRODUCT_NOT_EXIST);
+        }
+        Product deleteProduct = new Product();
+        deleteProduct.setId(productId);
+        deleteProduct.setStatus(DELETE.getStatus());
+        int row = productMapper.updateByPrimaryKeySelective(deleteProduct);
+        if( row <= 0){
+            return ResponseVo.error(ResponseEnum.PRODUCT_DELETE_ERROR);
+        }
+        return ResponseVo.success();
     }
 }

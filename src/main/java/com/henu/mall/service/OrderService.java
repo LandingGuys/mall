@@ -19,7 +19,7 @@ public interface OrderService {
     ResponseVo<OrderVo> create(Integer uid, OrderCreateRequest request);
 
     /**
-     * 订单列表
+     * 订单列表 用户
      * @param uid
      * @param pageNum
      * @param pageSize
@@ -28,7 +28,7 @@ public interface OrderService {
     ResponseVo<PageInfo> list(Integer uid, Integer pageNum, Integer pageSize);
 
     /**
-     * 订单详情
+     * 订单详情 用户
      * @param uid
      * @param orderNo
      * @return
