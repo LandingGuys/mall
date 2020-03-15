@@ -1,5 +1,7 @@
 package com.henu.mall.service;
 
+import com.henu.mall.request.CategoryAddRequest;
+import com.henu.mall.request.CategoryUpdateRequest;
 import com.henu.mall.vo.CategoryVO;
 import com.henu.mall.vo.ResponseVo;
 
@@ -22,10 +24,13 @@ public interface CategoryService {
     /**
      * 新增类目
      */
-    ResponseVo add();
+    ResponseVo add(CategoryAddRequest request);
 
     /**
-     * 删除类目
+     * 更新类目
+     * @param request
+     * @return
      */
-    ResponseVo delete();
+    ResponseVo update(CategoryUpdateRequest request);
+
 }

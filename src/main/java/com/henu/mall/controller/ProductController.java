@@ -1,11 +1,11 @@
 package com.henu.mall.controller;
 
+import com.henu.mall.request.ProductAddRequest;
+import com.henu.mall.request.ProductSelectCondition;
+import com.henu.mall.request.ProductUpdateRequest;
 import com.henu.mall.service.ProductService;
 import com.henu.mall.vo.ResponseVo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -30,5 +30,25 @@ public class ProductController {
     public ResponseVo detail(@PathVariable Integer productId){
         return productService.detail(productId);
     }
+
+
+    @PostMapping("/products")
+    public ResponseVo add(@RequestBody ProductAddRequest request){
+        return productService.add(request);
+    }
+    @DeleteMapping("/products")
+    public  ResponseVo delete(@RequestParam Integer productId){
+        return productService.delete(productId);
+    }
+    @PutMapping("/products")
+    public ResponseVo update(@RequestBody ProductUpdateRequest request){
+        return productService.update(request);
+    }
+    @GetMapping("/products/search")
+    public ResponseVo select(ProductSelectCondition condition){
+        return productService.getProductListByCondition(condition);
+    }
+
+
 
 }

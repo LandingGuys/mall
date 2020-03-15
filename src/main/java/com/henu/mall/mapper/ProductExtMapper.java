@@ -1,6 +1,7 @@
 package com.henu.mall.mapper;
 
 import com.henu.mall.pojo.Product;
+import com.henu.mall.request.ProductSelectCondition;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,4 +18,6 @@ public interface ProductExtMapper {
     List<Product> selectByCategoryIdSet(@Param("categoryIdSet") Set<Integer> categoryIdSet);
 
     List<Product> selectByProductIdSet(@Param("productIdSet") Set<Integer> productIdSet);
+
+    List<Product> selectByCondition(ProductSelectCondition condition);
 }

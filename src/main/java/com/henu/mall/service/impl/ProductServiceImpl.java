@@ -3,11 +3,11 @@ package com.henu.mall.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.henu.mall.enums.ResponseEnum;
-import com.henu.mall.enums.SaleEnum;
 import com.henu.mall.mapper.ProductExtMapper;
 import com.henu.mall.mapper.ProductMapper;
 import com.henu.mall.pojo.Product;
 import com.henu.mall.request.ProductAddRequest;
+import com.henu.mall.request.ProductSelectCondition;
 import com.henu.mall.request.ProductUpdateRequest;
 import com.henu.mall.service.CategoryService;
 import com.henu.mall.service.ProductService;
@@ -24,7 +24,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.henu.mall.enums.ResponseEnum.PRODUCT_OFF_SALE_OR_DELETE;
-import static com.henu.mall.enums.SaleEnum.*;
+import static com.henu.mall.enums.SaleEnum.DELETE;
+import static com.henu.mall.enums.SaleEnum.SOLD_OUT;
 
 /**
  * @author lv
@@ -152,5 +153,23 @@ public class ProductServiceImpl implements ProductService {
             return ResponseVo.error(ResponseEnum.PRODUCT_DELETE_ERROR);
         }
         return ResponseVo.success();
+    }
+
+    @Override
+    public ResponseVo<PageInfo> getProductListByCondition(ProductSelectCondition condition) {
+
+        PageHelper.startPage(condition.getPageNum(),condition.getPageSize());
+        List<Product> productList = productExtMapper.selectByCondition(condition);
+        List<ProductVO> productVOList = productList.stream().map(e -> {
+            ProductVO productVO = new ProductVO();
+            BeanUtils.copyProperties(e, productVO);
+            return productVO;
+        }).collect(Collectors.toList());
+
+        PageInfo pageInfo = new PageInfo<>(productList);
+        pageInfo.setList(productVOList);
+
+        return ResponseVo.success(pageInfo);
+
     }
 }

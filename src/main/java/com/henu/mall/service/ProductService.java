@@ -3,6 +3,7 @@ package com.henu.mall.service;
 
 import com.github.pagehelper.PageInfo;
 import com.henu.mall.request.ProductAddRequest;
+import com.henu.mall.request.ProductSelectCondition;
 import com.henu.mall.request.ProductUpdateRequest;
 import com.henu.mall.vo.ProductDetailVo;
 import com.henu.mall.vo.ResponseVo;
@@ -55,4 +56,11 @@ public interface ProductService {
      * @return
      */
     ResponseVo delete(Integer productId);
+
+    /**
+     * 根据查询条件查询商品
+     * @param condition
+     * @return
+     */
+    ResponseVo<PageInfo> getProductListByCondition(ProductSelectCondition condition);
 }

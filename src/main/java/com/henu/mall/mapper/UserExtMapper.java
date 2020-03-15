@@ -15,5 +15,4 @@ public interface UserExtMapper {
     List<User> selectUserListByCondition (UserSelectCondition condition);
 
 
-
 }

@@ -1,9 +1,12 @@
 package com.henu.mall.service.impl;
 
 import com.henu.mall.consts.MallConsts;
+import com.henu.mall.enums.ResponseEnum;
 import com.henu.mall.mapper.CategoryExtMapper;
 import com.henu.mall.mapper.CategoryMapper;
 import com.henu.mall.pojo.Category;
+import com.henu.mall.request.CategoryAddRequest;
+import com.henu.mall.request.CategoryUpdateRequest;
 import com.henu.mall.service.CategoryService;
 import com.henu.mall.vo.CategoryVO;
 import com.henu.mall.vo.ResponseVo;
@@ -27,6 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryMapper categoryMapper;
     @Resource
     private CategoryExtMapper categoryExtMapper;
+
     @Override
     public ResponseVo<List<CategoryVO>> searchAll() {
         //查出所有类目数据
@@ -38,23 +42,24 @@ public class CategoryServiceImpl implements CategoryService {
                 .sorted(Comparator.comparing(CategoryVO::getSortOrder).reversed())
                 .collect(Collectors.toList());
         //查子目录
-        findSubCategories(categoryVOList,categories);
+        findSubCategories(categoryVOList, categories);
 
         return ResponseVo.success(categoryVOList);
     }
 
     /**
      * 查询子类目
+     *
      * @param categoryVOList
      * @param categories
      */
-    private void findSubCategories(List<CategoryVO> categoryVOList,List<Category> categories){
+    private void findSubCategories(List<CategoryVO> categoryVOList, List<Category> categories) {
         for (CategoryVO categoryVO : categoryVOList) {
             List<CategoryVO> subCategoryVoList = new ArrayList<>();
 
             for (Category category : categories) {
                 //如果查到内容，设置subCategory,继续往下查
-                if(categoryVO.getId().equals(category.getParentId())){
+                if (categoryVO.getId().equals(category.getParentId())) {
                     CategoryVO subCategoryVo = category2CategoryVO(category);
                     subCategoryVoList.add(subCategoryVo);
                 }
@@ -62,7 +67,7 @@ public class CategoryServiceImpl implements CategoryService {
                 subCategoryVoList.sort(Comparator.comparing(CategoryVO::getSortOrder).reversed());
                 categoryVO.setSubCategories(subCategoryVoList);
                 //递归
-                findSubCategories(subCategoryVoList,categories);
+                findSubCategories(subCategoryVoList, categories);
             }
         }
 
@@ -70,37 +75,40 @@ public class CategoryServiceImpl implements CategoryService {
 
     /**
      * 转换对象
+     *
      * @param category
      * @return
      */
-    private CategoryVO category2CategoryVO(Category category){
+    private CategoryVO category2CategoryVO(Category category) {
         CategoryVO categoryVO = new CategoryVO();
-        BeanUtils.copyProperties(category,categoryVO);
+        BeanUtils.copyProperties(category, categoryVO);
         return categoryVO;
     }
 
     /**
      * 查询子类目id
+     *
      * @param id
      * @param resultSet
      */
     @Override
     public void findSubCategoryId(Integer id, Set<Integer> resultSet) {
         List<Category> categories = categoryExtMapper.selectAll();
-        findSubCategoryId(id,resultSet,categories);
+        findSubCategoryId(id, resultSet, categories);
     }
 
     /**
      * 递归查询子类目id
+     *
      * @param id
      * @param resultSet
      * @param categories
      */
-    public void findSubCategoryId(Integer id,Set<Integer> resultSet, List<Category> categories){
+    public void findSubCategoryId(Integer id, Set<Integer> resultSet, List<Category> categories) {
         for (Category category : categories) {
-            if(category.getParentId().equals(id)){
+            if (category.getParentId().equals(id)) {
                 resultSet.add(category.getId());
-                findSubCategoryId(category.getId(),resultSet,categories);
+                findSubCategoryId(category.getId(), resultSet, categories);
             }
         }
     }
@@ -110,15 +118,36 @@ public class CategoryServiceImpl implements CategoryService {
      * 新增类目
      */
     @Override
-    public ResponseVo add() {
-        return null;
+    public ResponseVo add(CategoryAddRequest request) {
+        Category category = new Category();
+        BeanUtils.copyProperties(request, category);
+        int row = categoryMapper.insertSelective(category);
+        if (row <= 0) {
+            return ResponseVo.error(ResponseEnum.CATEGORY_ADD_ERROR);
+        }
+        return ResponseVo.success();
     }
 
     /**
-     * 删除类目
+     * 更新类目
+     *
+     * @param request
+     * @return
      */
     @Override
-    public ResponseVo delete() {
-        return null;
+    public ResponseVo update(CategoryUpdateRequest request) {
+        Category categoryById = categoryMapper.selectByPrimaryKey(request.getCategoryId());
+        if (categoryById == null) {
+            return ResponseVo.error(ResponseEnum.CATEGORY_NOT_EXIST);
+        }
+        Category category = new Category();
+        BeanUtils.copyProperties(request, category);
+        int row = categoryMapper.updateByPrimaryKeySelective(category);
+
+        if (row <= 0) {
+            return ResponseVo.error(ResponseEnum.CATEGORY_UPDATE_ERROR);
+        }
+        return ResponseVo.success();
     }
+
 }

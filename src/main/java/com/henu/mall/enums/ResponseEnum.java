@@ -73,6 +73,13 @@ public enum ResponseEnum {
 
     PRODUCT_DELETE_ERROR(30,"删除商品失败"),
 
+    CATEGORY_ADD_ERROR(31,"添加类目失败"),
+
+    CATEGORY_UPDATE_ERROR(32,"更新类目失败"),
+
+    CATEGORY_DELETE_ERROR(32,"删除类目失败"),
+
+    CATEGORY_NOT_EXIST(33,"类目不存在"),
     ;
 
     private Integer code;

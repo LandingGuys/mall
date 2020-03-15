@@ -43,4 +43,15 @@
         </if>
     </where>
   </select>
+  <select id="selectByCondition" parameterType="com.henu.mall.request.ProductSelectCondition" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from mall_product
+    <where>
+      <if test="query !=null and query !=''">
+        and concat(`name`,`subtitle`,`detail`) like concat (concat ('%',#{query},'%'))
+      </if>
+    </where>
+    order by id
+  </select>
 </mapper>
