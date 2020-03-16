@@ -15,6 +15,8 @@ public class MallConsts {
 
     public static final String USER_TOKEN_KEY_RESET_TEMPLATE = "token_rest_%s";
 
+    public static final String EMAIL_KEY_TEMPLATE = "email_%s";
+
     public static  final String HTTP_HEADER_NAME = "Authorization";
     // 用户token 过期时间 15 分钟 单位 秒
     public static final Integer USER_TOKEN_KEY_EXPIRE_TIME = 60 * 15;

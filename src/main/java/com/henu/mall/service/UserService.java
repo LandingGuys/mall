@@ -78,4 +78,10 @@ public interface UserService {
      * @return
      */
     ResponseVo delete(Integer userId);
+
+    /**
+     * 邮箱验证
+     * @param email
+     */
+    ResponseVo validateEmail(String email);
 }

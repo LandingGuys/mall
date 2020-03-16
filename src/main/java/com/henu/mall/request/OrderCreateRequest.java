@@ -10,6 +10,8 @@ import javax.validation.constraints.NotBlank;
  */
 @Data
 public class OrderCreateRequest {
+
+
     @NotBlank(message ="收货人不能为空")
     private String receiverName;
 

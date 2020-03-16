@@ -100,5 +100,9 @@ public class UserController {
         return  userService.delete(userId);
     }
 
+    @GetMapping("/user/email")
+    public ResponseVo email(@RequestParam("email") String email){
+        return userService.validateEmail(email);
+    }
 
 }

@@ -1,5 +1,6 @@
 package com.henu.mall.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.henu.mall.dto.BaiDuAccessTokenDTO;
 import com.henu.mall.dto.BaiDuUser;
 import com.henu.mall.dto.QQAccessTokenDTO;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -82,8 +84,8 @@ public class Oauth2Controller {
        return null;
     }
     @GetMapping("/qqcallback")
-    public ResponseVo<UserVo> qqCallback(@RequestParam("code") String code,
-                                 HttpServletResponse response){
+    public void qqCallback(@RequestParam("code") String code,
+                                         HttpSession session,HttpServletResponse response) throws IOException {
         QQAccessTokenDTO qqAccessTokenDTO = new QQAccessTokenDTO("authorization_code", QQClientId, code, QQClientSecret, QQRedirectUri);
         String accessToken= QQProvider.getAccessToken(qqAccessTokenDTO);
         String openId=QQProvider.getOpenId(accessToken);
@@ -103,19 +105,27 @@ public class Oauth2Controller {
         }
         ResponseVo<UserVo> userResponseVo = userService.crateOrUpdate(user);
         if(userResponseVo.getStatus().equals(ResponseEnum.THIRD_PARTY_LOGIN_ERROR.getCode())){
-            return ResponseVo.error(ResponseEnum.THIRD_PARTY_LOGIN_QQ_ERROR);
+            //return ResponseVo.error(ResponseEnum.THIRD_PARTY_LOGIN_QQ_ERROR);
+            JSONObject jsonStu= (JSONObject) JSONObject.toJSON(ResponseVo.error(ResponseEnum.THIRD_PARTY_LOGIN_QQ_ERROR));
+            response.sendRedirect("http://www.mall.wast.club/#/oauth?result=" + jsonStu);
         }
-        authManager.login(userResponseVo.getData());
+        //authManager.login(userResponseVo.getData());
         //response.addCookie(new Cookie("token",userResponseVo.getData().getToken()));
-        return userResponseVo;
+        //设置Session
+        session.setAttribute("user", userResponseVo.getData());
+        log.info("/login sessionId={}", session.getId());
+        JSONObject jsonStu= (JSONObject) JSONObject.toJSON(userResponseVo);
+
+        response.sendRedirect("http://www.mall.wast.club/#/oauth?result=" + jsonStu);
+        //return userResponseVo;
     }
     @PostMapping("/weiBoCallBack")
     public ResponseVo weiBoCallback(){
         return null;
     }
     @GetMapping("/baiducallback")
-    public ResponseVo<UserVo> baiDuCallBack(@RequestParam("code") String code,
-                                    HttpServletResponse response){
+    public void baiDuCallBack(@RequestParam("code") String code,
+                              HttpServletResponse response,HttpSession session) throws IOException {
         BaiDuAccessTokenDTO baiDuAccessTokenDTO = new BaiDuAccessTokenDTO("authorization_code", BaiDuClientId, code, BaiDuClientSecret, BaiDuRedirectUri);
         String accessToken = BaiDuProvider.getAccessToken(baiDuAccessTokenDTO);
 
@@ -139,14 +149,22 @@ public class Oauth2Controller {
 
             ResponseVo<UserVo> userResponseVo = userService.crateOrUpdate(user);
             if(userResponseVo.getStatus().equals(ResponseEnum.THIRD_PARTY_LOGIN_ERROR.getCode())){
-                return ResponseVo.error(ResponseEnum.THIRD_PARTY_LOGIN_BAI_DU_ERROR);
+                //ResponseVo.error(ResponseEnum.THIRD_PARTY_LOGIN_BAI_DU_ERROR);
+                JSONObject jsonStu= (JSONObject) JSONObject.toJSON(ResponseVo.error(ResponseEnum.THIRD_PARTY_LOGIN_BAI_DU_ERROR));
+                response.sendRedirect("http://www.mall.wast.club/#/oauth?result=" + jsonStu);
             }
-            authManager.login(userResponseVo.getData());
-            return userResponseVo;
+            //authManager.login(userResponseVo.getData());
+            session.setAttribute("user", userResponseVo.getData());
+            log.info("/login sessionId={}", session.getId());
+            JSONObject jsonStu= (JSONObject) JSONObject.toJSON(userResponseVo);
+
+            response.sendRedirect("http://www.mall.wast.club/#/oauth?result=" + jsonStu);
         }else{
             //登录失败，请重新登录
             log.error("callback get github error,{}",baiduUser);
-            return ResponseVo.error(ResponseEnum.THIRD_PARTY_LOGIN_BAI_DU_ERROR);
+            //ResponseVo.error(ResponseEnum.THIRD_PARTY_LOGIN_BAI_DU_ERROR);
+            JSONObject jsonStu= (JSONObject) JSONObject.toJSON(ResponseVo.error(ResponseEnum.THIRD_PARTY_LOGIN_BAI_DU_ERROR));
+            response.sendRedirect("http://www.mall.wast.club/#/oauth?result=" + jsonStu);
         }
     }
 }

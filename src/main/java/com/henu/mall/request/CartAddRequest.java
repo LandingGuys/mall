@@ -13,5 +13,7 @@ public class CartAddRequest {
     @NotNull
     private Integer productId;
 
-    private Boolean selected = true;
+    private Integer productNum = 1;
+
+    private Boolean selected = false;
 }

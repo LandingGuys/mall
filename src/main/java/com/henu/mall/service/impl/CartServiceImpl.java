@@ -102,7 +102,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public ResponseVo<CartVo> add(Integer uid, CartAddRequest cartAddRequest) {
-        Integer quantity=1;
+        Integer quantity=cartAddRequest.getProductNum();
         //商品是否存在
         Product product = productMapper.selectByPrimaryKey(cartAddRequest.getProductId());
         if(product == null){

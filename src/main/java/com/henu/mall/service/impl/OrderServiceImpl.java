@@ -64,15 +64,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public ResponseVo<OrderVo> create(Integer uid, OrderCreateRequest request) {
-//        //1.收货地质校验（后面也会需要收货地址）
-//        ShippingExample example = new ShippingExample();
-//        example.createCriteria().andUserIdEqualTo(uid)
-//                .andIdEqualTo(shippingId);
-//
-//        List<Shipping> shippings = shippingMapper.selectByExample(example);
-//        if(CollectionUtils.isEmpty(shippings)){
-//            return ResponseVo.error(ResponseEnum.SHIPPING_NOT_EXIST);
-//        }
 
         //1.获取购物车，校验（是否有商品、库存）
         List<Cart> cartList = cartService.listForCart(uid).stream().filter(
@@ -111,7 +102,6 @@ public class OrderServiceImpl implements OrderService {
             }
             //计算总价 只计算被选中的
             //生成订单，入库 OrderItem ,事务
-
             OrderItem orderItem = buildOrderItem(uid, orderNo, cart.getQuantity(), product);
             orderItemList.add(orderItem);
         }
@@ -123,10 +113,9 @@ public class OrderServiceImpl implements OrderService {
             return ResponseVo.error(ResponseEnum.ERROR);
         }
         int rowForOrderItem = orderItemExtMapper.batchInsert(orderItemList);
-        if(rowForOrderItem <= 0){
+        if(rowForOrderItem <= 0) {
             return ResponseVo.error(ResponseEnum.ERROR);
         }
-        
         //更新购物车（删除选中的商品） Redis 没有事务 不能回滚 所以确保前面没有发生异常
         for (Cart cart : cartList) {
             cartService.delete(uid, cart.getProductId());
@@ -137,7 +126,6 @@ public class OrderServiceImpl implements OrderService {
         messageService.send(MQConstant.ORDER_QUEUE_NAME,orderVo.getOrderNo().toString(), MallConsts.ORDER_TIME_OUT_TIME);
         return ResponseVo.success(orderVo);
     }
-
     private OrderVo buildOrderVo(Order order, List<OrderItem> orderItemList) {
         OrderVo orderVo = new OrderVo();
         BeanUtils.copyProperties(order, orderVo);
@@ -150,12 +138,10 @@ public class OrderServiceImpl implements OrderService {
         orderVo.setOrderItemVoList(OrderItemVoList);
         return orderVo;
     }
-
     private Order buildOrder(Integer uid, Long orderNo, OrderCreateRequest request, List<OrderItem> orderItemList) {
         BigDecimal payment = orderItemList.stream()
                 .map(OrderItem::getTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-
         Order order = new Order();
         order.setOrderNo(orderNo);
         order.setUserId(uid);
@@ -168,8 +154,6 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(OrderStatusEnum.NO_PAY.getCode());
         return order;
     }
-
-
     /**
      * 构建OrderItem 对象
      * @param uid

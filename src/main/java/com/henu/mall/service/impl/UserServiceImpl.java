@@ -3,6 +3,7 @@ package com.henu.mall.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.henu.mall.consts.MallConsts;
 import com.henu.mall.enums.ResponseEnum;
 import com.henu.mall.enums.RoleEnum;
 import com.henu.mall.manager.AuthManager;
@@ -14,18 +15,25 @@ import com.henu.mall.request.UserAddRequest;
 import com.henu.mall.request.UserSelectCondition;
 import com.henu.mall.request.UserUpdateRequest;
 import com.henu.mall.service.UserService;
+import com.henu.mall.utils.RedisUtil;
 import com.henu.mall.vo.ResponseVo;
 import com.henu.mall.vo.UserVo;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import javax.annotation.Resource;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.henu.mall.enums.ResponseEnum.GET_USER_INFO_ERROR;
@@ -35,6 +43,7 @@ import static com.henu.mall.enums.ResponseEnum.THIRD_PARTY_LOGIN_ERROR;
  * @author lv
  * @date 2019-12-21 17:39
  */
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
     @Resource
@@ -45,6 +54,12 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private UserExtMapper userExtMapper;
+
+    @Resource
+    private RedisUtil redisUtil;
+
+    @Resource
+    JavaMailSenderImpl javaMailSender;
 
     @Override
     public ResponseVo<UserVo> crateOrUpdate(User user) {
@@ -278,6 +293,34 @@ public class UserServiceImpl implements UserService {
         if(row <= 0){
             return ResponseVo.error(ResponseEnum.USER_DELETE_ERROR);
         }
+        return ResponseVo.success();
+    }
+
+    @Override
+    public ResponseVo validateEmail(String email) {
+        UserExample example = new UserExample();
+        example.createCriteria().andEmailEqualTo(email);
+        List<User> userList = userMapper.selectByExample(example);
+        if(CollectionUtils.isNotEmpty(userList)){
+            return ResponseVo.error(ResponseEnum.EMAIL_EXIST);
+        }
+        String result=String.valueOf((int)((Math.random()*9+1)*100000));
+        redisUtil.setEx(String.format(MallConsts.EMAIL_KEY_TEMPLATE,email),result,15,TimeUnit.MINUTES);
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
+        try {
+            helper.setSubject("欢迎注册智慧药房，离完成就差一步了");
+            helper.setText("亲爱的用户：您好！感谢您使用智慧药房服务。" +
+                    "您正在进行邮箱验证，请在验证码输入框中输入此次验证码："+"<b style='color:red'>"+result+"</b>"+
+                    " 请在15分钟内按页面提示提交验证码以完成验证，切勿将验证码泄露于他人。" +
+                    "如非本人操作，请忽略此邮件，由此给您带来的不便请您谅解！",true);
+            helper.setTo(email);
+            helper.setFrom("community@wast.club");
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        }
+        log.info("邮箱发送成功，验证码为"+result);
         return ResponseVo.success();
     }
 }
