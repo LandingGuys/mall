@@ -4,13 +4,11 @@ import com.github.pagehelper.PageInfo;
 import com.henu.mall.annotation.AuthIgnore;
 import com.henu.mall.enums.ResponseEnum;
 import com.henu.mall.manager.AuthManager;
-import com.henu.mall.pojo.User;
 import com.henu.mall.request.*;
 import com.henu.mall.service.UserService;
 import com.henu.mall.vo.ResponseVo;
 import com.henu.mall.vo.UserVo;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -33,21 +31,18 @@ public class UserController {
 
     @PostMapping("/user/register")
     public ResponseVo<UserVo> register(@Valid @RequestBody UserRegisterRequest addUser){
-        log.info("username {} ",addUser.getUsername());
-        User user=new User();
-        BeanUtils.copyProperties(addUser,user);
-        return userService.register(user);
+        //log.info("username {} ",addUser.getUsername());
+
+        return userService.register(addUser);
     }
     @PostMapping("/user/login")
     public ResponseVo<UserVo> login(@Valid @RequestBody UserLoginForm userLoginForm,  HttpSession session){
         // TODO 改成邮箱 手机号 token cookie
-        User user = new User();
-        BeanUtils.copyProperties(userLoginForm,user);
-        ResponseVo<UserVo> login = userService.login(user);
+
+        ResponseVo<UserVo> login = userService.login(userLoginForm);
         //设置Session
         session.setAttribute("user", login.getData());
         log.info("/login sessionId={}", session.getId());
-        //response.addCookie(new Cookie("token",login.getData().getToken()));
         return login;
     }
 
@@ -103,6 +98,11 @@ public class UserController {
     @GetMapping("/user/email")
     public ResponseVo email(@RequestParam("email") String email){
         return userService.validateEmail(email);
+    }
+
+    @GetMapping("/user/checkName")
+    public ResponseVo checkName(@RequestParam("userName") String userName){
+        return userService.checkName(userName);
     }
 
 }

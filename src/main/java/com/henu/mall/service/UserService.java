@@ -2,9 +2,7 @@ package com.henu.mall.service;
 
 import com.github.pagehelper.PageInfo;
 import com.henu.mall.pojo.User;
-import com.henu.mall.request.UserAddRequest;
-import com.henu.mall.request.UserSelectCondition;
-import com.henu.mall.request.UserUpdateRequest;
+import com.henu.mall.request.*;
 import com.henu.mall.vo.ResponseVo;
 import com.henu.mall.vo.UserVo;
 
@@ -23,11 +21,11 @@ public interface UserService {
      * @param user
      * @return
      */
-    ResponseVo<UserVo> register(User user);
+    ResponseVo<UserVo> register(UserRegisterRequest user);
     /**
-     * 邮箱、手机号登录
+     * 邮箱、手机号、用户名登录
      */
-   ResponseVo<UserVo> login(User user);
+    ResponseVo<UserVo> login(UserLoginForm userLoginForm);
 
 //    /**
 //     * 获取用户信息
@@ -84,4 +82,11 @@ public interface UserService {
      * @param email
      */
     ResponseVo validateEmail(String email);
+
+    /**
+     * 验证用户是否存在
+     * @param userName
+     * @return
+     */
+    ResponseVo checkName(String userName);
 }

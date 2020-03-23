@@ -11,10 +11,9 @@ import com.henu.mall.mapper.UserExtMapper;
 import com.henu.mall.mapper.UserMapper;
 import com.henu.mall.pojo.User;
 import com.henu.mall.pojo.UserExample;
-import com.henu.mall.request.UserAddRequest;
-import com.henu.mall.request.UserSelectCondition;
-import com.henu.mall.request.UserUpdateRequest;
+import com.henu.mall.request.*;
 import com.henu.mall.service.UserService;
+import com.henu.mall.utils.CheckUtil;
 import com.henu.mall.utils.RedisUtil;
 import com.henu.mall.vo.ResponseVo;
 import com.henu.mall.vo.UserVo;
@@ -76,64 +75,108 @@ public class UserServiceImpl implements UserService {
             return getUserInfo(user.getAccountId(),userVo);
         }
         //更新
-        user.setUpdateTime(new Date());
+        User updateUser = new User();
+        updateUser.setAccountId(user.getAccountId());
+        updateUser.setUpdateTime(new Date());
         UserExample example = new UserExample();
-        example.createCriteria().andAccountIdEqualTo(user.getAccountId());
-        int i = userMapper.updateByExampleSelective(user, example);
+        example.createCriteria().andAccountIdEqualTo(updateUser.getAccountId());
+        int i = userMapper.updateByExampleSelective(updateUser, example);
         if(i != 1 ){
             return ResponseVo.error(THIRD_PARTY_LOGIN_ERROR);
         }
         return getUserInfo(user.getAccountId(),userVo);
     }
 
+    /**
+     * 用户名、邮箱、手机号登录
+     * @param userLoginForm
+     * @return
+     */
     @Override
-    public ResponseVo login(User user) {
-        //判断用户名，密码是否一致
-        // TODO 改成邮箱 手机号 token redis
-        UserExample example = new UserExample();
-        example.createCriteria().andUsernameEqualTo(user.getUsername())
-                .andPasswordEqualTo(DigestUtils.md5DigestAsHex(
-                        user.getPassword().getBytes(StandardCharsets.UTF_8)));
-        List<User> users = userMapper.selectByExample(example);
+    public ResponseVo login(UserLoginForm userLoginForm) {
+        //判断用户名、邮箱、手机号，密码是否一致
+        String usernameOrEmailOrPhone = userLoginForm.getUsernameOrEmailOrPhone();
+        String password = userLoginForm.getPassword();
+        List<User> users;
+        if(CheckUtil.isEmail(usernameOrEmailOrPhone)){
+            //邮箱
+            UserExample exampleByEmail = new UserExample();
+            exampleByEmail.createCriteria().andEmailEqualTo(usernameOrEmailOrPhone)
+                    .andPasswordEqualTo(DigestUtils.md5DigestAsHex(password.getBytes(StandardCharsets.UTF_8)));
+
+             users = userMapper.selectByExample(exampleByEmail);
+        }else if(CheckUtil.isMobile(usernameOrEmailOrPhone)){
+            //手机号
+            UserExample exampleByPhone = new UserExample();
+            exampleByPhone.createCriteria().andPhoneEqualTo(usernameOrEmailOrPhone)
+                    .andPasswordEqualTo(DigestUtils.md5DigestAsHex(password.getBytes(StandardCharsets.UTF_8)));
+             users = userMapper.selectByExample(exampleByPhone);
+        }else{
+            //用户名
+            UserExample exampleByUserName = new UserExample();
+            exampleByUserName.createCriteria().andUsernameEqualTo(usernameOrEmailOrPhone)
+                    .andPasswordEqualTo(DigestUtils.md5DigestAsHex(password.getBytes(StandardCharsets.UTF_8)));
+            users = userMapper.selectByExample(exampleByUserName);
+        }
         UserVo userVo = new UserVo();
         if(users.size() != 0){
             BeanUtils.copyProperties(users.get(0),userVo);
-//            // TODO token redis
+            //设置token
             userVo.setToken(authManager.login(userVo));
             return ResponseVo.success(userVo);
         }
         return ResponseVo.error(ResponseEnum.PASSWORD_ERROR);
     }
-
     /**
      * 邮箱、手机号注册
-     *
-     * @param user
+     * @param addUser
      * @return
      */
     @Override
-    public ResponseVo<UserVo> register(User user) {
-        //username不能重复 手机号不能重复
-        Long hasUserName = validateUserName(user);
-        if(hasUserName > 0){
-            return ResponseVo.error(ResponseEnum.USERNAME_EXIST);
-        }
-        Long hasEmail = validateEmail(user);
-        if(hasEmail > 0){
-            return ResponseVo.error(ResponseEnum.EMAIL_EXIST);
+    public ResponseVo<UserVo> register(UserRegisterRequest addUser) {
+        User user = new User();
+        BeanUtils.copyProperties(addUser,user);
+        //1.先判断是邮箱还是手机号 再校验验证码 从redis 获取验证码 对比
+        String phoneOrEmail = addUser.getPhoneOrEmail();
+        if(phoneOrEmail.contains("@")){
+            //邮箱
+            if(!CheckUtil.isEmail(phoneOrEmail)){
+                return ResponseVo.error(ResponseEnum.PHONE_OR_EMAIL_ERROR);
+            }
+            String emailKey = String.format(MallConsts.EMAIL_KEY_TEMPLATE,phoneOrEmail);
+            getCodeFormRedis(emailKey,addUser.getVerifyCode());
+            user.setEmail(phoneOrEmail);
+        } else{
+            //手机号
+            if(!CheckUtil.isMobile(phoneOrEmail)){
+                return ResponseVo.error(ResponseEnum.PHONE_OR_EMAIL_ERROR);
+            }
+            String phoneKey = String.format(MallConsts.PHONE_KEY_TEMPLATE,phoneOrEmail);
+            getCodeFormRedis(phoneKey,addUser.getVerifyCode());
+            user.setPhone(phoneOrEmail);
         }
         user.setRole(RoleEnum.CUSTOMER.getCode());
         user.setAccountId(UUID.randomUUID().toString());
         user.setPassword(DigestUtils.md5DigestAsHex(
                 user.getPassword().getBytes(StandardCharsets.UTF_8)
         ));
+        user.setAvatarUrl("http://shuixin.oss-cn-beijing.aliyuncs.com/moren.jpg");
         int resultCount = userMapper.insertSelective(user);
-        if(resultCount==0){
+        if(resultCount <= 0){
             return ResponseVo.error(ResponseEnum.ERROR);
         }
         return ResponseVo.success();
     }
-
+    private void getCodeFormRedis(String key,String code){
+        if(!redisUtil.hasKey(key)){
+            throw new RuntimeException(ResponseEnum.VERIFY_CODE_REDIS_NOT_EXIST.getDesc());
+        }
+        String verifyCodeFormRedis = redisUtil.get(key);
+        if(!verifyCodeFormRedis.equals(code)){
+            throw new RuntimeException(ResponseEnum.VERIFY_CODE_REDIS_NOT_EXIST.getDesc());
+        }
+        redisUtil.delete(key);
+    }
 
     private ResponseVo<UserVo> getUserInfo(String accountId,UserVo userVo) {
         UserExample example = new UserExample();
@@ -322,5 +365,17 @@ public class UserServiceImpl implements UserService {
         }
         log.info("邮箱发送成功，验证码为"+result);
         return ResponseVo.success();
+    }
+
+    @Override
+    public ResponseVo checkName(String userName) {
+        // username 不能重复
+        UserExample userExampleByUsername = new UserExample();
+        userExampleByUsername.createCriteria().andUsernameEqualTo(userName);
+        long countByUsername = userMapper.countByExample(userExampleByUsername);
+        if(countByUsername >= 1){
+            return ResponseVo.error(ResponseEnum.USERNAME_EXIST);
+        }
+       return ResponseVo.success();
     }
 }

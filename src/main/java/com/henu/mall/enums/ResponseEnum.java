@@ -15,7 +15,7 @@ public enum ResponseEnum {
 
     PASSWORD_ERROR(1,"密码错误"),
 
-    USERNAME_EXIST(2, "用户名已存在"),
+    USERNAME_EXIST(2, "用户名已存在,请重新填写用户名"),
 
     PARAM_ERROR(3, "参数错误"),
 
@@ -80,6 +80,11 @@ public enum ResponseEnum {
     CATEGORY_DELETE_ERROR(32,"删除类目失败"),
 
     CATEGORY_NOT_EXIST(33,"类目不存在"),
+
+    PHONE_OR_EMAIL_ERROR(34,"请输入正确的手机号或邮箱"),
+
+    VERIFY_CODE_REDIS_NOT_EXIST(35,"验证码不存在，或已过期，请重新获取验证码！"),
+
     ;
 
     private Integer code;

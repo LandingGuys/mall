@@ -32,6 +32,21 @@ spring:
     port: 5672
     username: admin
     password: Lv1003@@
+  mail:
+    username: community@wast.club
+    password: 18639760875Lv
+    host: smtp.exmail.qq.com
+    protocol: smtp
+    port: 465
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+            socketFactory:
+              class: com.sun.mail.util.MailSSLSocketFactory
+              fallback: false
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
@@ -49,7 +64,6 @@ QQ_Redirect_uri: http://www.mall.wast.club/api/qqcallback
 BaiDu_client_id: Q7E0zSzseyw0n6x8FhDWwc1f
 BaiDu_client_secret: DqHG6U9DxHkeP63uCdEUUy42AXmWbsB6
 BaiDu_Redirect_uri: http://www.mall.wast.club/api/baiducallback
-
 
 #oss
 endpoint: http://oss-cn-beijing.aliyuncs.com

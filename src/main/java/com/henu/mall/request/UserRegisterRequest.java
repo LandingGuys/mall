@@ -20,6 +20,9 @@ public class UserRegisterRequest {
     @NotBlank(message = "密码不能为空")
     private String password;
 
-    @NotBlank(message = "邮箱不能为空")
-    private String email;
+    @NotBlank(message = "手机号或邮箱不能为空")
+    private String phoneOrEmail;
+
+    @NotBlank(message = "验证码不能为空")
+    private String verifyCode;
 }
