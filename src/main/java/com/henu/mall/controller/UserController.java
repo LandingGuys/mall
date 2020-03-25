@@ -59,7 +59,7 @@ public class UserController {
     @AuthIgnore
     public ResponseVo<UserVo> updateUser(@RequestBody UserUpdateRequest request,HttpSession session){
         UserVo user =(UserVo) session.getAttribute("user");
-        ResponseVo responseVo = userService.updateUserImage(user.getId(), request);
+        ResponseVo responseVo = userService.updateMuser(user.getId(), request);
         session.setAttribute("user", responseVo.getData());
         return responseVo;
     }
@@ -95,14 +95,35 @@ public class UserController {
         return  userService.delete(userId);
     }
 
+    /**
+     * 注册时邮箱验证
+     * @param email
+     * @return
+     */
     @GetMapping("/user/email")
     public ResponseVo email(@RequestParam("email") String email){
         return userService.validateEmail(email);
     }
 
+    /**
+     * 修改个人邮箱时发送邮箱
+     * @param email
+     * @return
+     */
+    @GetMapping("/user/sendEmail")
+    public ResponseVo sendEmail(@RequestParam("email") String email){
+        return userService.sendEmailAndCheck(email);
+    }
+
+
     @GetMapping("/user/checkName")
     public ResponseVo checkName(@RequestParam("userName") String userName){
         return userService.checkName(userName);
+    }
+
+    @GetMapping("/user/checkEmail")
+    public ResponseVo checkEmail(@RequestParam("email") String email){
+        return userService.checkEmail(email);
     }
 
 }

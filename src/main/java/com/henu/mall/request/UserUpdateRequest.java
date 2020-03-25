@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class UserUpdateRequest {
 
-    private  Integer id;
+    private Integer id;
 
     private String username;
 

@@ -4,6 +4,7 @@ package com.henu.mall.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.henu.mall.consts.MallConsts;
+import com.henu.mall.enums.EmailTypeEnum;
 import com.henu.mall.enums.ResponseEnum;
 import com.henu.mall.enums.RoleEnum;
 import com.henu.mall.manager.AuthManager;
@@ -144,6 +145,7 @@ public class UserServiceImpl implements UserService {
                 return ResponseVo.error(ResponseEnum.PHONE_OR_EMAIL_ERROR);
             }
             String emailKey = String.format(MallConsts.EMAIL_KEY_TEMPLATE,phoneOrEmail);
+            //从redis获取code
             getCodeFormRedis(emailKey,addUser.getVerifyCode());
             user.setEmail(phoneOrEmail);
         } else{
@@ -152,6 +154,7 @@ public class UserServiceImpl implements UserService {
                 return ResponseVo.error(ResponseEnum.PHONE_OR_EMAIL_ERROR);
             }
             String phoneKey = String.format(MallConsts.PHONE_KEY_TEMPLATE,phoneOrEmail);
+            //从redis获取code
             getCodeFormRedis(phoneKey,addUser.getVerifyCode());
             user.setPhone(phoneOrEmail);
         }
@@ -167,6 +170,12 @@ public class UserServiceImpl implements UserService {
         }
         return ResponseVo.success();
     }
+
+    /**
+     * 从redis获取code
+     * @param key
+     * @param code
+     */
     private void getCodeFormRedis(String key,String code){
         if(!redisUtil.hasKey(key)){
             throw new RuntimeException(ResponseEnum.VERIFY_CODE_REDIS_NOT_EXIST.getDesc());
@@ -178,6 +187,12 @@ public class UserServiceImpl implements UserService {
         redisUtil.delete(key);
     }
 
+    /**
+     * 获取用户信息 后台
+     * @param accountId
+     * @param userVo
+     * @return
+     */
     private ResponseVo<UserVo> getUserInfo(String accountId,UserVo userVo) {
         UserExample example = new UserExample();
         example.createCriteria().andAccountIdEqualTo(accountId);
@@ -192,7 +207,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 获取用户列表
+     * 获取用户列表 后台
      *
      * @param condition
      * @param
@@ -219,7 +234,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * 根据详细信息添加用户
+     * 根据详细信息添加用户 后台
      *
      * @param request
      * @return
@@ -251,6 +266,11 @@ public class UserServiceImpl implements UserService {
         return ResponseVo.success();
     }
 
+    /**
+     * 验证用户名不能重复
+     * @param user
+     * @return
+     */
     private Long validateUserName(User user) {
         // username 不能重复
         UserExample userExampleByUsername = new UserExample();
@@ -258,6 +278,12 @@ public class UserServiceImpl implements UserService {
         long countByUsername = userMapper.countByExample(userExampleByUsername);
         return countByUsername;
     }
+
+    /**
+     * 验证邮箱不能重复
+     * @param user
+     * @return
+     */
     private Long validateEmail(User user){
         //email 不能重复
         UserExample userExampleByEmail= new UserExample();
@@ -266,6 +292,12 @@ public class UserServiceImpl implements UserService {
         return countByEmail;
     }
 
+    /**
+     * 修改用户个人信息 后台
+     * @param userId
+     * @param request
+     * @return
+     */
     @Override
     public ResponseVo updateUser(Integer userId, UserUpdateRequest request) {
         User userSelect = userMapper.selectByPrimaryKey(userId);
@@ -274,37 +306,73 @@ public class UserServiceImpl implements UserService {
         }
         User user =new User();
 //        BeanUtils.copyProperties(userSelect,user);
+
         BeanUtils.copyProperties(request,user);
+        user.setId(userId);
         // 修改用户前username,email的验证 （验证除自己username,email 之外是否还有 已存在的）
-        if(!user.getUsername().equals(userSelect.getUsername()) ){
-            Long hasUserName = validateUserName(user);
-            if(hasUserName > 0){
-                return ResponseVo.error(ResponseEnum.USERNAME_EXIST);
+        if(request.getUsername() !=null){
+            if(!user.getUsername().equals(userSelect.getUsername()) ){
+                Long hasUserName = validateUserName(user);
+                if(hasUserName > 0){
+                    return ResponseVo.error(ResponseEnum.USERNAME_EXIST);
+                }
             }
         }
-        if(!user.getEmail().equals(userSelect.getEmail())){
-            Long hasEmail = validateEmail(user);
-            if(hasEmail > 0){
-                return ResponseVo.error(ResponseEnum.EMAIL_EXIST);
+
+        if(request.getEmail() != null){
+            if(!user.getEmail().equals(userSelect.getEmail())){
+                Long hasEmail = validateEmail(user);
+                if(hasEmail > 0){
+                    return ResponseVo.error(ResponseEnum.EMAIL_EXIST);
+                }
             }
         }
-        user.setRole(Integer.valueOf(request.getRole()));
+        if(request.getRole()!=null){
+            user.setRole(Integer.valueOf(request.getRole()));
+        }
+
         int row = userMapper.updateByPrimaryKeySelective(user);
         if(row <= 0){
             return ResponseVo.error(ResponseEnum.UPDATE_USER_ERROR);
         }
-        return ResponseVo.success();
+        User userV = userMapper.selectByPrimaryKey(userId);
+        UserVo userVo =new UserVo();
+        BeanUtils.copyProperties(userV,userVo);
+
+        return ResponseVo.success(userVo);
     }
 
+    /**
+     * 修改个人信息 前台
+     * @param userId
+     * @param request
+     * @return
+     */
     @Override
-    public ResponseVo<UserVo> updateUserImage(Integer userId, UserUpdateRequest request) {
+    public ResponseVo<UserVo> updateMuser(Integer userId, UserUpdateRequest request) {
         User userSelect = userMapper.selectByPrimaryKey(userId);
         if(userSelect == null){
             return ResponseVo.error(ResponseEnum.USER_NOT_EXIST);
         }
         User user = new User();
-        user.setAvatarUrl(request.getAvatarUrl());
         user.setId(userId);
+        if(request.getAvatarUrl()!=null){
+            user.setAvatarUrl(request.getAvatarUrl());
+        }
+        if(request.getUsername()!=null){
+            user.setUsername(request.getUsername());
+        }
+        if(request.getEmail()!=null){
+            user.setEmail(request.getEmail());
+        }
+        if(request.getPassword()!=null){
+            user.setPassword(DigestUtils.md5DigestAsHex(
+                    request.getPassword().getBytes(StandardCharsets.UTF_8)));
+        }
+        if(request.getPhone()!=null){
+            user.setPhone(request.getPhone());
+        }
+
         int row = userMapper.updateByPrimaryKeySelective(user);
         if(row <= 0){
            return ResponseVo.error(ResponseEnum.UPLOAD_USER_ERROR);
@@ -315,6 +383,11 @@ public class UserServiceImpl implements UserService {
         return ResponseVo.success(userVo);
     }
 
+    /**
+     * 获取用户 后台
+     * @param userId
+     * @return
+     */
     @Override
     public ResponseVo<UserVo> getUserInfo(Integer userId) {
         User user = userMapper.selectByPrimaryKey(userId);
@@ -326,6 +399,11 @@ public class UserServiceImpl implements UserService {
         return ResponseVo.success(userVo);
     }
 
+    /**
+     * 删除用户 后台
+     * @param userId
+     * @return
+     */
     @Override
     public ResponseVo delete(Integer userId) {
         User user = userMapper.selectByPrimaryKey(userId);
@@ -339,6 +417,11 @@ public class UserServiceImpl implements UserService {
         return ResponseVo.success();
     }
 
+    /**
+     * 注册时邮箱验证 前台
+     * @param email
+     * @return
+     */
     @Override
     public ResponseVo validateEmail(String email) {
         UserExample example = new UserExample();
@@ -347,12 +430,28 @@ public class UserServiceImpl implements UserService {
         if(CollectionUtils.isNotEmpty(userList)){
             return ResponseVo.error(ResponseEnum.EMAIL_EXIST);
         }
+        String subject="欢迎注册智慧药房，离完成就差一步了";
+        return sendEmail(email,subject, EmailTypeEnum.EMAIL_REGISTER.getType());
+    }
+    /**
+     * 发送邮件 前台
+     * @param email
+     * @return
+     */
+    @Override
+    public ResponseVo sendEmailAndCheck(String email){
+        String subject="尊敬的用户，您正在进行邮箱验证！！！";
+        return sendEmail(email,subject,EmailTypeEnum.EMAIL_VERIFY.getType());
+    }
+
+
+    private ResponseVo sendEmail(String email,String subject,Integer type) {
         String result=String.valueOf((int)((Math.random()*9+1)*100000));
         redisUtil.setEx(String.format(MallConsts.EMAIL_KEY_TEMPLATE,email),result,15,TimeUnit.MINUTES);
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
         try {
-            helper.setSubject("欢迎注册智慧药房，离完成就差一步了");
+            helper.setSubject(subject);
             helper.setText("亲爱的用户：您好！感谢您使用智慧药房服务。" +
                     "您正在进行邮箱验证，请在验证码输入框中输入此次验证码："+"<b style='color:red'>"+result+"</b>"+
                     " 请在15分钟内按页面提示提交验证码以完成验证，切勿将验证码泄露于他人。" +
@@ -364,9 +463,19 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
         }
         log.info("邮箱发送成功，验证码为"+result);
-        return ResponseVo.success();
+        if(type.equals(EmailTypeEnum.EMAIL_REGISTER.getType())){
+            return ResponseVo.success();
+        }else{
+            return ResponseVo.success(result);
+        }
+
     }
 
+    /**
+     * 注册时验证用户名 前台
+     * @param userName
+     * @return
+     */
     @Override
     public ResponseVo checkName(String userName) {
         // username 不能重复
@@ -377,5 +486,22 @@ public class UserServiceImpl implements UserService {
             return ResponseVo.error(ResponseEnum.USERNAME_EXIST);
         }
        return ResponseVo.success();
+    }
+
+    /**
+     * 验证邮箱是否存在
+     * @param email
+     * @return
+     */
+    @Override
+    public ResponseVo checkEmail(String email) {
+        //email 不能重复
+        UserExample userExampleByEmail = new UserExample();
+        userExampleByEmail.createCriteria().andEmailEqualTo(email);
+        long countByEmail = userMapper.countByExample(userExampleByEmail);
+        if(countByEmail >= 1){
+            return ResponseVo.error(ResponseEnum.EMAIL_EXIST);
+        }
+        return ResponseVo.success();
     }
 }

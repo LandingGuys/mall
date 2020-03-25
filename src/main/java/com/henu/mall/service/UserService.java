@@ -56,12 +56,12 @@ public interface UserService {
     ResponseVo updateUser(Integer userId, UserUpdateRequest request);
 
     /**
-     * 根据用户id 修改头像
+     * 根据用户id 修改信息
      * @param userId
      * @param request
      * @return
      */
-    ResponseVo updateUserImage(Integer userId,UserUpdateRequest request);
+    ResponseVo updateMuser(Integer userId,UserUpdateRequest request);
 
     /**
      * 根据用户id 获取用户信息
@@ -84,9 +84,23 @@ public interface UserService {
     ResponseVo validateEmail(String email);
 
     /**
+     * 发送邮件并获取验证码
+     * @param email
+     * @return
+     */
+    ResponseVo sendEmailAndCheck(String email);
+
+    /**
      * 验证用户是否存在
      * @param userName
      * @return
      */
     ResponseVo checkName(String userName);
+
+    /**
+     * 验证邮箱是否已存在
+     * @param email
+     * @return
+     */
+    ResponseVo checkEmail(String email);
 }

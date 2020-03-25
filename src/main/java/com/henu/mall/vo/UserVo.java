@@ -24,6 +24,8 @@ public class UserVo {
 
     private Integer role;
 
+    private String password;
+
     private Date createTime;
 
     private Date updateTime;
