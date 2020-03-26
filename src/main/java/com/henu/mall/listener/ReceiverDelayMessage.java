@@ -3,7 +3,7 @@ package com.henu.mall.listener;
 import com.alibaba.fastjson.JSON;
 import com.henu.mall.consts.MQConstant;
 import com.henu.mall.dto.DLXMessage;
-import com.henu.mall.service.MessageService;
+import com.henu.mall.service.member.MessageService;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;

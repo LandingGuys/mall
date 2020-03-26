@@ -30,4 +30,8 @@ public class ProductUpdateRequest {
     private Integer stock;
 
     private Integer status;
+
+    private Integer isHot;
+
+    private Integer isNew;
 }

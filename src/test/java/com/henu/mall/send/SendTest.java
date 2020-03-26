@@ -2,7 +2,7 @@ package com.henu.mall.send;
 
 import com.henu.mall.MallApplicationTests;
 import com.henu.mall.consts.MQConstant;
-import com.henu.mall.service.MessageService;
+import com.henu.mall.service.member.MessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 

@@ -29,4 +29,8 @@ public class ProductAddRequest {
 
     private Integer status;
 
+    private Integer isHot;
+
+    private Integer isNew;
+
 }

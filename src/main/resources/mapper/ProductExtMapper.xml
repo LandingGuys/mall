@@ -12,12 +12,33 @@
     <result column="price" jdbcType="DECIMAL" property="price" />
     <result column="stock" jdbcType="INTEGER" property="stock" />
     <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="is_new" jdbcType="INTEGER" property="isNew" />
+    <result column="is_hot" jdbcType="INTEGER" property="isHot" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, category_id, name, subtitle, main_image, price, stock, status, create_time, update_time
+    id, category_id, name, subtitle, main_image, sub_images, detail, price, stock, status,
+    is_new, is_hot, create_time, update_time
   </sql>
+
+  <select id="selectAllByCondition" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from mall_product
+    where status != 3
+    <if test="categoryIdSet.size() > 0">
+      and category_id in
+      <foreach collection="categoryIdSet" item="item" index="index" open="(" separator="," close=")">
+        #{item}
+      </foreach>
+    </if>
+    <if test="query !=null and query !=''">
+      and concat(`name`,`subtitle`,`detail`) like concat (concat ('%',#{query},'%'))
+    </if>
+    order by create_time desc
+  </select>
+
   <select id="selectByCategoryIdSet" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
@@ -29,6 +50,7 @@
         #{item}
       </foreach>
     </if>
+    order by create_time desc
   </select>
   <select id="selectByProductIdSet" resultMap="BaseResultMap">
     select
@@ -43,15 +65,39 @@
         </if>
     </where>
   </select>
+
   <select id="selectByCondition" parameterType="com.henu.mall.request.ProductSelectCondition" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from mall_product
-    <where>
-      <if test="query !=null and query !=''">
+    where status = 1
+    <if test="query !=null and query !=''">
         and concat(`name`,`subtitle`,`detail`) like concat (concat ('%',#{query},'%'))
-      </if>
-    </where>
-    order by id
+    </if>
+    order by create_time desc
+  </select>
+
+<!--  <select id="selectAllByCondition" parameterType="com.henu.mall.request.ProductSelectCondition" resultMap="BaseResultMap">-->
+<!--    select-->
+<!--    <include refid="Base_Column_List" />-->
+<!--    from mall_product-->
+<!--    where status != 3-->
+<!--    <if test="query !=null and query !=''">-->
+<!--      and concat(`name`,`subtitle`,`detail`) like concat (concat ('%',#{query},'%'))-->
+<!--    </if>-->
+<!--    order by create_time desc-->
+<!--  </select>-->
+  <select id="selectAllByType" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from mall_product
+    where status = 1
+    <if test="type !=null and type !='' and type=='new'">
+      and is_new = 1
+    </if>
+    <if test="type !=null and type !='' and type=='hot'">
+      and is_hot = 1
+    </if>
+    order by create_time desc
   </select>
 </mapper>

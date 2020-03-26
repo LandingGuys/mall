@@ -1,11 +1,10 @@
 package com.henu.mall.pojo;
 
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 import java.util.Date;
+
 @Data
-@Accessors(chain = true)
 public class User {
     private Integer id;
 
@@ -30,6 +29,8 @@ public class User {
     private Date createTime;
 
     private Date updateTime;
+
+    private String token;
 
 
 }

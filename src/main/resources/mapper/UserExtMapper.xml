@@ -28,7 +28,7 @@
           and concat(`username`,`email`,`phone`) like concat (concat ('%',#{query},'%'))
         </if>
     </where>
-    order by id
+    order by create_time desc
   </select>
 
 

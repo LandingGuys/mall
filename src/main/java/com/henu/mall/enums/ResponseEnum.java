@@ -85,6 +85,8 @@ public enum ResponseEnum {
 
     VERIFY_CODE_REDIS_NOT_EXIST(35,"验证码不存在，或已过期，请重新获取验证码！"),
 
+    USER_PERMISSION_ERROR(36,"您不是管理员，没有权限呢！！！")
+
     ;
 
     private Integer code;

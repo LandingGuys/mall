@@ -756,6 +756,126 @@ public class ProductExample {
             return (Criteria) this;
         }
 
+        public Criteria andIsNewIsNull() {
+            addCriterion("is_new is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewIsNotNull() {
+            addCriterion("is_new is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewEqualTo(Integer value) {
+            addCriterion("is_new =", value, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewNotEqualTo(Integer value) {
+            addCriterion("is_new <>", value, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewGreaterThan(Integer value) {
+            addCriterion("is_new >", value, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewGreaterThanOrEqualTo(Integer value) {
+            addCriterion("is_new >=", value, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewLessThan(Integer value) {
+            addCriterion("is_new <", value, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewLessThanOrEqualTo(Integer value) {
+            addCriterion("is_new <=", value, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewIn(List<Integer> values) {
+            addCriterion("is_new in", values, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewNotIn(List<Integer> values) {
+            addCriterion("is_new not in", values, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewBetween(Integer value1, Integer value2) {
+            addCriterion("is_new between", value1, value2, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewNotBetween(Integer value1, Integer value2) {
+            addCriterion("is_new not between", value1, value2, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotIsNull() {
+            addCriterion("is_hot is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotIsNotNull() {
+            addCriterion("is_hot is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotEqualTo(Integer value) {
+            addCriterion("is_hot =", value, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotNotEqualTo(Integer value) {
+            addCriterion("is_hot <>", value, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotGreaterThan(Integer value) {
+            addCriterion("is_hot >", value, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotGreaterThanOrEqualTo(Integer value) {
+            addCriterion("is_hot >=", value, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotLessThan(Integer value) {
+            addCriterion("is_hot <", value, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotLessThanOrEqualTo(Integer value) {
+            addCriterion("is_hot <=", value, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotIn(List<Integer> values) {
+            addCriterion("is_hot in", values, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotNotIn(List<Integer> values) {
+            addCriterion("is_hot not in", values, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotBetween(Integer value1, Integer value2) {
+            addCriterion("is_hot between", value1, value2, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotNotBetween(Integer value1, Integer value2) {
+            addCriterion("is_hot not between", value1, value2, "isHot");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("create_time is null");
             return (Criteria) this;

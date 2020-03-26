@@ -12,6 +12,7 @@
     <result column="receiver_district" jdbcType="VARCHAR" property="receiverDistrict" />
     <result column="receiver_address" jdbcType="VARCHAR" property="receiverAddress" />
     <result column="receiver_zip" jdbcType="VARCHAR" property="receiverZip" />
+    <result column="is_default" jdbcType="BIT" property="isDefault" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
@@ -75,7 +76,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, user_id, receiver_name, receiver_phone, receiver_mobile, receiver_province, receiver_city, 
-    receiver_district, receiver_address, receiver_zip, create_time, update_time
+    receiver_district, receiver_address, receiver_zip, is_default, create_time, update_time
   </sql>
   <select id="selectByExample" parameterType="com.henu.mall.pojo.ShippingExample" resultMap="BaseResultMap">
     select
@@ -111,13 +112,13 @@
     insert into mall_shipping (id, user_id, receiver_name, 
       receiver_phone, receiver_mobile, receiver_province, 
       receiver_city, receiver_district, receiver_address, 
-      receiver_zip, create_time, update_time
-      )
+      receiver_zip, is_default, create_time, 
+      update_time)
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{receiverName,jdbcType=VARCHAR}, 
       #{receiverPhone,jdbcType=VARCHAR}, #{receiverMobile,jdbcType=VARCHAR}, #{receiverProvince,jdbcType=VARCHAR}, 
       #{receiverCity,jdbcType=VARCHAR}, #{receiverDistrict,jdbcType=VARCHAR}, #{receiverAddress,jdbcType=VARCHAR}, 
-      #{receiverZip,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+      #{receiverZip,jdbcType=VARCHAR}, #{isDefault,jdbcType=BIT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.henu.mall.pojo.Shipping">
     insert into mall_shipping
@@ -151,6 +152,9 @@
       </if>
       <if test="receiverZip != null">
         receiver_zip,
+      </if>
+      <if test="isDefault != null">
+        is_default,
       </if>
       <if test="createTime != null">
         create_time,
@@ -189,6 +193,9 @@
       </if>
       <if test="receiverZip != null">
         #{receiverZip,jdbcType=VARCHAR},
+      </if>
+      <if test="isDefault != null">
+        #{isDefault,jdbcType=BIT},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -237,6 +244,9 @@
       <if test="record.receiverZip != null">
         receiver_zip = #{record.receiverZip,jdbcType=VARCHAR},
       </if>
+      <if test="record.isDefault != null">
+        is_default = #{record.isDefault,jdbcType=BIT},
+      </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -260,6 +270,7 @@
       receiver_district = #{record.receiverDistrict,jdbcType=VARCHAR},
       receiver_address = #{record.receiverAddress,jdbcType=VARCHAR},
       receiver_zip = #{record.receiverZip,jdbcType=VARCHAR},
+      is_default = #{record.isDefault,jdbcType=BIT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
@@ -296,6 +307,9 @@
       <if test="receiverZip != null">
         receiver_zip = #{receiverZip,jdbcType=VARCHAR},
       </if>
+      <if test="isDefault != null">
+        is_default = #{isDefault,jdbcType=BIT},
+      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -316,6 +330,7 @@
       receiver_district = #{receiverDistrict,jdbcType=VARCHAR},
       receiver_address = #{receiverAddress,jdbcType=VARCHAR},
       receiver_zip = #{receiverZip,jdbcType=VARCHAR},
+      is_default = #{isDefault,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

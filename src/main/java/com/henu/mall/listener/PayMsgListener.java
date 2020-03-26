@@ -3,7 +3,7 @@ package com.henu.mall.listener;
 import com.alibaba.fastjson.JSON;
 import com.henu.mall.consts.MQConstant;
 import com.henu.mall.pojo.PayInfo;
-import com.henu.mall.service.OrderService;
+import com.henu.mall.service.member.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

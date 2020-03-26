@@ -24,6 +24,10 @@ public class Product {
 
     private Integer status;
 
+    private Integer isNew;
+
+    private Integer isHot;
+
     private Date createTime;
 
     private Date updateTime;
@@ -106,6 +110,22 @@ public class Product {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getIsNew() {
+        return isNew;
+    }
+
+    public void setIsNew(Integer isNew) {
+        this.isNew = isNew;
+    }
+
+    public Integer getIsHot() {
+        return isHot;
+    }
+
+    public void setIsHot(Integer isHot) {
+        this.isHot = isHot;
     }
 
     public Date getCreateTime() {

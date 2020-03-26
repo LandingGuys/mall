@@ -31,6 +31,10 @@ public class ProductDetailVo {
 
     private Integer status;
 
+    private Integer isNew;
+
+    private Integer isHot;
+
     private Date createTime;
 
     private Date updateTime;

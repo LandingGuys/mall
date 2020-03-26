@@ -23,6 +23,8 @@ public class Shipping {
 
     private String receiverZip;
 
+    private Boolean isDefault;
+
     private Date createTime;
 
     private Date updateTime;
@@ -105,6 +107,14 @@ public class Shipping {
 
     public void setReceiverZip(String receiverZip) {
         this.receiverZip = receiverZip == null ? null : receiverZip.trim();
+    }
+
+    public Boolean getIsDefault() {
+        return isDefault;
+    }
+
+    public void setIsDefault(Boolean isDefault) {
+        this.isDefault = isDefault;
     }
 
     public Date getCreateTime() {
