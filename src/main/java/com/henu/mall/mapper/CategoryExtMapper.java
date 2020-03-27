@@ -2,6 +2,7 @@ package com.henu.mall.mapper;
 
 import com.henu.mall.pojo.Category;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -15,5 +16,5 @@ public interface CategoryExtMapper {
      * 查询所有类目
      * @return
      */
-   List<Category> selectAll();
+   List<Category> selectAll(@Param("type") Integer type,@Param("query") String query,@Param("categoryId") Integer categoryId);
 }

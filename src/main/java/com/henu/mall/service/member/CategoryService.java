@@ -1,8 +1,5 @@
 package com.henu.mall.service.member;
 
-import com.henu.mall.request.CategoryAddRequest;
-import com.henu.mall.request.CategoryUpdateRequest;
-import com.henu.mall.vo.CategoryAdminVo;
 import com.henu.mall.vo.CategoryVO;
 import com.henu.mall.vo.ResponseVo;
 
@@ -18,7 +15,7 @@ public interface CategoryService {
      * 查询所有
      * @return
      */
-    ResponseVo<List<CategoryVO>> searchAll();
+    ResponseVo<List<CategoryVO>> searchAll(Integer type);
 
     void findSubCategoryId(Integer id, Set<Integer> resultSet);
 

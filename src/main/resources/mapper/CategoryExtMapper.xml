@@ -17,7 +17,17 @@
     select
     <include refid="Base_Column_List" />
     from mall_category
-    where status = 1
+    <where>
+      <if test="type !=null and type != '' and type == 1">
+        and status = 1
+      </if>
+      <if test="categoryId !=null and categoryId != ''">
+        and id = #{categoryId}
+      </if>
+      <if test="query !=null and query !=''">
+        and concat(`name`,`id`,`parent_id`) like concat (concat ('%',#{query},'%'))
+      </if>
+    </where>
   </select>
 
 </mapper>

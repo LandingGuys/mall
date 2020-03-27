@@ -1,6 +1,7 @@
 package com.henu.mall.service.member.impl;
 
 import com.henu.mall.consts.MallConsts;
+import com.henu.mall.enums.CategorySearchTypeEnum;
 import com.henu.mall.mapper.CategoryExtMapper;
 import com.henu.mall.pojo.Category;
 import com.henu.mall.service.member.CategoryService;
@@ -27,9 +28,10 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryExtMapper categoryExtMapper;
 
     @Override
-    public ResponseVo<List<CategoryVO>> searchAll() {
+    public ResponseVo<List<CategoryVO>> searchAll(Integer type) {
         //查出所有类目数据
-        List<Category> categories = categoryExtMapper.selectAll();
+
+        List<Category> categories = categoryExtMapper.selectAll(type,null,null);
         //筛选出根目录
         List<CategoryVO> categoryVOList = categories.stream()
                 .filter(e -> e.getParentId().equals(MallConsts.ROOT_PARENT_ID))
@@ -81,14 +83,15 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     /**
-     * 查询子类目id
+     * 查询子类目id 供前台商品模块使用
      *
      * @param id
      * @param resultSet
      */
     @Override
     public void findSubCategoryId(Integer id, Set<Integer> resultSet) {
-        List<Category> categories = categoryExtMapper.selectAll();
+        Integer type = CategorySearchTypeEnum.MEMBER.getType();
+        List<Category> categories = categoryExtMapper.selectAll(type,null,null);
         findSubCategoryId(id, resultSet, categories);
     }
 

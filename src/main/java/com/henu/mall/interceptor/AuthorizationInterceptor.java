@@ -37,19 +37,25 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
         Boolean hasToken = false;
+        //判断请求方法是否标注@AuthIgnore注解
         if (method.getAnnotation(AuthIgnore.class) != null || handlerMethod.getBeanType().getAnnotation(AuthIgnore.class) != null) {
+            //从请求头中获取token值
             String tokenValue=request.getHeader(MallConsts.HTTP_HEADER_NAME);
             log.info("GET Token from request is {}",tokenValue);
-
+            //判断请求头中获取的token值是否为空
             if(StringUtils.isNotBlank(tokenValue)){
+                    //从redis中验证token值，是否存在，是否过期
                    hasToken = tokenManager.validateToken(tokenValue);
             }else{
+                // 空,返回错误信息，跳转到登录页
                    throw  new UserLoginException();
             }
             if(!hasToken){
+                // 验证失败，返回错误信息，跳转到登录页
                 throw new UserTokenException();
             }
 
+            //验证成功，重新设置token过期时间
             tokenManager.refreshUserToken(tokenValue);
         }
 

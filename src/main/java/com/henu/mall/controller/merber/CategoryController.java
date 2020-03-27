@@ -1,5 +1,6 @@
 package com.henu.mall.controller.merber;
 
+import com.henu.mall.enums.CategorySearchTypeEnum;
 import com.henu.mall.service.member.CategoryService;
 import com.henu.mall.vo.ResponseVo;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,7 @@ public class CategoryController {
     private CategoryService categoryService;
     @GetMapping("/categories")
     public ResponseVo selectAll(){
-        return categoryService.searchAll();
+        return categoryService.searchAll(CategorySearchTypeEnum.MEMBER.getType());
     }
 
 }

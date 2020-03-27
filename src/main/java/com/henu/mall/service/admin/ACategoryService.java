@@ -26,9 +26,15 @@ public interface ACategoryService {
     ResponseVo update(CategoryUpdateRequest request);
 
     /**
-     * 后台管理查询所有
+     * 后台管理查询所有 树型列表
      * @return
      */
-    ResponseVo<List<CategoryAdminVo>> adminSelectAll();
+    ResponseVo<List<CategoryAdminVo>> adminSelect();
+
+    /**
+     * 后台管理查询所有 表格
+     * @return
+     */
+    ResponseVo adminSelectAll(Integer categoryId,Integer pageNum,Integer pageSize,String query);
 
 }

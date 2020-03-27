@@ -1,6 +1,10 @@
 package com.henu.mall.service.admin.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.henu.mall.enums.CategorySearchTypeEnum;
 import com.henu.mall.enums.ResponseEnum;
+import com.henu.mall.mapper.CategoryExtMapper;
 import com.henu.mall.mapper.CategoryMapper;
 import com.henu.mall.pojo.Category;
 import com.henu.mall.request.CategoryAddRequest;
@@ -25,6 +29,9 @@ import java.util.stream.Collectors;
 public class ACategoryServiceImpl implements ACategoryService {
     @Resource
     private CategoryMapper categoryMapper;
+
+    @Resource
+    private CategoryExtMapper categoryExtMapper;
 
     @Resource
     private CategoryService categoryService;
@@ -70,10 +77,21 @@ public class ACategoryServiceImpl implements ACategoryService {
      * @return
      */
     @Override
-    public ResponseVo<List<CategoryAdminVo>> adminSelectAll() {
-        ResponseVo<List<CategoryVO>> listResponseVo = categoryService.searchAll();
+    public ResponseVo<List<CategoryAdminVo>> adminSelect() {
+        
+        ResponseVo<List<CategoryVO>> listResponseVo = categoryService.searchAll(CategorySearchTypeEnum.ADMIN.getType());
         List<CategoryAdminVo> categoryAdminVos = find(listResponseVo.getData());
         return ResponseVo.success(categoryAdminVos);
+    }
+
+    @Override
+    public ResponseVo adminSelectAll(Integer categoryId,Integer pageNum,Integer pageSize,String query) {
+        PageHelper.startPage(pageNum,pageSize);
+        Integer type = CategorySearchTypeEnum.ADMIN.getType();
+        List<Category> categories = categoryExtMapper.selectAll(type,query,categoryId);
+        PageInfo pageInfo = new PageInfo<>(categories);
+        pageInfo.setList(categories);
+        return ResponseVo.success(pageInfo);
     }
 
     private List<CategoryAdminVo> find(List<CategoryVO> categoryVOList) {
