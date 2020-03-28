@@ -124,6 +124,7 @@ public class OrderServiceImpl implements OrderService {
         OrderVo orderVo = buildOrderVo(order, orderItemList);
         // 设置订单超时时间 发消息到 mq (orderId) 设置过期时间 未在规定时间内完成支付，将自动取消订单
         messageService.send(MQConstant.ORDER_QUEUE_NAME,orderVo.getOrderNo().toString(), MallConsts.ORDER_TIME_OUT_TIME);
+
         return ResponseVo.success(orderVo);
     }
     private OrderVo buildOrderVo(Order order, List<OrderItem> orderItemList) {

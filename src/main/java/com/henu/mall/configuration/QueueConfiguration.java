@@ -25,7 +25,6 @@ public class QueueConfiguration {
 
     }
     /******************** 业务队列与绑定 order 测试 *********/
-
     @Bean
     public Queue queue(){
         Queue queue =new Queue(MQConstant.ORDER_QUEUE_NAME);
@@ -36,10 +35,8 @@ public class QueueConfiguration {
     public Binding binding(){
         //队列绑定到exchange 上，再绑定好路由键
         return BindingBuilder.bind(queue()).to(defaultExchange()).with(MQConstant.ORDER_QUEUE_NAME);
-
     }
     /******************** 业务队列与绑定 order 测试 *********/
-
     //下面是延迟队列的配置
     //转发队列
     @Bean
