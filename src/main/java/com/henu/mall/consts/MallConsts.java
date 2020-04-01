@@ -19,6 +19,8 @@ public class MallConsts {
 
     public static final String PHONE_KEY_TEMPLATE = "phone_%s";
 
+    public static final String ORDER_KEY_TEMPLATE = "order_%s";
+
     public static  final String HTTP_HEADER_NAME = "Authorization";
     // 用户token 过期时间 15 分钟 单位 秒
     public static final Integer USER_TOKEN_KEY_EXPIRE_TIME = 60 * 15;

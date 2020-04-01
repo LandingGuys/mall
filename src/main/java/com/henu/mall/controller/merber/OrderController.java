@@ -10,6 +10,7 @@ import com.henu.mall.vo.UserVo;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -24,10 +25,11 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping("/user/orders")
-    public ResponseVo<OrderVo> create(@Valid @RequestBody OrderCreateRequest request,
-                                      HttpSession session){
-        UserVo user =(UserVo) session.getAttribute("user");
-        return orderService.create(user.getId(),request);
+    public ResponseVo<OrderVo> create(@Valid @RequestBody OrderCreateRequest orderCreateRequest,
+                                       HttpServletRequest request){
+        UserVo user =(UserVo) request.getSession().getAttribute("user");
+
+        return orderService.create(user.getId(),orderCreateRequest,request);
     }
     @GetMapping("/user/orders")
     public ResponseVo<PageInfo> list( @RequestParam(required = false,defaultValue = "1") Integer pageNum,

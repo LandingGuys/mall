@@ -15,5 +15,5 @@ public class CartAddRequest {
 
     private Integer productNum = 1;
 
-    private Boolean selected = false;
+    private Boolean selected = true;
 }

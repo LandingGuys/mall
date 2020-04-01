@@ -11,17 +11,22 @@ import com.henu.mall.request.OrderCreateRequest;
 import com.henu.mall.service.member.CartService;
 import com.henu.mall.service.member.MessageService;
 import com.henu.mall.service.member.OrderService;
+import com.henu.mall.utils.IPInfoUtil;
+import com.henu.mall.utils.RedisUtil;
 import com.henu.mall.vo.OrderItemVo;
 import com.henu.mall.vo.OrderVo;
 import com.henu.mall.vo.ResponseVo;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -54,6 +59,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Resource
     private UserMapper userMapper;
+
+    @Resource
+    private RedisUtil redisUtil;
     /**
      * 创建订单
      *
@@ -63,24 +71,46 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     @Transactional
-    public ResponseVo<OrderVo> create(Integer uid, OrderCreateRequest request) {
-
-        //1.获取购物车，校验（是否有商品、库存）
-        List<Cart> cartList = cartService.listForCart(uid).stream().filter(
-                Cart::getProductSelected
-        ).collect(Collectors.toList());
-        if(CollectionUtils.isEmpty(cartList)){
-            return ResponseVo.error(ResponseEnum.CART_SELECTED_IS_EMPTY);
+    public ResponseVo<OrderVo> create(Integer uid, OrderCreateRequest orderCreateRequest, HttpServletRequest request) {
+        // 1.判断请求信息
+        String receiverName = orderCreateRequest.getReceiverName();
+        String receiverPhone = orderCreateRequest.getReceiverPhone();
+        String receiverAddress = orderCreateRequest.getReceiverAddress();
+        List<Cart> orderProduct = orderCreateRequest.getOrderProductList();
+        if(StringUtils.isBlank(receiverName) || StringUtils.isBlank(receiverPhone)
+            || StringUtils.isBlank(receiverAddress) || CollectionUtils.isEmpty(orderProduct)){
+            return ResponseVo.error(ResponseEnum.REQUEST_MSG_ERROR);
         }
-        //查购物车商品
-        Set<Integer> productIdSets = cartList.stream().map(Cart::getProductId).collect(Collectors.toSet());
+
+        //2. 判断用户是否存在
+        User user = userMapper.selectByPrimaryKey(uid);
+        if(user == null){
+            return ResponseVo.error(ResponseEnum.USER_NOT_EXIST);
+        }
+
+        // 请求 ip 地址
+        String ip = IPInfoUtil.getIpAddr(request);
+        if("0:0:0:0:0:0:0:1".equals(ip)){
+            ip="127.0.0.1";
+        }
+
+        // Redis key，防止恶意请求
+        String orderKey = String.format(MallConsts.ORDER_KEY_TEMPLATE,ip);
+        String temp = redisUtil.get(orderKey);
+        if (StringUtils.isNotBlank(temp)) {
+            return ResponseVo.error(ResponseEnum.REQUEST_MORE_ERROR);
+        }
+        // 查出传进来的所有商品的商品id 放在set中
+        Set<Integer> productIdSets = orderProduct.stream().map(Cart::getProductId).collect(Collectors.toSet());
+        // 通过productIdSet 查出商品 list
         List<Product> productList = productExtMapper.selectByProductIdSet(productIdSets);
+        // 通过商品 id 将list 变成map
         Map<Integer, Product> map = productList.stream().collect(Collectors.toMap(Product::getId, product -> product));
         //唯一订单id
         Long orderNo = generateOrderNo();
         //订单详情表 一对多， order 对 多orderItem
         List<OrderItem> orderItemList =new ArrayList<>();
-        for (Cart cart : cartList) {
+        for (Cart cart : orderProduct) {
             Product product = map.get(cart.getProductId());
             //数据库商品不存在
             if(product == null){
@@ -92,7 +122,7 @@ public class OrderServiceImpl implements OrderService {
             }
             //库存是否充足
             if(product.getStock() < cart.getQuantity()){
-                return ResponseVo.error(ResponseEnum.PRODUCT_STOCK_ERROR,"库存不正确 "+product.getName());
+                return ResponseVo.error(ResponseEnum.PRODUCT_STOCK_ERROR,"商品："+product.getName()+"：库存不正确 ");
             }
             //减库存
             product.setStock(product.getStock() -cart.getQuantity());
@@ -105,9 +135,8 @@ public class OrderServiceImpl implements OrderService {
             OrderItem orderItem = buildOrderItem(uid, orderNo, cart.getQuantity(), product);
             orderItemList.add(orderItem);
         }
-        //计算总价 只计算被选中的
         //生成订单，入库 Order ,事务
-        Order order = buildOrder(uid, orderNo, request, orderItemList);
+        Order order = buildOrder(uid, orderNo, orderCreateRequest, orderItemList);
         int rowForOrder = orderMapper.insertSelective(order);
         if(rowForOrder <= 0){
             return ResponseVo.error(ResponseEnum.ERROR);
@@ -116,16 +145,30 @@ public class OrderServiceImpl implements OrderService {
         if(rowForOrderItem <= 0) {
             return ResponseVo.error(ResponseEnum.ERROR);
         }
-        //更新购物车（删除选中的商品） Redis 没有事务 不能回滚 所以确保前面没有发生异常
-        for (Cart cart : cartList) {
-            cartService.delete(uid, cart.getProductId());
+        // 判断是购物车下单方式还是立即购买方式
+        if(orderCreateRequest.getType().equals(CreateOrderTypeEnum.CART.getType())){
+            //购物车redisKey
+            String cartKey=String.format(MallConsts.CART_REDIS_KEY_TEMPLATE,uid);
+            //更新购物车（删除选中的商品） Redis 没有事务 不能回滚 所以确保前面没有发生异常
+            for (Cart cart : orderProduct) {
+                //先判断redis 里面是否有该购物车数据
+                Object value = redisUtil.hGet(cartKey,String.valueOf(cart.getProductId()));
+                if(value != null) {
+                    redisUtil.hDelete(cartKey, String.valueOf(cart.getProductId()));
+                }
+            }
         }
+
+        //设置订单ip访问
+        redisUtil.setEx(orderKey,"ADD_ORDER",60,TimeUnit.SECONDS);
+
         //构造orderVo
         OrderVo orderVo = buildOrderVo(order, orderItemList);
         // 设置订单超时时间 发消息到 mq (orderId) 设置过期时间 未在规定时间内完成支付，将自动取消订单
         messageService.send(MQConstant.ORDER_QUEUE_NAME,orderVo.getOrderNo().toString(), MallConsts.ORDER_TIME_OUT_TIME);
 
         return ResponseVo.success(orderVo);
+
     }
     private OrderVo buildOrderVo(Order order, List<OrderItem> orderItemList) {
         OrderVo orderVo = new OrderVo();

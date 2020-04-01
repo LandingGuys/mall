@@ -1,8 +1,11 @@
 package com.henu.mall.request;
 
+import com.henu.mall.pojo.Cart;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * @author lv
@@ -11,6 +14,8 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class OrderCreateRequest {
 
+    @NotNull
+    private Integer type;
 
     @NotBlank(message ="收货人不能为空")
     private String receiverName;
@@ -20,5 +25,8 @@ public class OrderCreateRequest {
 
     @NotBlank(message ="收货人地址不能为空")
     private String receiverAddress;
+
+    @NotNull
+    private List<Cart> orderProductList;
 
 }

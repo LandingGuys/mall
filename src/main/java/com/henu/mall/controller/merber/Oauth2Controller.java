@@ -115,7 +115,7 @@ public class Oauth2Controller {
         session.setAttribute("user", userResponseVo.getData());
         log.info("/login sessionId={}", session.getId());
         //区别于Baidu第三方登录 因为qq用户头像地址 http://thirdqq.qlogo.cn/g?b=oidb&k=I5yrgygI28K7B2ibAsCKdIw&s=40&t=1557546068
-        // & 在前端 获取jsonStu 出现丢失。所以 重新设置Vo对象只传token id 两个字段
+         //& 在前端 获取jsonStu 出现丢失。所以 重新设置Vo对象只传token id 两个字段
         UserVo qqUserVo=new UserVo();
         qqUserVo.setToken(userResponseVo.getData().getToken());
         qqUserVo.setId(userResponseVo.getData().getId());

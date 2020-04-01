@@ -112,10 +112,10 @@ public class CartServiceImpl implements CartService {
         if(!product.getStatus().equals(SaleEnum.ON_SALE.getStatus())){
             return ResponseVo.error(ResponseEnum.PRODUCT_OFF_SALE_OR_DELETE);
         }
-        //商品库存是否够
-        if(product.getStock() <= 0){
-            return ResponseVo.error(ResponseEnum.PRODUCT_STOCK_ERROR);
-        }
+//        //商品库存是否够
+//        if(product.getStock() <= 0){
+//            return ResponseVo.error(ResponseEnum.PRODUCT_STOCK_ERROR);
+//        }
         Cart cart;
         //购物车redisKey
         String cartKey=String.format(MallConsts.CART_REDIS_KEY_TEMPLATE,uid);

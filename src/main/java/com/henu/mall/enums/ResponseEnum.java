@@ -51,7 +51,7 @@ public enum ResponseEnum {
 
     PRODUCT_NOT_EXIST(19,"商品不存在"),
 
-    PRODUCT_STOCK_ERROR(20,"商品库存错误"),
+    PRODUCT_STOCK_ERROR(20,"商品库存不够"),
 
     CART_PRODUCT_NOT_EXIST(21,"购车中无该商品"),
 
@@ -85,7 +85,11 @@ public enum ResponseEnum {
 
     VERIFY_CODE_REDIS_NOT_EXIST(35,"验证码不存在，或已过期，请重新获取验证码！"),
 
-    USER_PERMISSION_ERROR(36,"您不是管理员，没有权限呢！！！")
+    USER_PERMISSION_ERROR(36,"您不是管理员，没有权限呢！！！"),
+
+    REQUEST_MSG_ERROR(37,"请求信息异常"),
+
+    REQUEST_MORE_ERROR(38,"您提交的太频繁了，请您稍后再试")
 
     ;
 

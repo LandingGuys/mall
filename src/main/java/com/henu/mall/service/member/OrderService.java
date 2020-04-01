@@ -5,6 +5,8 @@ import com.henu.mall.request.OrderCreateRequest;
 import com.henu.mall.vo.OrderVo;
 import com.henu.mall.vo.ResponseVo;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author lv
  * @date 2020-02-13 16:27
@@ -16,7 +18,7 @@ public interface OrderService {
      * @param request
      * @return
      */
-    ResponseVo<OrderVo> create(Integer uid, OrderCreateRequest request);
+    ResponseVo<OrderVo> create(Integer uid, OrderCreateRequest orderCreateRequest, HttpServletRequest request);
 
     /**
      * 订单列表 用户

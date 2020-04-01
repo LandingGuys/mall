@@ -4,11 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.henu.mall.MallApplicationTests;
 import com.henu.mall.enums.ResponseEnum;
 import com.henu.mall.request.CartAddRequest;
-import com.henu.mall.request.OrderCreateRequest;
 import com.henu.mall.service.member.CartService;
 import com.henu.mall.service.member.OrderService;
 import com.henu.mall.vo.CartVo;
-import com.henu.mall.vo.OrderVo;
 import com.henu.mall.vo.ResponseVo;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
@@ -41,19 +39,19 @@ public class OrderServiceImplTest extends MallApplicationTests {
         Assert.assertEquals(ResponseEnum.SUCCESS.getCode(), responseVo.getStatus());
     }
 
-    @Test
-    public void createTest() {
-        ResponseVo<OrderVo> responseVo = create();
-        Assert.assertEquals(ResponseEnum.SUCCESS.getCode(), responseVo.getStatus());
-    }
+//    @Test
+//    public void createTest() {
+//        ResponseVo<OrderVo> responseVo = create();
+//        Assert.assertEquals(ResponseEnum.SUCCESS.getCode(), responseVo.getStatus());
+//    }
 
-    private ResponseVo<OrderVo> create() {
-        OrderCreateRequest request = new OrderCreateRequest();
-        request.setReceiverName("吕本伟");
-        request.setReceiverPhone("18639760875");
-        request.setReceiverAddress("河南信阳");
-        ResponseVo<OrderVo> responseVo = orderService.create(uid,request);
-        log.info("result={}", JSON.toJSONString(responseVo));
-        return responseVo;
-    }
+//    private ResponseVo<OrderVo> create() {
+//        OrderCreateRequest request = new OrderCreateRequest();
+//        request.setReceiverName("吕本伟");
+//        request.setReceiverPhone("18639760875");
+//        request.setReceiverAddress("河南信阳");
+//        ResponseVo<OrderVo> responseVo = orderService.create(uid,request);
+//        log.info("result={}", JSON.toJSONString(responseVo));
+//        return responseVo;
+//    }
 }
