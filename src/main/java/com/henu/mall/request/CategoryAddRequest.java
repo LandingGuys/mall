@@ -9,11 +9,11 @@ import lombok.Data;
 @Data
 public class CategoryAddRequest {
 
-
-
     private String name;
 
-    private Boolean status;
+    private Integer parentId;
+
+    private Integer status;
 
     private Integer sortOrder;
 

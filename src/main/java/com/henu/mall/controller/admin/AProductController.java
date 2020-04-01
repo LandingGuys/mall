@@ -38,8 +38,8 @@ public class AProductController {
         return aProductService.add(request);
     }
     @AuthIgnore
-    @DeleteMapping("/products")
-    public  ResponseVo delete(@RequestParam Integer productId){
+    @DeleteMapping("/products/{productId}")
+    public  ResponseVo delete(@PathVariable Integer productId){
         return aProductService.delete(productId);
     }
     @AuthIgnore
@@ -47,9 +47,5 @@ public class AProductController {
     public ResponseVo update(@RequestBody ProductUpdateRequest request){
         return aProductService.update(request);
     }
-//    @AuthIgnore
-//    @GetMapping("/products/search")
-//    public ResponseVo select(ProductSelectCondition condition){
-//        return aProductService.getProductListByCondition(condition);
-//    }
+
 }

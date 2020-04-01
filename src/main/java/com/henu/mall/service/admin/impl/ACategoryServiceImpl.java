@@ -58,7 +58,7 @@ public class ACategoryServiceImpl implements ACategoryService {
      */
     @Override
     public ResponseVo update(CategoryUpdateRequest request) {
-        Category categoryById = categoryMapper.selectByPrimaryKey(request.getCategoryId());
+        Category categoryById = categoryMapper.selectByPrimaryKey(request.getId());
         if (categoryById == null) {
             return ResponseVo.error(ResponseEnum.CATEGORY_NOT_EXIST);
         }

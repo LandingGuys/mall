@@ -1,11 +1,10 @@
 package com.henu.mall.controller.admin;
 
+import com.henu.mall.request.CategoryAddRequest;
+import com.henu.mall.request.CategoryUpdateRequest;
 import com.henu.mall.service.admin.ACategoryService;
 import com.henu.mall.vo.ResponseVo;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -28,5 +27,14 @@ public class ACategoryController {
                                      @RequestParam(required = false,defaultValue = "10") Integer pageSize,
                                      @RequestParam(required = false) String query){
         return aCategoryService.adminSelectAll(categoryId,pageNum,pageSize,query);
+    }
+    @PutMapping("/categories")
+    public ResponseVo update(@RequestBody CategoryUpdateRequest request){
+        return aCategoryService.update(request);
+    }
+
+    @PostMapping("/categories")
+    public ResponseVo add(@RequestBody CategoryAddRequest request){
+        return aCategoryService.add(request);
     }
 }
