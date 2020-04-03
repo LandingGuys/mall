@@ -9,6 +9,8 @@ import com.henu.mall.request.UserUpdateRequest;
 import com.henu.mall.service.member.UserService;
 import com.henu.mall.vo.ResponseVo;
 import com.henu.mall.vo.UserVo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +24,7 @@ import javax.validation.Valid;
  */
 @Slf4j
 @RestController
+@Api(description = "前台用户服务接口")
 public class UserController {
 
     @Resource
@@ -30,12 +33,15 @@ public class UserController {
     @Resource
     private AuthManager authManager;
 
+    @ApiOperation("用户注册")
     @PostMapping("/user/register")
     public ResponseVo<UserVo> register(@Valid @RequestBody UserRegisterRequest addUser){
         //log.info("username {} ",addUser.getUsername());
 
         return userService.register(addUser);
     }
+
+    @ApiOperation("用户登录")
     @PostMapping("/user/login")
     public ResponseVo<UserVo> login(@Valid @RequestBody UserLoginForm userLoginForm,  HttpSession session){
 
@@ -46,6 +52,7 @@ public class UserController {
         return login;
     }
 
+    @ApiOperation("获取当前用户信息")
     @GetMapping("/user")
     @AuthIgnore
     public ResponseVo<UserVo> userInfo(HttpSession session){
@@ -55,6 +62,8 @@ public class UserController {
         }
         return ResponseVo.success(user);
     }
+
+    @ApiOperation("更新用户")
     @PutMapping("/user")
     @AuthIgnore
     public ResponseVo<UserVo> updateUser(@RequestBody UserUpdateRequest request,HttpSession session){
@@ -63,6 +72,8 @@ public class UserController {
         session.setAttribute("user", responseVo.getData());
         return responseVo;
     }
+
+    @ApiOperation("登出")
     @PostMapping("/user/logout")
     public ResponseVo logout(HttpSession session){
         session.removeAttribute("user");
@@ -74,6 +85,7 @@ public class UserController {
      * @param email
      * @return
      */
+    @ApiOperation("注册时邮箱验证")
     @GetMapping("/user/email")
     public ResponseVo email(@RequestParam("email") String email){
         return userService.validateEmail(email);
@@ -84,17 +96,19 @@ public class UserController {
      * @param email
      * @return
      */
+    @ApiOperation("发送邮件")
     @GetMapping("/user/sendEmail")
     public ResponseVo sendEmail(@RequestParam("email") String email){
         return userService.sendEmailAndCheck(email);
     }
 
-
+    @ApiOperation("检查用户名")
     @GetMapping("/user/checkName")
     public ResponseVo checkName(@RequestParam("userName") String userName){
         return userService.checkName(userName);
     }
 
+    @ApiOperation("检查邮箱")
     @GetMapping("/user/checkEmail")
     public ResponseVo checkEmail(@RequestParam("email") String email){
         return userService.checkEmail(email);

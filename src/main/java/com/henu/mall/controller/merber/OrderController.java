@@ -7,6 +7,8 @@ import com.henu.mall.service.member.OrderService;
 import com.henu.mall.vo.OrderVo;
 import com.henu.mall.vo.ResponseVo;
 import com.henu.mall.vo.UserVo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -20,10 +22,13 @@ import javax.validation.Valid;
  */
 @RestController
 @AuthIgnore
+@Api(description = "前台订单服务接口")
 public class OrderController {
     @Resource
     private OrderService orderService;
 
+    @ApiOperation("创建订单")
+    @AuthIgnore
     @PostMapping("/user/orders")
     public ResponseVo<OrderVo> create(@Valid @RequestBody OrderCreateRequest orderCreateRequest,
                                        HttpServletRequest request){
@@ -31,6 +36,8 @@ public class OrderController {
 
         return orderService.create(user.getId(),orderCreateRequest,request);
     }
+    @ApiOperation("获取当前用户订单列表")
+    @AuthIgnore
     @GetMapping("/user/orders")
     public ResponseVo<PageInfo> list( @RequestParam(required = false,defaultValue = "1") Integer pageNum,
                                       @RequestParam(required = false,defaultValue = "10") Integer pageSize,
@@ -40,6 +47,8 @@ public class OrderController {
 
     }
 
+    @ApiOperation("根据订单id获取当前用户订单详情")
+    @AuthIgnore
     @GetMapping("/user/orderDetail/{orderNo}")
     public ResponseVo<OrderVo> detail(@PathVariable("orderNo") Long orderNo,
                                       HttpSession session){
@@ -48,6 +57,8 @@ public class OrderController {
 
     }
 
+    @ApiOperation("根据订单id更新订单")
+    @AuthIgnore
     @PutMapping("/user/orderDetail/{orderNo}")
     public ResponseVo cancel(@PathVariable("orderNo") Long orderNo,
                              HttpSession session){

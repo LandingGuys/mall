@@ -15,6 +15,8 @@ import com.henu.mall.service.member.UserService;
 import com.henu.mall.vo.OauthVo;
 import com.henu.mall.vo.ResponseVo;
 import com.henu.mall.vo.UserVo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +34,7 @@ import java.io.IOException;
  */
 @Slf4j
 @RestController
+@Api(description = "前台第三方登录服务接口")
 public class Oauth2Controller {
 
     @Value("${QQ_client_id}")
@@ -54,6 +57,7 @@ public class Oauth2Controller {
     @Resource
     private AuthManager authManager;
 
+    @ApiOperation("获取第三方登录地址")
     @PostMapping("/oauth/{req}")
     public ResponseVo<OauthVo> oauth(@PathVariable("req") String req, HttpServletResponse response) throws IOException{
         OauthVo oauthVo =new OauthVo();
@@ -83,6 +87,8 @@ public class Oauth2Controller {
         }
        return null;
     }
+
+    @ApiOperation("qq登录回调")
     @GetMapping("/qqcallback")
     public void qqCallback(@RequestParam("code") String code,
                                          HttpSession session,HttpServletResponse response) throws IOException {
@@ -124,10 +130,14 @@ public class Oauth2Controller {
         response.sendRedirect("http://www.mall.wast.club/#/oauth?result=" + jsonStu);
         //return userResponseVo;
     }
+
+    @ApiOperation("weibo登录回调")
     @PostMapping("/weiBoCallBack")
     public ResponseVo weiBoCallback(){
         return null;
     }
+
+    @ApiOperation("baidu登录回调")
     @GetMapping("/baiducallback")
     public void baiDuCallBack(@RequestParam("code") String code,
                               HttpServletResponse response,HttpSession session) throws IOException {

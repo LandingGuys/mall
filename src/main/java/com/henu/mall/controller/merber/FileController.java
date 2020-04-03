@@ -6,6 +6,8 @@ import com.henu.mall.service.member.FileService;
 import com.henu.mall.utils.BASE64DecodedMultipartFile;
 import com.henu.mall.utils.Base64StrToImageUtil;
 import com.henu.mall.vo.ResponseVo;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,16 +19,19 @@ import javax.annotation.Resource;
  * @author lv
  * @date 2020-02-23 20:25
  */
+@Api(description = "文件上传服务接口")
 @RestController
 public class FileController {
     @Resource
     private FileService fileService;
 
-
+    @ApiOperation("file格式上传")
     @PostMapping("/file/upload")
     public ResponseVo upload(MultipartFile file){
         return fileService.upload(file);
     }
+
+    @ApiOperation("base64格式上传")
     @PostMapping("/file/baseUpload")
     public ResponseVo baseUpload(@RequestBody Base64UploadRequest request) {
         try {
