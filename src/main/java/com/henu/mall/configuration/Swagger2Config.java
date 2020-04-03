@@ -32,7 +32,7 @@ public class Swagger2Config {
         if(flag){
             host="localhost:7777/api";
         }else{
-            host="www.mall.wast:5678/api";
+            host="www.mall.wast.club:5678/api";
         }
         return new Docket(DocumentationType.SWAGGER_2)
                 .host(host)

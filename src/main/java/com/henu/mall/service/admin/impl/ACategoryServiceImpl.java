@@ -3,6 +3,7 @@ package com.henu.mall.service.admin.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.henu.mall.enums.CategorySearchTypeEnum;
+import com.henu.mall.enums.CategoryStatusEnum;
 import com.henu.mall.enums.ResponseEnum;
 import com.henu.mall.mapper.CategoryExtMapper;
 import com.henu.mall.mapper.CategoryMapper;
@@ -93,7 +94,6 @@ public class ACategoryServiceImpl implements ACategoryService {
         pageInfo.setList(categories);
         return ResponseVo.success(pageInfo);
     }
-
     private List<CategoryAdminVo> find(List<CategoryVO> categoryVOList) {
         List<CategoryAdminVo> categoryAdminVoList = categoryVOList.stream().map(e -> {
             CategoryAdminVo categoryAdminVoChildren = new CategoryAdminVo();
@@ -103,5 +103,33 @@ public class ACategoryServiceImpl implements ACategoryService {
             return categoryAdminVoChildren;
         }).collect(Collectors.toList());
         return categoryAdminVoList;
+    }
+
+    @Override
+    public ResponseVo getCategoryById(Integer id) {
+        Category category = categoryMapper.selectByPrimaryKey(id);
+        if(category == null){
+            return ResponseVo.error(ResponseEnum.CATEGORY_NOT_EXIST);
+        }
+        return ResponseVo.success(category);
+    }
+
+    @Override
+    public ResponseVo delete(Integer id) {
+        Category category = categoryMapper.selectByPrimaryKey(id);
+        if(category == null){
+            return ResponseVo.error(ResponseEnum.CATEGORY_NOT_EXIST);
+        }
+        Category categoryDelete = new Category();
+        categoryDelete.setId(id);
+        categoryDelete.setStatus(CategoryStatusEnum.DELETE.getStatus());
+
+        int row = categoryMapper.updateByPrimaryKeySelective(categoryDelete);
+
+        if(row <= 0){
+            return ResponseVo.error(ResponseEnum.CATEGORY_DELETE_ERROR);
+        }
+
+        return ResponseVo.success();
     }
 }

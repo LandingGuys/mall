@@ -18,6 +18,9 @@
     <include refid="Base_Column_List" />
     from mall_category
     <where>
+      <if test="type !=null and type != '' and type == 0">
+        and status != 3
+      </if>
       <if test="type !=null and type != '' and type == 1">
         and status = 1
       </if>

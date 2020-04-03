@@ -37,4 +37,17 @@ public interface ACategoryService {
      */
     ResponseVo adminSelectAll(Integer categoryId,Integer pageNum,Integer pageSize,String query);
 
+    /**
+     * 根据类目id 查询类目信息
+     * @param id
+     * @return
+     */
+    ResponseVo getCategoryById(Integer id);
+
+    /**
+     * 根据类目id,删除类目信息
+     * @param id
+     * @return
+     */
+    ResponseVo delete(Integer id);
 }

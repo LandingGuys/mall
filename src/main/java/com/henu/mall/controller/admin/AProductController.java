@@ -33,6 +33,7 @@ public class AProductController {
         return aProductService.list(categoryId,pageNum,pageSize,query);
     }
 
+    @AuthIgnore
     @ApiOperation("根据商品id获取商品详细信息")
     @GetMapping("/products/{productId}")
     public ResponseVo detail(@PathVariable Integer productId){
