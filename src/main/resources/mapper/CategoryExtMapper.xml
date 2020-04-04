@@ -18,10 +18,10 @@
     <include refid="Base_Column_List" />
     from mall_category
     <where>
-      <if test="type !=null and type != '' and type == 0">
+      <if test="type !=null and type != '' or type.equals(0)">
         and status != 3
       </if>
-      <if test="type !=null and type != '' and type == 1">
+      <if test="type !=null and type != '' and type.equals(1)">
         and status = 1
       </if>
       <if test="categoryId !=null and categoryId != ''">
