@@ -29,7 +29,7 @@ public class PayMsgListener {
             PayInfo payInfo = JSON.parseObject(msg, PayInfo.class);
             if (payInfo.getPlatformStatus().equals("SUCCESS")){
                 //修改订单里的状态
-                orderService.paid(payInfo.getOrderNo());
+                orderService.paid(payInfo.getOrderNo(),payInfo.getPayPlatform());
             }
         } catch (RuntimeException e){
             throw new RuntimeException("异步消息体错误");

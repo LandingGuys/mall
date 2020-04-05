@@ -8,7 +8,6 @@ import com.henu.mall.enums.*;
 import com.henu.mall.mapper.*;
 import com.henu.mall.pojo.*;
 import com.henu.mall.request.OrderCreateRequest;
-import com.henu.mall.service.member.CartService;
 import com.henu.mall.service.member.MessageService;
 import com.henu.mall.service.member.OrderService;
 import com.henu.mall.utils.IPInfoUtil;
@@ -36,8 +35,6 @@ import java.util.stream.Collectors;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    @Resource
-    private CartService cartService;
 
     @Resource
     private ProductExtMapper productExtMapper;
@@ -235,33 +232,24 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseVo<PageInfo> list(Integer uid, Integer pageNum, Integer pageSize) {
         User user = userMapper.selectByPrimaryKey(uid);
+        if(user == null){
+            return ResponseVo.error(ResponseEnum.USER_NOT_EXIST);
+        }
         PageHelper.startPage(pageNum,pageSize);
         OrderExample example = new OrderExample();
-
-        //example.createCriteria().andUserIdEqualTo(uid);
-
-        if(!user.getRole().equals(RoleEnum.ADMIN.getCode())){
-            example.setOrderByClause("`create_time` DESC");
-            example.createCriteria().andUserIdEqualTo(uid);
-        }else{
-            example.setOrderByClause("`create_time` DESC");
-        }
+        example.createCriteria().andUserIdEqualTo(uid);
+        example.setOrderByClause("`create_time` DESC");
         List<Order> orderList = orderMapper.selectByExample(example);
         Set<Long> orderNoSet = orderList.stream().map(Order::getOrderNo).collect(Collectors.toSet());
 
         List<OrderItem> orderItemList = orderItemExtMapper.selectByOrderNoSet(orderNoSet);
         Map<Long, List<OrderItem>> orderItemMap = orderItemList.stream().collect(Collectors.groupingBy(OrderItem::getOrderNo));
-
-//        Set<Integer> shippingIdSet = orderList.stream().map(Order::getShippingId).collect(Collectors.toSet());
-//        List<Shipping> shippingList = shippingExtMapper.selectByIdSet(shippingIdSet);
-//        Map<Integer, Shipping> shippingMap = shippingList.stream().collect(Collectors.toMap(Shipping::getId, shipping -> shipping));
         List<OrderVo> orderVoList =new ArrayList<>();
 
         for (Order order : orderList) {
             OrderVo orderVo = buildOrderVo(order, orderItemMap.get(order.getOrderNo()));
             orderVoList.add(orderVo);
         }
-
         PageInfo pageInfo = new PageInfo<>(orderList);
         pageInfo.setList(orderVoList);
         return ResponseVo.success(pageInfo);
@@ -335,7 +323,40 @@ public class OrderServiceImpl implements OrderService {
         if (row <= 0) {
             return ResponseVo.error(ResponseEnum.ERROR);
         }
+        return ResponseVo.success();
+    }
 
+    @Override
+    public ResponseVo delete(Integer uid, Long orderNo) {
+        User user = userMapper.selectByPrimaryKey(uid);
+        if(user == null){
+            return ResponseVo.error(ResponseEnum.USER_NOT_EXIST);
+        }
+        OrderExample example = new OrderExample();
+        example.createCriteria().andOrderNoEqualTo(orderNo);
+        List<Order> orderList = orderMapper.selectByExample(example);
+        Order order = orderList.get(0);
+        if(user.getRole().equals(RoleEnum.ADMIN.getCode())){
+            if(CollectionUtils.isEmpty(orderList)){
+                return ResponseVo.error(ResponseEnum.ORDER_NOT_EXIST);
+            }
+        }else{
+            if (CollectionUtils.isEmpty(orderList) || !order.getUserId().equals(uid)) {
+                return ResponseVo.error(ResponseEnum.ORDER_NOT_EXIST);
+            }
+        }
+        if(!(order.getStatus().equals(OrderStatusEnum.CANCELED.getCode()) ||
+            order.getStatus().equals(OrderStatusEnum.TRADE_CLOSE.getCode()) ||
+                order.getStatus().equals(OrderStatusEnum.TRADE_SUCCESS.getCode()))
+        ){
+            return ResponseVo.error(ResponseEnum.ORDER_DELETE_STATUS_ERROR);
+        }
+        OrderExample orderExample = new OrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(orderNo);
+        int row = orderMapper.deleteByExample(orderExample);
+        if(row <= 0){
+            return ResponseVo.error(ResponseEnum.ORDER_DELETE_ERROR);
+        }
         return ResponseVo.success();
     }
 
@@ -345,7 +366,7 @@ public class OrderServiceImpl implements OrderService {
      * @param orderNo
      */
     @Override
-    public void paid(Long orderNo) {
+    public void paid(Long orderNo,Integer payPlatform) {
         OrderExample orderExample = new OrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(orderNo);
         List<Order> orderList = orderMapper.selectByExample(orderExample);
@@ -358,6 +379,7 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException(ResponseEnum.ORDER_STATUS_ERROR.getDesc()+"订单id:" + orderNo);
         }
         order.setStatus(OrderStatusEnum.PAID.getCode());
+        order.setPaymentType(payPlatform);
         order.setPaymentTime(new Date());
         int row = orderMapper.updateByPrimaryKeySelective(order);
         if (row <= 0) {
@@ -384,6 +406,7 @@ public class OrderServiceImpl implements OrderService {
         if(order.getStatus().equals(OrderStatusEnum.NO_PAY.getCode()) && !order.getStatus().equals(OrderStatusEnum.CANCELED)){
             //3.将未支付并且未取消的订单取消
             order.setStatus(OrderStatusEnum.CANCELED.getCode());
+            order.setCloseTime(new Date());
             int row = orderMapper.updateByPrimaryKeySelective(order);
             if(row <= 0){
                 throw new RuntimeException("将超时未支付订单自动取消失败，订单id:" + orderNo);

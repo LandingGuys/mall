@@ -20,6 +20,30 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class Swagger2Config {
 
+
+    @Bean
+    public Docket ApiUser(Environment environment) {
+        //设置要显示的swagger环境
+        Profiles profiles = Profiles.of("dev", "test");
+        // 获取项目环境
+        boolean flag = environment.acceptsProfiles(profiles);
+        String host;
+        if(flag){
+            host="localhost:7777/api";
+        }else{
+            host="www.mall.wast.club:5678/api";
+        }
+        return new Docket(DocumentationType.SWAGGER_2)
+                .host(host)
+                .apiInfo(apiInfo())
+                .groupName("前台商城")
+                .enable(true)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.henu.mall.controller.merber"))
+                //.paths(PathSelectors.any())
+                .build();
+    }
+
     // 配置了Swagger的Docket的bean实例
     // enable 是否开启swagger
     @Bean
@@ -37,7 +61,7 @@ public class Swagger2Config {
         return new Docket(DocumentationType.SWAGGER_2)
                 .host(host)
                 .apiInfo(apiInfo())
-                .groupName("30号小学生")
+                .groupName("后台管理")
                 .enable(true)
                 .select()
 
@@ -47,7 +71,7 @@ public class Swagger2Config {
                 // none 都不扫描
                 // withClassAnnotation 扫描类上的注解
                 // withMethodAnnotation 扫描方法上的注解
-                .apis(RequestHandlerSelectors.basePackage("com.henu.mall.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.henu.mall.controller.admin"))
                 //过滤什么路径
                 //any
                 //.paths(PathSelectors.any())

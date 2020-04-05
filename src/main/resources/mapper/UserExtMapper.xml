@@ -30,7 +30,20 @@
     </where>
     order by create_time desc
   </select>
+  <select id="selectUserListByUserIdSet" parameterType="com.henu.mall.request.UserSelectCondition" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from mall_user
+    <where>
+      <if test="userIdSet.size() > 0">
+        and id in
+        <foreach collection="userIdSet" item="item" index="index" open="(" separator="," close=")">
+          #{item}
+        </foreach>
+      </if>
+    </where>
 
+  </select>
 
 
 </mapper>

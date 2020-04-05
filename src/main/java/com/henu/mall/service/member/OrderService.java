@@ -46,9 +46,17 @@ public interface OrderService {
     ResponseVo cancel(Integer uid,Long orderNo);
 
     /**
+     * 删除订单
+     * @param uid
+     * @param orderNo
+     * @return
+     */
+    ResponseVo delete(Integer uid,Long orderNo);
+
+    /**
      * 支付后修改订单状态
      */
-    void paid(Long orderNo);
+    void paid(Long orderNo,Integer payPlatform);
 
     /**
      * 超时自动取消订单

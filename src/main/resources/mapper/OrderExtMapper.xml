@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henu.mall.mapper.OrderExtMapper">
+  <resultMap id="BaseResultMap" type="com.henu.mall.pojo.Order">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_no" jdbcType="BIGINT" property="orderNo" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="receiver_name" jdbcType="VARCHAR" property="receiverName" />
+    <result column="receiver_phone" jdbcType="VARCHAR" property="receiverPhone" />
+    <result column="receiver_address" jdbcType="VARCHAR" property="receiverAddress" />
+    <result column="payment" jdbcType="DECIMAL" property="payment" />
+    <result column="payment_type" jdbcType="INTEGER" property="paymentType" />
+    <result column="postage" jdbcType="INTEGER" property="postage" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="payment_time" jdbcType="TIMESTAMP" property="paymentTime" />
+    <result column="send_time" jdbcType="TIMESTAMP" property="sendTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="close_time" jdbcType="TIMESTAMP" property="closeTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, order_no, user_id, receiver_name, receiver_phone, receiver_address, payment, 
+    payment_type, postage, status, payment_time, send_time, end_time, close_time, create_time, 
+    update_time
+  </sql>
+  <select id="selectAll"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from mall_order
+    <where>
+      <if test="orderNo != null and orderNo != ''">
+        and order_no = #{orderNo}
+      </if>
+      <if test="receiverNameOrPhone != null and receiverNameOrPhone != ''">
+        and concat(`receiver_name`,`receiver_phone`) like concat (concat ('%',#{receiverNameOrPhone},'%'))
+      </if>
+      <if test="time !=null and time != ''">
+        and create_time = #{time}
+      </if>
+    </where>
+  </select>
+
+</mapper>

@@ -99,7 +99,6 @@ public class UserServiceImpl implements UserService {
             UserExample exampleByEmail = new UserExample();
             exampleByEmail.createCriteria().andEmailEqualTo(usernameOrEmailOrPhone)
                     .andPasswordEqualTo(DigestUtils.md5DigestAsHex(password.getBytes(StandardCharsets.UTF_8)));
-
              users = userMapper.selectByExample(exampleByEmail);
         }else if(CheckUtil.isMobile(usernameOrEmailOrPhone)){
             //手机号
@@ -113,6 +112,9 @@ public class UserServiceImpl implements UserService {
             exampleByUserName.createCriteria().andUsernameEqualTo(usernameOrEmailOrPhone)
                     .andPasswordEqualTo(DigestUtils.md5DigestAsHex(password.getBytes(StandardCharsets.UTF_8)));
             users = userMapper.selectByExample(exampleByUserName);
+        }
+        if(!users.get(0).getRole().equals(RoleEnum.CUSTOMER.getCode())){
+            return ResponseVo.error(ResponseEnum.QT_ADMIN_LOGIN_ERROR);
         }
         UserVo userVo = new UserVo();
         if(users.size() != 0){

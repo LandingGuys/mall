@@ -89,7 +89,13 @@ public enum ResponseEnum {
 
     REQUEST_MSG_ERROR(37,"请求信息异常"),
 
-    REQUEST_MORE_ERROR(38,"您提交的太频繁了，请您稍后再试")
+    REQUEST_MORE_ERROR(38,"您提交的太频繁了，请您稍后再试"),
+
+    ORDER_DELETE_ERROR(39,"删除订单失败"),
+
+    ORDER_DELETE_STATUS_ERROR(40,"当前订单未取消或未完成，不能删除！"),
+
+    QT_ADMIN_LOGIN_ERROR(41,"管理员账户想登录商城，也需要重新注册！！！"),
 
     ;
 

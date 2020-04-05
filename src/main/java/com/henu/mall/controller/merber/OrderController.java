@@ -65,4 +65,13 @@ public class OrderController {
         UserVo user =(UserVo) session.getAttribute("user");
         return orderService.cancel(user.getId(),orderNo);
     }
+
+    @DeleteMapping("/user/order/{orderNo}")
+    @AuthIgnore
+    @ApiOperation("根据订单id删除订单")
+    public ResponseVo delete(@PathVariable("orderNo") Long orderNo,
+                             HttpSession session){
+        UserVo user =(UserVo) session.getAttribute("user");
+        return orderService.delete(user.getId(),orderNo);
+    }
 }

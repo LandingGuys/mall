@@ -37,11 +37,6 @@ public interface ProductExtMapper {
      */
     List<Product> selectByCondition(ProductSelectCondition condition);
 
-//    /**
-//     * 搜索在售 或下架
-//     * @param condition
-//     * @return
-//     */
-//    List<Product> selectAllByCondition(ProductSelectCondition condition);
-List<Product> selectAllByType(@Param("type") String type);
+
+    List<Product> selectAllByType(@Param("type") String type);
 }
