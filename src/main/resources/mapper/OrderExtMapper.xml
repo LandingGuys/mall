@@ -39,6 +39,7 @@
         and create_time = #{time}
       </if>
     </where>
+    order by create_time desc
   </select>
 
 </mapper>

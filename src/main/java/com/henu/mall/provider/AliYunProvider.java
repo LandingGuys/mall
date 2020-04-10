@@ -1,6 +1,14 @@
 package com.henu.mall.provider;
 
 import com.aliyun.oss.OSSClient;
+import com.aliyuncs.CommonRequest;
+import com.aliyuncs.CommonResponse;
+import com.aliyuncs.DefaultAcsClient;
+import com.aliyuncs.IAcsClient;
+import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.exceptions.ServerException;
+import com.aliyuncs.http.MethodType;
+import com.aliyuncs.profile.DefaultProfile;
 import com.henu.mall.exception.FileUploadException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,6 +30,14 @@ public class AliYunProvider {
     private String accessKeySecret;
     @Value("${bucketName}")
     private String bucketName;
+    @Value("${ZmAccessKeyId}")
+    private String ZmAccessKeyId;
+    @Value("${ZmAccessKeySecret}")
+    private String ZmAccessKeySecret;
+    @Value("${SingName}")
+    private String SingName;
+    @Value("${TemplateCode}")
+    private String TemplateCode;
 
     public String upload(InputStream fileStream,String fileName){
         String finalFileName;
@@ -48,4 +64,30 @@ public class AliYunProvider {
         return url.toString();
     }
 
+    public String sendSms(String phone){
+        String code = String.valueOf((int)((Math.random()*9+1)*100000));
+        DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou",ZmAccessKeyId,ZmAccessKeySecret);
+        IAcsClient client = new DefaultAcsClient(profile);
+
+        CommonRequest request = new CommonRequest();
+        request.setSysMethod(MethodType.POST);
+        request.setSysDomain("dysmsapi.aliyuncs.com");
+        request.setSysVersion("2017-05-25");
+        request.setSysAction("SendSms");
+        request.putQueryParameter("RegionId", "cn-hangzhou");
+        request.putQueryParameter("PhoneNumbers", phone);
+        request.putQueryParameter("SignName", SingName);
+        request.putQueryParameter("TemplateCode",TemplateCode);
+        request.putQueryParameter("TemplateParam", "{\"code\":\""+code+"\"}");
+        try {
+            CommonResponse response = client.getCommonResponse(request);
+            //System.out.println(response.getData());
+            return code;
+        } catch (ServerException e) {
+            e.printStackTrace();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

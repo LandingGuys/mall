@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.henu.mall.consts.MQConstant;
 import com.henu.mall.pojo.PayInfo;
 import com.henu.mall.service.member.OrderService;
+import com.henu.mall.vo.ResponseVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -29,7 +30,8 @@ public class PayMsgListener {
             PayInfo payInfo = JSON.parseObject(msg, PayInfo.class);
             if (payInfo.getPlatformStatus().equals("SUCCESS")){
                 //修改订单里的状态
-                orderService.paid(payInfo.getOrderNo(),payInfo.getPayPlatform());
+                ResponseVo responseVo = orderService.paid(payInfo.getOrderNo(), payInfo.getPayPlatform());
+                log.info("【支付结果】 => {}",responseVo);
             }
         } catch (RuntimeException e){
             throw new RuntimeException("异步消息体错误");

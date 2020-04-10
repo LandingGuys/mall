@@ -190,7 +190,7 @@ public class OrderServiceImpl implements OrderService {
         order.setReceiverPhone(request.getReceiverPhone());
         order.setReceiverAddress(request.getReceiverAddress());
         order.setPayment(payment);
-        order.setPaymentType(PaymentTypeEnum.PAY_ONLINE.getCode());
+        //order.setPaymentType(PaymentTypeEnum.PAY_ONLINE.getCode());
         order.setPostage(0);
         order.setStatus(OrderStatusEnum.NO_PAY.getCode());
         return order;
@@ -366,26 +366,29 @@ public class OrderServiceImpl implements OrderService {
      * @param orderNo
      */
     @Override
-    public void paid(Long orderNo,Integer payPlatform) {
+    public ResponseVo paid(Long orderNo,Integer payPlatform) {
         OrderExample orderExample = new OrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(orderNo);
         List<Order> orderList = orderMapper.selectByExample(orderExample);
         if (CollectionUtils.isEmpty(orderList)) {
-            throw new RuntimeException(ResponseEnum.ORDER_NOT_EXIST.getDesc() + "订单id:" + orderNo);
+            return ResponseVo.error(ResponseEnum.ORDER_NOT_EXIST,ResponseEnum.ORDER_NOT_EXIST.getDesc() + "订单id:" + orderNo);
+            //throw new RuntimeException(ResponseEnum.ORDER_NOT_EXIST.getDesc() + "订单id:" + orderNo);
         }
         Order order = orderList.get(0);
         //只有[未付款]订单可以变成[已付款]，看自己公司业务
         if (!order.getStatus().equals(OrderStatusEnum.NO_PAY.getCode())) {
-            throw new RuntimeException(ResponseEnum.ORDER_STATUS_ERROR.getDesc()+"订单id:" + orderNo);
+            return ResponseVo.error(ResponseEnum.ORDER_STATUS_ERROR,ResponseEnum.ORDER_STATUS_ERROR.getDesc()+"订单id:" + orderNo);
+            //throw new RuntimeException(ResponseEnum.ORDER_STATUS_ERROR.getDesc()+"订单id:" + orderNo);
         }
         order.setStatus(OrderStatusEnum.PAID.getCode());
         order.setPaymentType(payPlatform);
         order.setPaymentTime(new Date());
         int row = orderMapper.updateByPrimaryKeySelective(order);
         if (row <= 0) {
-            throw new RuntimeException("将订单更新为已支付状态失败，订单id:" + orderNo);
+            return ResponseVo.error(ResponseEnum.ERROR,"将订单更新为已支付状态失败，订单id:" + orderNo);
+            //throw new RuntimeException("将订单更新为已支付状态失败，订单id:" + orderNo);
         }
-
+        return ResponseVo.success();
     }
 
     /**
@@ -393,13 +396,15 @@ public class OrderServiceImpl implements OrderService {
      * @param orderNo
      */
     @Override
-    public void cancel(Long orderNo) {
+    public ResponseVo cancel(Long orderNo) {
         //1.判断订单是否存在
         OrderExample example = new OrderExample();
         example.createCriteria().andOrderNoEqualTo(orderNo);
         List<Order> orderList = orderMapper.selectByExample(example);
         if(CollectionUtils.isEmpty(orderList)){
-            throw new RuntimeException(ResponseEnum.ORDER_NOT_EXIST.getDesc() + "订单id:" + orderNo);
+            //System.out.println(orderNo);
+            return ResponseVo.error(ResponseEnum.ORDER_NOT_EXIST,ResponseEnum.ORDER_NOT_EXIST.getDesc()+"订单id:" + orderNo);
+            //throw new RuntimeException(ResponseEnum.ORDER_NOT_EXIST.getDesc() + "订单id:" + orderNo);
         }
         //2.判断订单是否未支付并且订单未取消
         Order order = orderList.get(0);
@@ -409,8 +414,11 @@ public class OrderServiceImpl implements OrderService {
             order.setCloseTime(new Date());
             int row = orderMapper.updateByPrimaryKeySelective(order);
             if(row <= 0){
-                throw new RuntimeException("将超时未支付订单自动取消失败，订单id:" + orderNo);
+                return ResponseVo.error(ResponseEnum.ERROR,"将超时未支付订单自动取消失败，订单id:" + orderNo);
+                //throw new RuntimeException("将超时未支付订单自动取消失败，订单id:" + orderNo);
             }
+            return ResponseVo.success();
         }
+        return ResponseVo.success();
     }
 }

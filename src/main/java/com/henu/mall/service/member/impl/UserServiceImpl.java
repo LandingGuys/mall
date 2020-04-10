@@ -9,6 +9,7 @@ import com.henu.mall.manager.AuthManager;
 import com.henu.mall.mapper.UserMapper;
 import com.henu.mall.pojo.User;
 import com.henu.mall.pojo.UserExample;
+import com.henu.mall.provider.AliYunProvider;
 import com.henu.mall.request.UserLoginForm;
 import com.henu.mall.request.UserRegisterRequest;
 import com.henu.mall.request.UserUpdateRequest;
@@ -55,6 +56,9 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     JavaMailSenderImpl javaMailSender;
+
+    @Resource
+    private AliYunProvider provider;
 
     @Override
     public ResponseVo<UserVo> crateOrUpdate(User user) {
@@ -329,6 +333,24 @@ public class UserServiceImpl implements UserService {
         if(countByEmail >= 1){
             return ResponseVo.error(ResponseEnum.EMAIL_EXIST);
         }
+        return ResponseVo.success();
+    }
+
+    @Override
+    public ResponseVo validatePhone(String phone) {
+        UserExample example = new UserExample();
+        example.createCriteria().andPhoneEqualTo(phone);
+        List<User> users = userMapper.selectByExample(example);
+        if(CollectionUtils.isNotEmpty(users)){
+            return ResponseVo.error(ResponseEnum.PHONE_EXIST);
+        }
+        String code = provider.sendSms(phone);
+        try {
+            redisUtil.setEx(String.format(MallConsts.PHONE_KEY_TEMPLATE,phone),code,15,TimeUnit.MINUTES);
+        }catch (RuntimeException e){
+            e.printStackTrace();
+        }
+
         return ResponseVo.success();
     }
 }

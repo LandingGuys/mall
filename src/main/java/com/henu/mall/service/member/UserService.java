@@ -66,4 +66,11 @@ public interface UserService {
      * @return
      */
     ResponseVo checkEmail(String email);
+
+    /**
+     * 手机号验证
+     * @param phone
+     * @return
+     */
+    ResponseVo validatePhone(String phone);
 }

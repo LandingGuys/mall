@@ -97,6 +97,12 @@ public enum ResponseEnum {
 
     QT_ADMIN_LOGIN_ERROR(41,"管理员账户想登录商城，也需要重新注册！！！"),
 
+    PHONE_EXIST(42,"手机号已存在"),
+
+    LOGISTICS_INSERT_ERROR(43,"物流插入错误"),
+
+    ORDER_UPDATE_ERROR(44,"更新订单失败")
+
     ;
 
     private Integer code;

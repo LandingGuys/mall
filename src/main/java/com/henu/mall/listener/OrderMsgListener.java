@@ -2,6 +2,7 @@ package com.henu.mall.listener;
 
 import com.henu.mall.consts.MQConstant;
 import com.henu.mall.service.member.OrderService;
+import com.henu.mall.vo.ResponseVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -25,6 +26,7 @@ public class OrderMsgListener {
     public void process(String content){
         log.info("【接收到消息】 => {}",content);
         Long orderNo = Long.parseLong(content);
-        orderService.cancel(orderNo);
+        ResponseVo responseVo = orderService.cancel(orderNo);
+        log.info("【自动取消订单结果】 => {}",responseVo);
     }
 }

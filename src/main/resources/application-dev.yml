@@ -72,4 +72,8 @@ accessKeyId: LTAIlAHWpVWuoRQH
 accessKeySecret: Zg6oKK5WFdMiN8IEmKPAUWAvGUxfzG
 bucketName: shuixin
 
-
+#SMS
+ZmAccessKeyId: LTAI4FuSncxMtzcQ1ARcbe3H
+ZmAccessKeySecret: aRzSKc4PI1AlBRwKpj7ujvN8gmLoKD
+SingName: 智慧药房
+TemplateCode: SMS_187561566

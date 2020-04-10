@@ -91,6 +91,11 @@ public class UserController {
         return userService.validateEmail(email);
     }
 
+    @ApiOperation("注册时手机号验证")
+    @GetMapping("/user/phone")
+    public ResponseVo phone(@RequestParam("phone") String phone){
+        return userService.validatePhone(phone);
+    }
     /**
      * 修改个人邮箱时发送邮箱
      * @param email

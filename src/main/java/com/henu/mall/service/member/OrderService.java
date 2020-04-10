@@ -56,13 +56,13 @@ public interface OrderService {
     /**
      * 支付后修改订单状态
      */
-    void paid(Long orderNo,Integer payPlatform);
+    ResponseVo paid(Long orderNo,Integer payPlatform);
 
     /**
      * 超时自动取消订单
      * @param orderNo
      * @return
      */
-    void cancel(Long orderNo);
+    ResponseVo cancel(Long orderNo);
 
 }
