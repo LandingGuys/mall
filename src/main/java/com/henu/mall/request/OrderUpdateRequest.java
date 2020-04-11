@@ -9,7 +9,13 @@ import lombok.Data;
 @Data
 public class OrderUpdateRequest {
 
-    private Integer orderNo;
+    private Long orderNo;
+
+    private String receiverName;
+
+    private String receiverPhone;
+
+    private String receiverAddress;
 
 
 }

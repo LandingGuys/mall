@@ -10,4 +10,8 @@ import com.henu.mall.vo.ResponseVo;
 public interface TransportationService {
 
     ResponseVo add(LogisticsAddRequest requesut);
+
+    ResponseVo get(Long orderNo);
+
+
 }

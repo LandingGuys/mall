@@ -6,10 +6,7 @@ import com.henu.mall.service.admin.TransportationService;
 import com.henu.mall.vo.ResponseVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -30,5 +27,12 @@ public class TransportationController {
     @PostMapping("/transportation")
     public ResponseVo add(@RequestBody LogisticsAddRequest request){
         return transportationService.add(request);
+    }
+
+    @ApiOperation("获取订单物流信息")
+    @AuthIgnore
+    @GetMapping("/transportation")
+    public ResponseVo get(@RequestParam Long orderNo){
+        return transportationService.get(orderNo);
     }
 }

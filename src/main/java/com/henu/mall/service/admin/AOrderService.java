@@ -18,12 +18,7 @@ public interface AOrderService {
      */
     ResponseVo<PageInfo> list(Long orderNo, Integer pageNum, Integer pageSize, String receiverNameOrPhone, Date time);
 
-    /**
-     * 订单详情
-     * @param orderNo
-     * @return
-     */
-    ResponseVo detail(Long orderNo);
+
 
     /**
      * 更新订单
@@ -32,12 +27,7 @@ public interface AOrderService {
      */
     ResponseVo update(OrderUpdateRequest request);
 
-    /**
-     * 删除订单
-     * @param orderNo
-     * @return
-     */
-    ResponseVo delete(Integer orderNo);
+
 
 
 }

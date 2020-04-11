@@ -9,6 +9,7 @@ import com.henu.mall.pojo.Order;
 import com.henu.mall.pojo.OrderExample;
 import com.henu.mall.request.LogisticsAddRequest;
 import com.henu.mall.service.admin.TransportationService;
+import com.henu.mall.vo.ALogisticsVo;
 import com.henu.mall.vo.ResponseVo;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
@@ -35,7 +36,10 @@ public class TransportationServiceImpl implements TransportationService {
     @Transactional
     @Override
     public ResponseVo add(LogisticsAddRequest requesut) {
-
+        Logistics logisticsFormDb = logisticsExtMapper.get(requesut.getOrderNo());
+        if(logisticsFormDb != null){
+            return ResponseVo.error(ResponseEnum.LOGISTICS_IS_EXIST);
+        }
         Logistics logistics = new Logistics();
         BeanUtils.copyProperties(requesut,logistics);
         //写入物流信息
@@ -61,5 +65,16 @@ public class TransportationServiceImpl implements TransportationService {
             return ResponseVo.error(ResponseEnum.ORDER_UPDATE_ERROR);
         }
         return ResponseVo.success();
+    }
+
+    @Override
+    public ResponseVo get(Long orderNo) {
+        Logistics logistics = logisticsExtMapper.get(orderNo);
+        if(logistics ==null){
+            return ResponseVo.error(ResponseEnum.LOGISTICS_NOT_EXIST);
+        }
+        ALogisticsVo aLogisticsVo = new ALogisticsVo();
+        BeanUtils.copyProperties(logistics,aLogisticsVo);
+        return ResponseVo.success(aLogisticsVo);
     }
 }

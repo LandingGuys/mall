@@ -1,6 +1,7 @@
 package com.henu.mall.controller.admin;
 
 import com.henu.mall.annotation.AuthIgnore;
+import com.henu.mall.request.OrderUpdateRequest;
 import com.henu.mall.service.admin.AOrderService;
 import com.henu.mall.service.member.OrderService;
 import com.henu.mall.vo.ResponseVo;
@@ -47,6 +48,13 @@ public class AOrderController {
                              HttpSession session){
         UserVo user =(UserVo) session.getAttribute("user");
         return orderService.detail(user.getId(),orderNo);
+    }
+
+    @ApiOperation("根据订单id获取订单详情")
+    @AuthIgnore
+    @PutMapping(value = "/orders/update")
+    public ResponseVo update(@RequestBody OrderUpdateRequest request){
+        return aOrderService.update(request);
     }
 
     @ApiOperation("根据订单id取消订单")

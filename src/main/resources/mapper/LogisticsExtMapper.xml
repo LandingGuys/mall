@@ -12,7 +12,7 @@
 
     <sql id="Base_Column_List">
     id, order_no, logistics_ca, logistics_no, create_time, update_time
-  </sql>
+    </sql>
     <insert id="insertSelective" parameterType="com.henu.mall.pojo.Logistics">
         insert into mall_logistics
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -56,4 +56,15 @@
             </if>
         </trim>
     </insert>
+
+    <select id="get" parameterType="long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from mall_logistics
+        <where>
+            <if test="orderNo !=null and orderNo !='' ">
+                and order_no=#{orderNo}
+            </if>
+        </where>
+    </select>
 </mapper>

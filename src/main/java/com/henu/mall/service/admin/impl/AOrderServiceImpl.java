@@ -2,14 +2,18 @@ package com.henu.mall.service.admin.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.henu.mall.enums.ResponseEnum;
 import com.henu.mall.mapper.OrderExtMapper;
+import com.henu.mall.mapper.OrderMapper;
 import com.henu.mall.mapper.UserExtMapper;
 import com.henu.mall.pojo.Order;
+import com.henu.mall.pojo.OrderExample;
 import com.henu.mall.pojo.User;
 import com.henu.mall.request.OrderUpdateRequest;
 import com.henu.mall.service.admin.AOrderService;
 import com.henu.mall.vo.AOrderVo;
 import com.henu.mall.vo.ResponseVo;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -28,6 +32,9 @@ public class AOrderServiceImpl implements AOrderService {
 
     @Resource
     private UserExtMapper userExtMapper;
+
+    @Resource
+    private OrderMapper orderMapper;
     /**
      * 订单列表 分页 按OrderNo 创建时间 收货人或手机号
      *
@@ -62,16 +69,7 @@ public class AOrderServiceImpl implements AOrderService {
         pageInfo.setList(aOrderVoList);
         return ResponseVo.success(pageInfo);
     }
-    /**
-     * 订单详情
-     *
-     * @param orderNo
-     * @return
-     */
-    @Override
-    public ResponseVo detail(Long orderNo) {
-        return null;
-    }
+
 
     /**
      * 更新订单
@@ -81,17 +79,23 @@ public class AOrderServiceImpl implements AOrderService {
      */
     @Override
     public ResponseVo update(OrderUpdateRequest request) {
-        return null;
+
+        OrderExample example = new OrderExample();
+        example.createCriteria().andOrderNoEqualTo(request.getOrderNo());
+        List<Order> orderList = orderMapper.selectByExample(example);
+        if(CollectionUtils.isEmpty(orderList)){
+            return ResponseVo.error(ResponseEnum.ORDER_NOT_EXIST);
+        }
+        Order order = orderList.get(0);
+        order.setReceiverName(request.getReceiverName());
+        order.setReceiverPhone(request.getReceiverPhone());
+        order.setReceiverAddress(request.getReceiverAddress());
+        int row = orderMapper.updateByPrimaryKey(order);
+        if(row <= 0){
+            return ResponseVo.error(ResponseEnum.ORDER_UPDATE_ERROR);
+        }
+        return ResponseVo.success();
     }
 
-    /**
-     * 删除订单
-     *
-     * @param orderNo
-     * @return
-     */
-    @Override
-    public ResponseVo delete(Integer orderNo) {
-        return null;
-    }
+
 }

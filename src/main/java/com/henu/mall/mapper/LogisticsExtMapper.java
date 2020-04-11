@@ -12,4 +12,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface LogisticsExtMapper {
 
     int insertSelective(Logistics record);
+
+    Logistics get(Long orderNo);
 }

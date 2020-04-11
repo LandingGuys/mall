@@ -101,8 +101,11 @@ public enum ResponseEnum {
 
     LOGISTICS_INSERT_ERROR(43,"物流插入错误"),
 
-    ORDER_UPDATE_ERROR(44,"更新订单失败")
+    ORDER_UPDATE_ERROR(44,"更新订单失败"),
 
+    LOGISTICS_NOT_EXIST(45,"物流信息不存在"),
+
+    LOGISTICS_IS_EXIST(46,"物流信息已存在")
     ;
 
     private Integer code;
