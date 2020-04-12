@@ -82,3 +82,7 @@ TemplateCode: SMS_187561566
 #Courier 快递100
 CourierKey: Uulwwdpq3028
 CourierCustomer: 3450C150F61D3E8BD3437E10B4A1CD2C
+
+#快递鸟
+EBusinessID: 1633133
+EKey: 30e0470c-ea2c-4ade-91ac-d9c22f4c057e
