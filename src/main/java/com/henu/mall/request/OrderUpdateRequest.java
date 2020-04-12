@@ -17,5 +17,4 @@ public class OrderUpdateRequest {
 
     private String receiverAddress;
 
-
 }

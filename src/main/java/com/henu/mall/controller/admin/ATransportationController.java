@@ -1,6 +1,7 @@
 package com.henu.mall.controller.admin;
 
 import com.henu.mall.annotation.AuthIgnore;
+import com.henu.mall.request.CourierSelectRequest;
 import com.henu.mall.request.LogisticsAddRequest;
 import com.henu.mall.service.admin.TransportationService;
 import com.henu.mall.vo.ResponseVo;
@@ -15,16 +16,15 @@ import javax.annotation.Resource;
  * @date 2020-04-10 16:40
  */
 @RestController
-@RequestMapping("/admin")
 @Api(description = "管理员物流接口服务")
-public class TransportationController {
+public class ATransportationController {
 
     @Resource
     private TransportationService transportationService;
 
     @ApiOperation("添加物流信息")
     @AuthIgnore
-    @PostMapping("/transportation")
+    @PostMapping("/admin/transportation")
     public ResponseVo add(@RequestBody LogisticsAddRequest request){
         return transportationService.add(request);
     }
@@ -34,5 +34,12 @@ public class TransportationController {
     @GetMapping("/transportation")
     public ResponseVo get(@RequestParam Long orderNo){
         return transportationService.get(orderNo);
+    }
+
+    @PostMapping("/transportation/track")
+    @AuthIgnore
+    @ApiOperation("获取物流轨迹")
+    public ResponseVo getTrack(@RequestBody CourierSelectRequest request){
+        return transportationService.getTrack(request.getExpCode(),request.getExpNo());
     }
 }

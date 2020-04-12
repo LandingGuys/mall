@@ -50,7 +50,7 @@ public class AOrderController {
         return orderService.detail(user.getId(),orderNo);
     }
 
-    @ApiOperation("根据订单id获取订单详情")
+    @ApiOperation("根据订单id更新订单状态")
     @AuthIgnore
     @PutMapping(value = "/orders/update")
     public ResponseVo update(@RequestBody OrderUpdateRequest request){

@@ -5,7 +5,7 @@
         <id column="id" jdbcType="INTEGER" property="id" />
         <result column="order_no" jdbcType="BIGINT" property="orderNo" />
         <result column="logistics_ca" jdbcType="VARCHAR" property="logisticsCa" />
-        <result column="logistics_no" jdbcType="BIGINT" property="logisticsNo" />
+        <result column="logistics_no" jdbcType="VARCHAR" property="logisticsNo" />
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     </resultMap>

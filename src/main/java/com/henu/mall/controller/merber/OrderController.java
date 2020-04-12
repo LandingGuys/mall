@@ -56,8 +56,26 @@ public class OrderController {
         return orderService.detail(user.getId(),orderNo);
 
     }
+    @ApiOperation("根据订单id确认收货")
+    @AuthIgnore
+    @PutMapping(value = "/user/orderReceipt/{orderNo}")
+    public ResponseVo receipt(@PathVariable("orderNo") Long orderNo,
+                             HttpSession session){
+        UserVo user =(UserVo) session.getAttribute("user");
+        String operation = "receipt";
+        return orderService.update(user.getId(),orderNo,operation);
+    }
+    @ApiOperation("根据订单id确认完成订单")
+    @AuthIgnore
+    @PutMapping(value = "/user/orderFinish/{orderNo}")
+    public ResponseVo finish(@PathVariable("orderNo") Long orderNo,
+                              HttpSession session){
+        UserVo user =(UserVo) session.getAttribute("user");
+        String operation = "finish";
+        return orderService.update(user.getId(),orderNo,operation);
+    }
 
-    @ApiOperation("根据订单id更新订单")
+    @ApiOperation("根据订单id取消订单")
     @AuthIgnore
     @PutMapping("/user/orderDetail/{orderNo}")
     public ResponseVo cancel(@PathVariable("orderNo") Long orderNo,

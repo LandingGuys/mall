@@ -13,6 +13,6 @@ public class LogisticsAddRequest {
 
     private String logisticsCa;
 
-    private Long logisticsNo;
+    private String logisticsNo;
 
 }

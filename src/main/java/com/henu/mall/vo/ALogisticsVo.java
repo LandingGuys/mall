@@ -11,5 +11,5 @@ public class ALogisticsVo {
 
     private String logisticsCa;
 
-    private Long logisticsNo;
+    private String logisticsNo;
 }

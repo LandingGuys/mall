@@ -14,4 +14,7 @@ public interface TransportationService {
     ResponseVo get(Long orderNo);
 
 
+    ResponseVo getTrack(String expCode, String expNo);
+
+
 }

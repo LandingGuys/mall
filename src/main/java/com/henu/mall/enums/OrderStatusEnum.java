@@ -17,7 +17,9 @@ public enum  OrderStatusEnum {
 
     PAID(20, "已付款"),
 
-    SHIPPED(40, "已发货"),
+    SHIPPED(30, "已发货"),
+
+    RECEIPT(40,"已收货"),
 
     TRADE_SUCCESS(50, "交易成功"),
 

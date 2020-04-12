@@ -1,5 +1,6 @@
 package com.henu.mall.service.admin.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.henu.mall.enums.OrderStatusEnum;
 import com.henu.mall.enums.ResponseEnum;
 import com.henu.mall.mapper.LogisticsExtMapper;
@@ -7,8 +8,10 @@ import com.henu.mall.mapper.OrderMapper;
 import com.henu.mall.pojo.Logistics;
 import com.henu.mall.pojo.Order;
 import com.henu.mall.pojo.OrderExample;
+import com.henu.mall.provider.CourierBirdProvider;
 import com.henu.mall.request.LogisticsAddRequest;
 import com.henu.mall.service.admin.TransportationService;
+import com.henu.mall.utils.ExpCodeUtil;
 import com.henu.mall.vo.ALogisticsVo;
 import com.henu.mall.vo.ResponseVo;
 import org.apache.commons.collections4.CollectionUtils;
@@ -32,6 +35,9 @@ public class TransportationServiceImpl implements TransportationService {
 
     @Resource
     private OrderMapper orderMapper;
+
+    @Resource
+    private CourierBirdProvider provider;
 
     @Transactional
     @Override
@@ -76,5 +82,18 @@ public class TransportationServiceImpl implements TransportationService {
         ALogisticsVo aLogisticsVo = new ALogisticsVo();
         BeanUtils.copyProperties(logistics,aLogisticsVo);
         return ResponseVo.success(aLogisticsVo);
+    }
+
+    @Override
+    public ResponseVo getTrack(String expCode, String expNo) {
+        String ex = ExpCodeUtil.expCode(expCode);
+        Object track =null;
+        try {
+            String result= provider.getOrderTracesByJson(ex,expNo);
+            track= JSONObject.parse(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseVo.success(track);
     }
 }

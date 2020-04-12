@@ -17,7 +17,7 @@ public class Logistics {
 
     private String logisticsCa;
 
-    private Long logisticsNo;
+    private String logisticsNo;
 
     private Date createTime;
 

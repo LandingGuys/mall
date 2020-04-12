@@ -264,9 +264,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public ResponseVo<OrderVo> detail(Integer uid, Long orderNo) {
-        OrderExample orderExample = new OrderExample();
-        orderExample.createCriteria().andOrderNoEqualTo(orderNo);
-        List<Order> orderList = orderMapper.selectByExample(orderExample);
+        List<Order> orderList = getOrder(orderNo);
         User user = userMapper.selectByPrimaryKey(uid);
         if(user.getRole().equals(RoleEnum.ADMIN.getCode())){
             if(CollectionUtils.isEmpty(orderList)){
@@ -298,9 +296,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public ResponseVo cancel(Integer uid, Long orderNo) {
-        OrderExample orderExample = new OrderExample();
-        orderExample.createCriteria().andOrderNoEqualTo(orderNo);
-        List<Order> orderList = orderMapper.selectByExample(orderExample);
+        List<Order> orderList = getOrder(orderNo);
         User user = userMapper.selectByPrimaryKey(uid);
         if(user.getRole().equals(RoleEnum.ADMIN.getCode())){
             if(CollectionUtils.isEmpty(orderList)){
@@ -332,9 +328,7 @@ public class OrderServiceImpl implements OrderService {
         if(user == null){
             return ResponseVo.error(ResponseEnum.USER_NOT_EXIST);
         }
-        OrderExample example = new OrderExample();
-        example.createCriteria().andOrderNoEqualTo(orderNo);
-        List<Order> orderList = orderMapper.selectByExample(example);
+        List<Order> orderList = getOrder(orderNo);
         Order order = orderList.get(0);
         if(user.getRole().equals(RoleEnum.ADMIN.getCode())){
             if(CollectionUtils.isEmpty(orderList)){
@@ -367,9 +361,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public ResponseVo paid(Long orderNo,Integer payPlatform) {
-        OrderExample orderExample = new OrderExample();
-        orderExample.createCriteria().andOrderNoEqualTo(orderNo);
-        List<Order> orderList = orderMapper.selectByExample(orderExample);
+        List<Order> orderList = getOrder(orderNo);
         if (CollectionUtils.isEmpty(orderList)) {
             return ResponseVo.error(ResponseEnum.ORDER_NOT_EXIST,ResponseEnum.ORDER_NOT_EXIST.getDesc() + "订单id:" + orderNo);
             //throw new RuntimeException(ResponseEnum.ORDER_NOT_EXIST.getDesc() + "订单id:" + orderNo);
@@ -398,13 +390,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseVo cancel(Long orderNo) {
         //1.判断订单是否存在
-        OrderExample example = new OrderExample();
-        example.createCriteria().andOrderNoEqualTo(orderNo);
-        List<Order> orderList = orderMapper.selectByExample(example);
+        List<Order> orderList = getOrder(orderNo);
         if(CollectionUtils.isEmpty(orderList)){
-            //System.out.println(orderNo);
             return ResponseVo.error(ResponseEnum.ORDER_NOT_EXIST,ResponseEnum.ORDER_NOT_EXIST.getDesc()+"订单id:" + orderNo);
-            //throw new RuntimeException(ResponseEnum.ORDER_NOT_EXIST.getDesc() + "订单id:" + orderNo);
         }
         //2.判断订单是否未支付并且订单未取消
         Order order = orderList.get(0);
@@ -420,5 +408,36 @@ public class OrderServiceImpl implements OrderService {
             return ResponseVo.success();
         }
         return ResponseVo.success();
+    }
+
+    @Override
+    public ResponseVo update(Integer id, Long orderNo, String operation) {
+        List<Order> orderList = getOrder(orderNo);
+        if(CollectionUtils.isEmpty(orderList)){
+            return ResponseVo.error(ResponseEnum.ORDER_NOT_EXIST,ResponseEnum.ORDER_NOT_EXIST.getDesc()+"订单id:" + orderNo);
+        }
+        User user = userMapper.selectByPrimaryKey(id);
+        if(user == null){
+            return ResponseVo.error(ResponseEnum.USER_NOT_EXIST);
+        }
+        Order order = orderList.get(0);
+        if(operation.equals("receipt")){
+            order.setStatus(OrderStatusEnum.RECEIPT.getCode());
+            order.setEndTime(new Date());
+        }else{
+            order.setStatus(OrderStatusEnum.TRADE_SUCCESS.getCode());
+            order.setCloseTime(new Date());
+        }
+        int row = orderMapper.updateByPrimaryKey(order);
+        if(row <= 0){
+            return ResponseVo.error(ResponseEnum.ORDER_UPDATE_ERROR);
+        }
+        return ResponseVo.success();
+    }
+    private List<Order> getOrder(Long orderNo){
+        OrderExample example = new OrderExample();
+        example.createCriteria().andOrderNoEqualTo(orderNo);
+        List<Order> orderList = orderMapper.selectByExample(example);
+        return  orderList;
     }
 }

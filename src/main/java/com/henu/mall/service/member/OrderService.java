@@ -65,4 +65,12 @@ public interface OrderService {
      */
     ResponseVo cancel(Long orderNo);
 
+    /**
+     * 更新订单状态 主要是确认收货和完成订单
+     * @param id
+     * @param orderNo
+     * @param operation
+     * @return
+     */
+    ResponseVo update(Integer id, Long orderNo, String operation);
 }
