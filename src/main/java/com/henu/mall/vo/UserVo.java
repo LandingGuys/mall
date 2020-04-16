@@ -10,6 +10,7 @@ import java.util.Date;
  */
 @Data
 public class UserVo {
+
     private Integer id;
 
     private String accountId;

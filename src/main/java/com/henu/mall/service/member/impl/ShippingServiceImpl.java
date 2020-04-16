@@ -3,9 +3,12 @@ package com.henu.mall.service.member.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.henu.mall.enums.ResponseEnum;
+import com.henu.mall.mapper.ShippingExtMapper;
 import com.henu.mall.mapper.ShippingMapper;
+import com.henu.mall.mapper.UserMapper;
 import com.henu.mall.pojo.Shipping;
 import com.henu.mall.pojo.ShippingExample;
+import com.henu.mall.pojo.User;
 import com.henu.mall.request.ShippingRequest;
 import com.henu.mall.service.member.ShippingService;
 import com.henu.mall.vo.ResponseVo;
@@ -26,6 +29,12 @@ public class ShippingServiceImpl implements ShippingService {
     @Resource
     private ShippingMapper shippingMapper;
 
+    @Resource
+    private ShippingExtMapper shippingExtMapper;
+
+    @Resource
+    private UserMapper userMapper;
+
     /**
      * 新增收货地址
      *
@@ -35,6 +44,16 @@ public class ShippingServiceImpl implements ShippingService {
      */
     @Override
     public ResponseVo<Map<String, Integer>> add(Integer uid, ShippingRequest request) {
+        User user = userMapper.selectByPrimaryKey(uid);
+        if(user == null){
+            return ResponseVo.error(ResponseEnum.USER_NOT_EXIST);
+        }
+        if(request.getIsDefault() !=null && request.getIsDefault() == true){
+            int row = shippingExtMapper.updateIsDefaultByUid(uid);
+            if(row <= 0){
+                return ResponseVo.error(ResponseEnum.ERROR);
+            }
+        }
         Shipping shipping = new Shipping();
         BeanUtils.copyProperties(request,shipping);
         shipping.setUserId(uid);
@@ -56,6 +75,7 @@ public class ShippingServiceImpl implements ShippingService {
      */
     @Override
     public ResponseVo delete(Integer uid, Integer shippingId) {
+
         ShippingExample example = new ShippingExample();
         example.createCriteria().andIdEqualTo(shippingId)
                 .andUserIdEqualTo(uid);
@@ -76,12 +96,22 @@ public class ShippingServiceImpl implements ShippingService {
      */
     @Override
     public ResponseVo update(Integer uid, Integer shippingId, ShippingRequest request) {
+        User user = userMapper.selectByPrimaryKey(uid);
+        if(user == null){
+            return ResponseVo.error(ResponseEnum.USER_NOT_EXIST);
+        }
+        if(request.getIsDefault() !=null && request.getIsDefault() == true){
+            int row = shippingExtMapper.updateIsDefaultByUid(uid);
+            if(row <= 0){
+                return ResponseVo.error(ResponseEnum.ERROR);
+            }
+        }
         Shipping shipping = new Shipping();
         BeanUtils.copyProperties(request,shipping);
         shipping.setUserId(uid);
         shipping.setId(shippingId);
         int i = shippingMapper.updateByPrimaryKeySelective(shipping);
-        if( i == 0){
+        if( i <= 0){
             return ResponseVo.error(ResponseEnum.ERROR);
         }
         return ResponseVo.success();

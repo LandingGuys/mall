@@ -15,4 +15,6 @@ import java.util.Set;
 public interface ShippingExtMapper {
 
     List<Shipping> selectByIdSet(@Param("shippingIdSet") Set<Integer> shippingIdSet);
+
+    int updateIsDefaultByUid(@Param("uid") Integer uid);
 }

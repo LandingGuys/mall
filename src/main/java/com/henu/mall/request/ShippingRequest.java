@@ -8,19 +8,12 @@ import lombok.Data;
  */
 @Data
 public class ShippingRequest {
-
     //收货人
     private String receiverName;
-    //收货固定电话
-    private String receiverPhone;
     //收货手机
     private String receiverMobile;
     //收货城市
     private String receiverCity;
-    //
-    private String receiverDistrict;
-    //收货详细地址
-    private String receiverAddress;
-    //收货邮编
-    private String receiverZip;
+    //是否默认
+    private Boolean isDefault;
 }

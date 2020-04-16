@@ -65,6 +65,11 @@ BaiDu_client_id: Q7E0zSzseyw0n6x8FhDWwc1f
 BaiDu_client_secret: DqHG6U9DxHkeP63uCdEUUy42AXmWbsB6
 BaiDu_Redirect_uri: http://www.mall.wast.club/api/baiducallback
 
+#WeiBo
+WeiBo_client_id: 661887081
+WeiBo_client_secret: 498ffdc1916b4f57c65405904b51ed16
+WeiBo_Redirect_uri: http://www.mall.wast.club/api/weibocallback
+
 #oss
 endpoint: http://oss-cn-beijing.aliyuncs.com
 accessKeyId: LTAIlAHWpVWuoRQH

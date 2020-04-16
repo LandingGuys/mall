@@ -37,11 +37,7 @@ public class QQProvider {
         Request request = new Request.Builder().url(urlString).get().build();
         try (Response response = client.newCall(request).execute()) {
             String string = response.body().string();
-//            Object jsonObject = JSON.parseObject(string);
             String accessToken = string.split("\\&")[0].split("\\=")[1];
-//            String[] split1 = split[0].split("\\=");
-//            String accessToken=split1[1];
-//            String accessToken = JSON.parseObject(string).getString("access_token");
             return accessToken;
         } catch (IOException e) {
             e.printStackTrace();

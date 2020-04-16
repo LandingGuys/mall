@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 /**
  * @author lvbenwei11319
@@ -14,10 +16,19 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
+@Component
 public class QQAccessTokenDTO {
-    private String grant_type;
+
+    private String grant_type= "authorization_code";
+
+    @Value("${QQ_client_id}")
     private String client_id;
+
     private String code;
+
+    @Value("${QQ_client_secret}")
     private String client_secret;
+
+    @Value("${QQ_Redirect_uri}")
     private String redirect_uri;
 }

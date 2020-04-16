@@ -35,4 +35,10 @@
     </where>
   </select>
 
+
+  <update id="updateIsDefaultByUid" parameterType="int">
+    update mall_shipping
+    set is_default = false
+    where user_id = #{uid}
+  </update>
 </mapper>
