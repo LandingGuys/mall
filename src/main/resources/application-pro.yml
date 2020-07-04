@@ -28,10 +28,11 @@ spring:
         min-idle: 0
     timeout: 5000
   rabbitmq:
-    addresses: 39.106.112.85
+    #addresses: 39.106.112.85
     port: 5672
     username: admin
     password: Lv1003@@
+    addresses: http://www.mall.wast.club
   mail:
     username: community@wast.club
     password: 18639760875Lv

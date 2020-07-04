@@ -78,19 +78,16 @@ public class OrderServiceImpl implements OrderService {
             || StringUtils.isBlank(receiverAddress) || CollectionUtils.isEmpty(orderProduct)){
             return ResponseVo.error(ResponseEnum.REQUEST_MSG_ERROR);
         }
-
         //2. 判断用户是否存在
         User user = userMapper.selectByPrimaryKey(uid);
         if(user == null){
             return ResponseVo.error(ResponseEnum.USER_NOT_EXIST);
         }
-
         // 请求 ip 地址
         String ip = IPInfoUtil.getIpAddr(request);
         if("0:0:0:0:0:0:0:1".equals(ip)){
             ip="127.0.0.1";
         }
-
         // Redis key，防止恶意请求
         String orderKey = String.format(MallConsts.ORDER_KEY_TEMPLATE,ip);
         String temp = redisUtil.get(orderKey);
@@ -155,15 +152,12 @@ public class OrderServiceImpl implements OrderService {
                 }
             }
         }
-
         //设置订单ip访问
         redisUtil.setEx(orderKey,"ADD_ORDER",60,TimeUnit.SECONDS);
-
         //构造orderVo
         OrderVo orderVo = buildOrderVo(order, orderItemList);
         // 设置订单超时时间 发消息到 mq (orderId) 设置过期时间 未在规定时间内完成支付，将自动取消订单
         messageService.send(MQConstant.ORDER_QUEUE_NAME,orderVo.getOrderNo().toString(), MallConsts.ORDER_TIME_OUT_TIME);
-
         return ResponseVo.success(orderVo);
 
     }

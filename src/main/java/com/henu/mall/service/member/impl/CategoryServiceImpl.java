@@ -30,7 +30,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public ResponseVo<List<CategoryVO>> searchAll(Integer type) {
         //查出所有类目数据
-
         List<Category> categories = categoryExtMapper.selectAll(type,null,null);
         //筛选出根目录
         List<CategoryVO> categoryVOList = categories.stream()
@@ -40,7 +39,6 @@ public class CategoryServiceImpl implements CategoryService {
                 .collect(Collectors.toList());
         //查子目录
         findSubCategories(categoryVOList, categories);
-
         return ResponseVo.success(categoryVOList);
     }
 
