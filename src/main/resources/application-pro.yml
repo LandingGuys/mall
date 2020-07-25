@@ -1,0 +1,93 @@
+server:
+  port: 8081
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: Lv1003@@
+    url:  jdbc:mysql://39.106.112.85:3306/yymall?characterEncoding=utf-8&useSSL=false
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: DatabookHikariCP
+      max-lifetime: 1800000
+      connection-test-query: SELECT 1
+      connection-timeout: 30000
+  redis:
+    host: 39.106.112.85
+    port: 6379
+    password: Lv1003@@
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+    timeout: 5000
+  rabbitmq:
+    addresses: 39.106.112.85
+    port: 5672
+    username: admin
+    password: Lv1003@@
+  mail:
+    username: community@wast.club
+    password: 18639760875Lv
+    host: smtp.exmail.qq.com
+    protocol: smtp
+    port: 465
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+            socketFactory:
+              class: com.sun.mail.util.MailSSLSocketFactory
+              fallback: false
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    # 控制台日志配置
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-aliases-package: com.henu.mall.pojo
+  mapper-locations: classpath:mapper/*.xml
+
+#qq
+QQ_client_id: 101861558
+QQ_client_secret: 4a1bf26ec3d09de36c18fb800cd758ed
+QQ_Redirect_uri: http://www.mall.wast.club/api/qqcallback
+
+#baidu
+BaiDu_client_id: Q7E0zSzseyw0n6x8FhDWwc1f
+BaiDu_client_secret: DqHG6U9DxHkeP63uCdEUUy42AXmWbsB6
+BaiDu_Redirect_uri: http://www.mall.wast.club/api/baiducallback
+
+#WeiBo
+WeiBo_client_id: 661887081
+WeiBo_client_secret: 498ffdc1916b4f57c65405904b51ed16
+WeiBo_Redirect_uri: http://www.mall.wast.club/api/weibocallback
+
+#oss
+endpoint: http://oss-cn-beijing.aliyuncs.com
+accessKeyId: LTAIlAHWpVWuoRQH
+accessKeySecret: Zg6oKK5WFdMiN8IEmKPAUWAvGUxfzG
+bucketName: shuixin
+
+
+#SMS
+ZmAccessKeyId: LTAI4FuSncxMtzcQ1ARcbe3H
+ZmAccessKeySecret: aRzSKc4PI1AlBRwKpj7ujvN8gmLoKD
+SingName: 智慧药房
+TemplateCode: SMS_187561566
+
+
+#Courier 快递100
+CourierKey: Uulwwdpq3028
+CourierCustomer: 3450C150F61D3E8BD3437E10B4A1CD2C
+
+#快递鸟
+EBusinessID: 1633133
+EKey: 30e0470c-ea2c-4ade-91ac-d9c22f4c057e

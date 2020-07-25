@@ -1,19 +1,16 @@
 package com.henu.mall.pojo;
 
 import lombok.Data;
-import lombok.experimental.Accessors;
 
 import java.util.Date;
+
 @Data
-@Accessors(chain = true)
 public class User {
     private Integer id;
 
     private String accountId;
 
     private String username;
-
-    private String token;
 
     private String password;
 
@@ -32,6 +29,8 @@ public class User {
     private Date createTime;
 
     private Date updateTime;
+
+    private String token;
 
 
 }

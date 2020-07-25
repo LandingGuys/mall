@@ -1,26 +1,63 @@
-server:
-  port: 80
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: Lv1003@@
-    url:  jdbc:mysql://106.75.109.78:3306/mall?characterEncoding=utf-8&useSSL=false
-mybatis:
-  configuration:
-    map-underscore-to-camel-case: true
-    # 控制台日志配置
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  type-aliases-package: com.henu.mall.pojo
-  mapper-locations: classpath:mapper/*.xml
+  profiles:
+    active: dev
 
-#qq
-QQ_client_id: 101802971
-QQ_client_secret: 772adebaf15b637a2d2e6aed6081895f
-QQ_Redirect_uri: http://www.wast.club/qqcallback
+#server:
+#  port: 8081
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.jdbc.Driver
+#    username: *****
+#    password: ******
+#    url:  jdbc:mysql://127.0.0.1:3306/yymall?characterEncoding=utf-8&useSSL=false
+#    type: com.zaxxer.hikari.HikariDataSource
+#    hikari:
+#      minimum-idle: 5
+#      maximum-pool-size: 15
+#      auto-commit: true
+#      idle-timeout: 30000
+#      pool-name: DatabookHikariCP
+#      max-lifetime: 120000
+#      connection-test-query: SELECT 1
+#      connection-timeout: 30000
+#
+#  redis:
+#    host: *****
+#    port: *****
+#    password: *****
+#    jedis:
+#      pool:
+#        max-active: 8
+#        max-wait: -1
+#        max-idle: 8
+#        min-idle: 0
+#    timeout: 5000
+#  rabbitmq:
+#    addresses: *****
+#    port: *****
+#    username: *****
+#    password: *****
+#mybatis:
+#  configuration:
+#    map-underscore-to-camel-case: true
+#    # 控制台日志配置
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#  type-aliases-package: com.henu.mall.pojo
+#  mapper-locations: classpath:mapper/*.xml
+#
+##qq
+#QQ_client_id: *******
+#QQ_client_secret: **********
+#QQ_Redirect_uri: ************
+#
+##baidu
+#BaiDu_client_id: **************
+#BaiDu_client_secret: **********
+#BaiDu_Redirect_uri: **********
+##oss
+#endpoint: ********
+#accessKeyId: *******
+#accessKeySecret: *********
+#bucketName: ********
 
-#baidu
-BaiDu_client_id: SBzm4VChESX3VQc7qEgP8DMO
-BaiDu_client_secret: zDtClO4KaarnzBXfeIPn9E98niblkNHu
-BaiDu_Redirect_uri: http://www.wast.club/baiducallback
 

@@ -10,7 +10,11 @@ public class Order {
 
     private Integer userId;
 
-    private Integer shippingId;
+    private String receiverName;
+
+    private String receiverPhone;
+
+    private String receiverAddress;
 
     private BigDecimal payment;
 
@@ -56,12 +60,28 @@ public class Order {
         this.userId = userId;
     }
 
-    public Integer getShippingId() {
-        return shippingId;
+    public String getReceiverName() {
+        return receiverName;
     }
 
-    public void setShippingId(Integer shippingId) {
-        this.shippingId = shippingId;
+    public void setReceiverName(String receiverName) {
+        this.receiverName = receiverName == null ? null : receiverName.trim();
+    }
+
+    public String getReceiverPhone() {
+        return receiverPhone;
+    }
+
+    public void setReceiverPhone(String receiverPhone) {
+        this.receiverPhone = receiverPhone == null ? null : receiverPhone.trim();
+    }
+
+    public String getReceiverAddress() {
+        return receiverAddress;
+    }
+
+    public void setReceiverAddress(String receiverAddress) {
+        this.receiverAddress = receiverAddress == null ? null : receiverAddress.trim();
     }
 
     public BigDecimal getPayment() {

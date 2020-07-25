@@ -436,6 +436,146 @@ public class ProductExample {
             return (Criteria) this;
         }
 
+        public Criteria andSubImagesIsNull() {
+            addCriterion("sub_images is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubImagesIsNotNull() {
+            addCriterion("sub_images is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubImagesEqualTo(String value) {
+            addCriterion("sub_images =", value, "subImages");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubImagesNotEqualTo(String value) {
+            addCriterion("sub_images <>", value, "subImages");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubImagesGreaterThan(String value) {
+            addCriterion("sub_images >", value, "subImages");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubImagesGreaterThanOrEqualTo(String value) {
+            addCriterion("sub_images >=", value, "subImages");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubImagesLessThan(String value) {
+            addCriterion("sub_images <", value, "subImages");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubImagesLessThanOrEqualTo(String value) {
+            addCriterion("sub_images <=", value, "subImages");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubImagesLike(String value) {
+            addCriterion("sub_images like", value, "subImages");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubImagesNotLike(String value) {
+            addCriterion("sub_images not like", value, "subImages");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubImagesIn(List<String> values) {
+            addCriterion("sub_images in", values, "subImages");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubImagesNotIn(List<String> values) {
+            addCriterion("sub_images not in", values, "subImages");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubImagesBetween(String value1, String value2) {
+            addCriterion("sub_images between", value1, value2, "subImages");
+            return (Criteria) this;
+        }
+
+        public Criteria andSubImagesNotBetween(String value1, String value2) {
+            addCriterion("sub_images not between", value1, value2, "subImages");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailIsNull() {
+            addCriterion("detail is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailIsNotNull() {
+            addCriterion("detail is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailEqualTo(String value) {
+            addCriterion("detail =", value, "detail");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailNotEqualTo(String value) {
+            addCriterion("detail <>", value, "detail");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailGreaterThan(String value) {
+            addCriterion("detail >", value, "detail");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailGreaterThanOrEqualTo(String value) {
+            addCriterion("detail >=", value, "detail");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailLessThan(String value) {
+            addCriterion("detail <", value, "detail");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailLessThanOrEqualTo(String value) {
+            addCriterion("detail <=", value, "detail");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailLike(String value) {
+            addCriterion("detail like", value, "detail");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailNotLike(String value) {
+            addCriterion("detail not like", value, "detail");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailIn(List<String> values) {
+            addCriterion("detail in", values, "detail");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailNotIn(List<String> values) {
+            addCriterion("detail not in", values, "detail");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailBetween(String value1, String value2) {
+            addCriterion("detail between", value1, value2, "detail");
+            return (Criteria) this;
+        }
+
+        public Criteria andDetailNotBetween(String value1, String value2) {
+            addCriterion("detail not between", value1, value2, "detail");
+            return (Criteria) this;
+        }
+
         public Criteria andPriceIsNull() {
             addCriterion("price is null");
             return (Criteria) this;
@@ -613,6 +753,126 @@ public class ProductExample {
 
         public Criteria andStatusNotBetween(Integer value1, Integer value2) {
             addCriterion("status not between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewIsNull() {
+            addCriterion("is_new is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewIsNotNull() {
+            addCriterion("is_new is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewEqualTo(Integer value) {
+            addCriterion("is_new =", value, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewNotEqualTo(Integer value) {
+            addCriterion("is_new <>", value, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewGreaterThan(Integer value) {
+            addCriterion("is_new >", value, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewGreaterThanOrEqualTo(Integer value) {
+            addCriterion("is_new >=", value, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewLessThan(Integer value) {
+            addCriterion("is_new <", value, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewLessThanOrEqualTo(Integer value) {
+            addCriterion("is_new <=", value, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewIn(List<Integer> values) {
+            addCriterion("is_new in", values, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewNotIn(List<Integer> values) {
+            addCriterion("is_new not in", values, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewBetween(Integer value1, Integer value2) {
+            addCriterion("is_new between", value1, value2, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsNewNotBetween(Integer value1, Integer value2) {
+            addCriterion("is_new not between", value1, value2, "isNew");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotIsNull() {
+            addCriterion("is_hot is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotIsNotNull() {
+            addCriterion("is_hot is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotEqualTo(Integer value) {
+            addCriterion("is_hot =", value, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotNotEqualTo(Integer value) {
+            addCriterion("is_hot <>", value, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotGreaterThan(Integer value) {
+            addCriterion("is_hot >", value, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotGreaterThanOrEqualTo(Integer value) {
+            addCriterion("is_hot >=", value, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotLessThan(Integer value) {
+            addCriterion("is_hot <", value, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotLessThanOrEqualTo(Integer value) {
+            addCriterion("is_hot <=", value, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotIn(List<Integer> values) {
+            addCriterion("is_hot in", values, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotNotIn(List<Integer> values) {
+            addCriterion("is_hot not in", values, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotBetween(Integer value1, Integer value2) {
+            addCriterion("is_hot between", value1, value2, "isHot");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsHotNotBetween(Integer value1, Integer value2) {
+            addCriterion("is_hot not between", value1, value2, "isHot");
             return (Criteria) this;
         }
 

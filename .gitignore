@@ -29,3 +29,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+#### application####
+src/main/resources/application-dev.yml
+src/main/resources/application-pro.yml

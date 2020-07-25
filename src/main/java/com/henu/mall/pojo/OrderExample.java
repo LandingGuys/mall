@@ -286,63 +286,213 @@ public class OrderExample {
             return (Criteria) this;
         }
 
-        public Criteria andShippingIdIsNull() {
-            addCriterion("shipping_id is null");
+        public Criteria andReceiverNameIsNull() {
+            addCriterion("receiver_name is null");
             return (Criteria) this;
         }
 
-        public Criteria andShippingIdIsNotNull() {
-            addCriterion("shipping_id is not null");
+        public Criteria andReceiverNameIsNotNull() {
+            addCriterion("receiver_name is not null");
             return (Criteria) this;
         }
 
-        public Criteria andShippingIdEqualTo(Integer value) {
-            addCriterion("shipping_id =", value, "shippingId");
+        public Criteria andReceiverNameEqualTo(String value) {
+            addCriterion("receiver_name =", value, "receiverName");
             return (Criteria) this;
         }
 
-        public Criteria andShippingIdNotEqualTo(Integer value) {
-            addCriterion("shipping_id <>", value, "shippingId");
+        public Criteria andReceiverNameNotEqualTo(String value) {
+            addCriterion("receiver_name <>", value, "receiverName");
             return (Criteria) this;
         }
 
-        public Criteria andShippingIdGreaterThan(Integer value) {
-            addCriterion("shipping_id >", value, "shippingId");
+        public Criteria andReceiverNameGreaterThan(String value) {
+            addCriterion("receiver_name >", value, "receiverName");
             return (Criteria) this;
         }
 
-        public Criteria andShippingIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("shipping_id >=", value, "shippingId");
+        public Criteria andReceiverNameGreaterThanOrEqualTo(String value) {
+            addCriterion("receiver_name >=", value, "receiverName");
             return (Criteria) this;
         }
 
-        public Criteria andShippingIdLessThan(Integer value) {
-            addCriterion("shipping_id <", value, "shippingId");
+        public Criteria andReceiverNameLessThan(String value) {
+            addCriterion("receiver_name <", value, "receiverName");
             return (Criteria) this;
         }
 
-        public Criteria andShippingIdLessThanOrEqualTo(Integer value) {
-            addCriterion("shipping_id <=", value, "shippingId");
+        public Criteria andReceiverNameLessThanOrEqualTo(String value) {
+            addCriterion("receiver_name <=", value, "receiverName");
             return (Criteria) this;
         }
 
-        public Criteria andShippingIdIn(List<Integer> values) {
-            addCriterion("shipping_id in", values, "shippingId");
+        public Criteria andReceiverNameLike(String value) {
+            addCriterion("receiver_name like", value, "receiverName");
             return (Criteria) this;
         }
 
-        public Criteria andShippingIdNotIn(List<Integer> values) {
-            addCriterion("shipping_id not in", values, "shippingId");
+        public Criteria andReceiverNameNotLike(String value) {
+            addCriterion("receiver_name not like", value, "receiverName");
             return (Criteria) this;
         }
 
-        public Criteria andShippingIdBetween(Integer value1, Integer value2) {
-            addCriterion("shipping_id between", value1, value2, "shippingId");
+        public Criteria andReceiverNameIn(List<String> values) {
+            addCriterion("receiver_name in", values, "receiverName");
             return (Criteria) this;
         }
 
-        public Criteria andShippingIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("shipping_id not between", value1, value2, "shippingId");
+        public Criteria andReceiverNameNotIn(List<String> values) {
+            addCriterion("receiver_name not in", values, "receiverName");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverNameBetween(String value1, String value2) {
+            addCriterion("receiver_name between", value1, value2, "receiverName");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverNameNotBetween(String value1, String value2) {
+            addCriterion("receiver_name not between", value1, value2, "receiverName");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverPhoneIsNull() {
+            addCriterion("receiver_phone is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverPhoneIsNotNull() {
+            addCriterion("receiver_phone is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverPhoneEqualTo(String value) {
+            addCriterion("receiver_phone =", value, "receiverPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverPhoneNotEqualTo(String value) {
+            addCriterion("receiver_phone <>", value, "receiverPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverPhoneGreaterThan(String value) {
+            addCriterion("receiver_phone >", value, "receiverPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverPhoneGreaterThanOrEqualTo(String value) {
+            addCriterion("receiver_phone >=", value, "receiverPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverPhoneLessThan(String value) {
+            addCriterion("receiver_phone <", value, "receiverPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverPhoneLessThanOrEqualTo(String value) {
+            addCriterion("receiver_phone <=", value, "receiverPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverPhoneLike(String value) {
+            addCriterion("receiver_phone like", value, "receiverPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverPhoneNotLike(String value) {
+            addCriterion("receiver_phone not like", value, "receiverPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverPhoneIn(List<String> values) {
+            addCriterion("receiver_phone in", values, "receiverPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverPhoneNotIn(List<String> values) {
+            addCriterion("receiver_phone not in", values, "receiverPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverPhoneBetween(String value1, String value2) {
+            addCriterion("receiver_phone between", value1, value2, "receiverPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverPhoneNotBetween(String value1, String value2) {
+            addCriterion("receiver_phone not between", value1, value2, "receiverPhone");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverAddressIsNull() {
+            addCriterion("receiver_address is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverAddressIsNotNull() {
+            addCriterion("receiver_address is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverAddressEqualTo(String value) {
+            addCriterion("receiver_address =", value, "receiverAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverAddressNotEqualTo(String value) {
+            addCriterion("receiver_address <>", value, "receiverAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverAddressGreaterThan(String value) {
+            addCriterion("receiver_address >", value, "receiverAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverAddressGreaterThanOrEqualTo(String value) {
+            addCriterion("receiver_address >=", value, "receiverAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverAddressLessThan(String value) {
+            addCriterion("receiver_address <", value, "receiverAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverAddressLessThanOrEqualTo(String value) {
+            addCriterion("receiver_address <=", value, "receiverAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverAddressLike(String value) {
+            addCriterion("receiver_address like", value, "receiverAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverAddressNotLike(String value) {
+            addCriterion("receiver_address not like", value, "receiverAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverAddressIn(List<String> values) {
+            addCriterion("receiver_address in", values, "receiverAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverAddressNotIn(List<String> values) {
+            addCriterion("receiver_address not in", values, "receiverAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverAddressBetween(String value1, String value2) {
+            addCriterion("receiver_address between", value1, value2, "receiverAddress");
+            return (Criteria) this;
+        }
+
+        public Criteria andReceiverAddressNotBetween(String value1, String value2) {
+            addCriterion("receiver_address not between", value1, value2, "receiverAddress");
             return (Criteria) this;
         }
 

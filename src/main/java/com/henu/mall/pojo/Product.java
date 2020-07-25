@@ -14,11 +14,19 @@ public class Product {
 
     private String mainImage;
 
+    private String subImages;
+
+    private String detail;
+
     private BigDecimal price;
 
     private Integer stock;
 
     private Integer status;
+
+    private Integer isNew;
+
+    private Integer isHot;
 
     private Date createTime;
 
@@ -64,6 +72,22 @@ public class Product {
         this.mainImage = mainImage == null ? null : mainImage.trim();
     }
 
+    public String getSubImages() {
+        return subImages;
+    }
+
+    public void setSubImages(String subImages) {
+        this.subImages = subImages == null ? null : subImages.trim();
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail == null ? null : detail.trim();
+    }
+
     public BigDecimal getPrice() {
         return price;
     }
@@ -86,6 +110,22 @@ public class Product {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getIsNew() {
+        return isNew;
+    }
+
+    public void setIsNew(Integer isNew) {
+        this.isNew = isNew;
+    }
+
+    public Integer getIsHot() {
+        return isHot;
+    }
+
+    public void setIsHot(Integer isHot) {
+        this.isHot = isHot;
     }
 
     public Date getCreateTime() {
