@@ -4,8 +4,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     username: root
-    password: Lv1003@@
-    url:  jdbc:mysql://39.106.112.85:3306/yymall?characterEncoding=utf-8&useSSL=false
+    password: *****
+    url:  jdbc:mysql://*******:3306/yymall?characterEncoding=utf-8&useSSL=false
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
       minimum-idle: 5
@@ -17,9 +17,9 @@ spring:
       connection-test-query: SELECT 1
       connection-timeout: 30000
   redis:
-    host: 39.106.112.85
+    host: *****
     port: 6379
-    password: Lv1003@@
+    password: *****
     jedis:
       pool:
         max-active: 8
@@ -28,13 +28,13 @@ spring:
         min-idle: 0
     timeout: 5000
   rabbitmq:
-    addresses: 39.106.112.85
+    addresses: *****
     port: 5672
     username: admin
-    password: Lv1003@@
+    password: *****
   mail:
-    username: community@wast.club
-    password: 18639760875Lv
+    username: *****
+    password: *****
     host: smtp.exmail.qq.com
     protocol: smtp
     port: 465
@@ -56,38 +56,38 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
 
 #qq
-QQ_client_id: 101861558
-QQ_client_secret: 4a1bf26ec3d09de36c18fb800cd758ed
-QQ_Redirect_uri: http://www.mall.wast.club/api/qqcallback
+QQ_client_id: ****
+QQ_client_secret: ****
+QQ_Redirect_uri: ******
 
 #baidu
-BaiDu_client_id: Q7E0zSzseyw0n6x8FhDWwc1f
-BaiDu_client_secret: DqHG6U9DxHkeP63uCdEUUy42AXmWbsB6
-BaiDu_Redirect_uri: http://www.mall.wast.club/api/baiducallback
+BaiDu_client_id: *****
+BaiDu_client_secret: *****
+BaiDu_Redirect_uri: ******
 
 #WeiBo
-WeiBo_client_id: 661887081
-WeiBo_client_secret: 498ffdc1916b4f57c65405904b51ed16
-WeiBo_Redirect_uri: http://www.mall.wast.club/api/weibocallback
+WeiBo_client_id: ****
+WeiBo_client_secret: ****
+WeiBo_Redirect_uri: *****
 
 #oss
-endpoint: http://oss-cn-beijing.aliyuncs.com
-accessKeyId: LTAIlAHWpVWuoRQH
-accessKeySecret: Zg6oKK5WFdMiN8IEmKPAUWAvGUxfzG
-bucketName: shuixin
+endpoint: *****
+accessKeyId: ******
+accessKeySecret: ***
+bucketName: ***
 
 
 #SMS
-ZmAccessKeyId: LTAI4FuSncxMtzcQ1ARcbe3H
-ZmAccessKeySecret: aRzSKc4PI1AlBRwKpj7ujvN8gmLoKD
+ZmAccessKeyId: ******
+ZmAccessKeySecret: *****
 SingName: 智慧药房
-TemplateCode: SMS_187561566
+TemplateCode: *****
 
 
 #Courier 快递100
-CourierKey: Uulwwdpq3028
-CourierCustomer: 3450C150F61D3E8BD3437E10B4A1CD2C
+CourierKey: ****
+CourierCustomer: ****
 
 #快递鸟
-EBusinessID: 1633133
-EKey: 30e0470c-ea2c-4ade-91ac-d9c22f4c057e
+EBusinessID: ***
+EKey: ******
