@@ -52,6 +52,7 @@ public class ProductServiceImpl implements ProductService {
         }
         // 分页设置
         PageHelper.startPage(pageNum,pageSize);
+
         // 通过类目id进行商品查询
         List<Product> products = productExtMapper.selectByCategoryIdSet(categoryIdSet);
         // 将查出来的商品列表传入到 List<productVo> 对象中 同时设置到分页对象 pageInfo
